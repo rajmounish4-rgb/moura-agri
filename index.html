@@ -1557,7 +1557,282 @@ function synthDoc(topic,code){
   secs.forEach(function(s){s.h=numSecs(n++)+s.h});
   return {title:T,course:code,secs:secs,source:"synthesis",kbname:null};
 }
-function renderDoc(doc){
+// ===== MouRa export engine: Word (.docx), PowerPoint (.pptx), canvas diagrams =====
+var _LASTDOC=null;
+function _xe(s){return String(s).replace(/&/g,"&" + "amp;").replace(/</g,"&" + "lt;").replace(/>/g,"&" + "gt;").replace(/"/g,"&" + "quot;").replace(/'/g,"&" + "apos;")}
+function _u8(s){return new TextEncoder().encode(s)}
+var _CRCT=null;
+function _crc32(buf){var c,t,i;if(!_CRCT){_CRCT=[];for(var n=0;n<256;n++){c=n;for(var k=0;k<8;k++){c=c&1?3988292384^(c>>>1):c>>>1}_CRCT[n]=c>>>0}}t=0xFFFFFFFF;for(i=0;i<buf.length;i++){t=_CRCT[(t^buf[i])&255]^(t>>>8)}return (t^0xFFFFFFFF)>>>0}
+function _b64d(b64){var s=atob(b64),u=new Uint8Array(s.length);for(var i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u}
+function _h16(a,n){a.push(n&255,(n>>8)&255)}
+function _h32(a,n){a.push(n&255,(n>>8)&255,(n>>16)&255,(n>>24)&255)}
+function _zipStore(files){var parts=[],offs=[],pos=0,i;
+  for(i=0;i<files.length;i++){var d=files[i].d,nm=_u8(files[i].n),crc=_crc32(d),loc=[];
+    _h16(loc,20);_h16(loc,0);_h16(loc,0);_h16(loc,0);_h16(loc,0);
+    _h32(loc,crc);_h32(loc,d.length);_h32(loc,d.length);_h16(loc,nm.length);_h16(loc,0);
+    parts.push(new Uint8Array([80,75,3,4].concat(loc)),nm,d);
+    offs.push({n:nm,c:crc,z:d.length,o:pos,sz:loc.length+nm.length});
+    pos+=4+loc.length+nm.length+d.length}
+  var cdstart=pos;
+  for(i=0;i<offs.length;i++){var e=offs[i],cde=[];
+    _h16(cde,20);_h16(cde,20);_h16(cde,0);_h16(cde,0);_h16(cde,0);_h16(cde,0);
+    _h32(cde,e.c);_h32(cde,e.z);_h32(cde,e.z);_h16(cde,e.n.length);_h16(cde,0);_h16(cde,0);_h16(cde,0);
+    _h16(cde,0);_h32(cde,0);_h32(cde,e.o);
+    parts.push(new Uint8Array([80,75,1,2].concat(cde)),e.n);pos+=46+e.n.length}
+  var end=[80,75,5,6,0,0,0,0];_h16(end,offs.length);_h16(end,offs.length);_h32(end,pos-cdstart);_h32(end,cdstart);_h16(end,0);
+  parts.push(new Uint8Array(end));
+  var out=new Uint8Array(pos+22),o=0;
+  for(i=0;i<parts.length;i++){out.set(parts[i],o);o+=parts[i].length}
+  return out}
+function _safeName(s){return String(s).replace(/[^A-Za-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,60)||"assignment"}
+function _dl(bytes,name,mime){var b=new Blob([bytes],{type:mime}),u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},5000)}
+
+// ---------- diagram canvas helpers (browser only) ----------
+function _can(w,h){var c=document.createElement("canvas");if(!c.getContext)return null;c.width=w;c.height=h;var x=c.getContext("2d");if(!x)return null;return{x:x,c:c}}
+function _rr(x,a,b,w,h,r){x.beginPath();x.moveTo(a+r,b);x.lineTo(a+w-r,b);x.arcTo(a+w,b,a+w,b+r,r);x.lineTo(a+w,b+h-r);x.arcTo(a+w,b+h,a+w-r,b+h,r);x.lineTo(a+r,b+h);x.arcTo(a,b+h,a,b+h-r,r);x.lineTo(a,b+r);x.arcTo(a,b,a+r,b,r);x.closePath()}
+function _arrow(x,x1,y1,x2,y2,col){x.strokeStyle=col;x.fillStyle=col;x.lineWidth=5;x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();var an=Math.atan2(y2-y1,x2-x1);x.beginPath();x.moveTo(x2,y2);x.lineTo(x2-22*Math.cos(an-0.4),y2-22*Math.sin(an-0.4));x.lineTo(x2-22*Math.cos(an+0.4),y2-22*Math.sin(an+0.4));x.closePath();x.fill()}
+function _wrap(x,text,maxw){var words=String(text).split(/\s+/),lines=[],cur="";for(var i=0;i<words.length;i++){var t=cur?cur+" "+words[i]:words[i];if(x.measureText(t).width>maxw&&cur){lines.push(cur);cur=words[i]}else cur=t}if(cur)lines.push(cur);return lines}
+function _picBase(can){try{return can.toDataURL("image/png").split(",")[1]}catch(e){return null}}
+function _diagramTitle(x,title,sub){x.fillStyle="#faf7f5";x.fillRect(0,0,1600,900);x.fillStyle="#1c1917";x.font='700 46px "Plus Jakarta Sans",Arial,sans-serif';x.fillText(title,70,110);x.fillStyle="#c2410c";x.fillRect(70,136,150,10);if(sub){x.fillStyle="#78716c";x.font='500 28px "Plus Jakarta Sans",Arial,sans-serif';x.fillText(sub,70,190)}}
+function drawFlowDoc(title,sub,steps){var o=_can(1600,900);if(!o)return null;var x=o.x;_diagramTitle(x,title,sub);
+  var n=steps.length,cols=n>3?Math.ceil(n/2):n,rows=n>3?2:1,cw=Math.min(1330,Math.floor(1460/cols)),ch=180,gap=40;
+  for(var i=0;i<n;i++){var r=Math.floor(i/cols),c=i%cols,cx=70+c*(cw+gap),cy=250+r*(ch+70);
+    var isLast=n>3&&i===n-1&&c===0;
+    _rr(x,cx,cy,cw,ch,18);x.fillStyle=i===n-1?"#fdeee4":"#ffffff";x.fill();x.strokeStyle=i===n-1?"#c2410c":"#d6cdbf";x.lineWidth=4;x.stroke();
+    x.fillStyle="#1c1917";x.font='700 34px "Plus Jakarta Sans",Arial,sans-serif';
+    var ls=_wrap(x,steps[i],cw-70);x.fillText(String(i+1)+".",cx+28,cy+62);
+    x.font='500 30px "Plus Jakarta Sans",Arial,sans-serif';
+    var y=cy+62;for(var k=0;k<ls.length&&k<4;k++){y+=44;x.fillText(ls[k],cx+28,y-36)}
+    if(i<n-1){var nx=i%cols<cols-1?cx+cw+8:cx,ny=i%cols<cols-1?cy+ch/2:(r===0?cy+ch+30:cy+ch/2);
+      var tx=i%cols<cols-1?nx+22:nx+cw/2,ty=i%cols<cols-1?ny:ny+22,fx=i%cols<cols-1?nx-20:nx+cw/2,fy=i%cols<cols-1?ny:ny-20;
+      if(i%cols<cols-1)_arrow(x,cx+cw+6,cy+ch/2,nx-8,cy+ch/2,"#65a30d");else _arrow(x,cx+cw/2,cy+ch+6,cx+cw/2,cy+ch+64,"#65a30d")}}
+  return _picBase(o.c)}
+function drawCycleDoc(title,sub,stages){var o=_can(1600,900);if(!o)return null;var x=o.x;_diagramTitle(x,title,sub);
+  var cx=800,cy=560,R=300,n=stages.length;
+  for(var i=0;i<n;i++){var a1=-Math.PI/2+i*2*Math.PI/n-Math.PI/n,a2=-Math.PI/2+(i+1)*2*Math.PI/n-Math.PI/n;
+    var sx=cx+R*Math.cos(a1),sy=cy+R*Math.sin(a1),ex=cx+R*Math.cos(a2),ey=cy+R*Math.sin(a2);
+    x.strokeStyle="#65a30d";x.lineWidth=6;x.beginPath();x.arc(cx,cy,R,a1+0.12,a2-0.12);x.stroke();
+    var am=(a1+a2)/2,ax=cx+R*Math.cos(am),ay=cy+R*Math.sin(am);_arrow(x,ax-14*Math.cos(am),ay-14*Math.sin(am),ax+16*Math.cos(am),ay+16*Math.sin(am),"#65a30d")}
+  for(i=0;i<n;i++){var a=-Math.PI/2+i*2*Math.PI/n-Math.PI/n+Math.PI/n;
+    var bx=cx+R*Math.cos(a),by=cy+R*Math.sin(a);
+    _rr(x,bx-190,by-70,380,140,16);x.fillStyle="#ffffff";x.fill();x.strokeStyle="#d6cdbf";x.lineWidth=4;x.stroke();
+    x.fillStyle="#c2410c";x.font='700 26px "Plus Jakarta Sans",Arial,sans-serif';x.fillText("Stage "+(i+1),bx-160,by-26);
+    x.fillStyle="#1c1917";x.font='600 30px "Plus Jakarta Sans",Arial,sans-serif';
+    var ls=_wrap(x,stages[i],330);for(var k=0;k<ls.length&&k<3;k++)x.fillText(ls[k],bx-160,by+16+k*40)}
+  x.fillStyle="#78716c";x.font='600 30px "Plus Jakarta Sans",Arial,sans-serif';x.textAlign="center";x.fillText("cycle",cx,cy+10);x.textAlign="left";
+  return _picBase(o.c)}
+function drawTableDoc(title,sub,head,rows){var o=_can(1600,900);if(!o)return null;var x=o.x;_diagramTitle(x,title,sub);
+  var y=250,rh=Math.min(92,Math.floor(560/Math.max(rows.length,1))),cw=[0.32,0.68];
+  x.font='600 28px "Plus Jakarta Sans",Arial,sans-serif';
+  x.fillStyle="#1c1917";x.fillRect(70,y,1460,rh);x.fillStyle="#ffffff";
+  x.fillText(_trunc(x,head[0],380),100,y+rh/2+10);if(head[1])x.fillText(_trunc(x,head.slice(1).join(" "),980),620,y+rh/2+10);
+  for(var i=0;i<rows.length&&i<7;i++){var ry=y+rh*(i+1);
+    if(i%2===0){x.fillStyle="#f4efe9";x.fillRect(70,ry,1460,rh)}
+    x.fillStyle="#1c1917";x.font='500 26px "Plus Jakarta Sans",Arial,sans-serif';
+    x.fillText(_trunc(x,rows[i][0],400),100,ry+rh/2+9);
+    x.font='500 24px "Plus Jakarta Sans",Arial,sans-serif';x.fillStyle="#44403c";
+    x.fillText(_trunc(x,rows[i].slice(1).join("  "),1060),620,ry+rh/2+9)}
+  return _picBase(o.c)}
+function _trunc(x,s,maxw){s=String(s);if(x.measureText(s).width<=maxw)return s;while(s.length>4&&x.measureText(s+"...").width>maxw)s=s.slice(0,-1);return s+"..."}
+function drawChartDoc(title,sub,head,rows){var o=_can(1600,900);if(!o)return null;var x=o.x;_diagramTitle(x,title,sub);
+  var items=[];for(var i=0;i<rows.length&&items.length<8;i++){var v=parseFloat(String(rows[i][1]).replace(/[^0-9.]/g,""));if(isFinite(v)&&v>0)items.push({l:rows[i][0],v:v,o:rows[i][1]})}
+  if(items.length<3)return drawTableDoc(title,sub,head,rows);
+  var maxv=0;items.forEach(function(it){if(it.v>maxv)maxv=it.v});
+  var y0=270,bh=Math.min(70,Math.floor(560/items.length)),gap=Math.min(30,Math.floor(90/items.length));
+  x.font='500 26px "Plus Jakarta Sans",Arial,sans-serif';
+  for(i=0;i<items.length;i++){var y=y0+i*(bh+gap),w=Math.max(30,1080*items[i].v/maxv);
+    x.fillStyle="#1c1917";x.fillText(_trunc(x,items[i].l,470),70,y+bh/2+9);
+    _rr(x,560,y,w,bh,10);x.fillStyle=i%2?"#65a30d":"#c2410c";x.fill();
+    x.fillStyle="#1c1917";x.font='700 26px "Plus Jakarta Sans",Arial,sans-serif';x.fillText(_trunc(x,items[i].o,380),580+w+16,y+bh/2+9);
+    x.font='500 26px "Plus Jakarta Sans",Arial,sans-serif'}
+  return _picBase(o.c)}
+function _short(s,n){s=String(s);if(s.length<=n)return s;s=s.slice(0,n-3);var p=s.lastIndexOf(" ");if(p>n*0.6)s=s.slice(0,p);return s+"..."}
+function collectDiagrams(doc){
+  var out=[],imgi=0,txt=(doc.title+" ").concat(doc.secs.map(function(s){return s.h+" "+(s.ps||[]).join(" ")+" "+(s.list||[]).join(" ")+" "+(s.defs||[]).map(function(d){return d.t+" "+d.d}).join(" ")}).join(" "));
+  // chart/table picture from the stats-like section
+  for(var i=0;i<doc.secs.length;i++){var s=doc.secs[i];
+    if(s.table&&s.table.rows&&s.table.rows.length>=2){out.push({n:"chart"+(imgi++),b64:drawChartDoc(s.table.title||s.h,doc.title,s.table.head,s.table.rows)});break}}
+  out=out.filter(function(p){return p.b64});
+  // topic-type diagram
+  var d=null,sub=doc.title;
+  if(/disease|blast|rust|wilt|blight|mosaic|rot|canker|spot|pathogen|fungu|symptom/i.test(txt)){
+    d=drawFlowDoc("Disease cycle and management pathway","schematic - "+sub,["Pathogen survival (seed, stubble, volunteers)","Infection under favourable weather","Symptoms appear on the plant","Secondary spread (air, water, seed)","Integrated management: cultural, biological, chemical"]);
+  }else if(/insect|pest|larva|moth|beetle|aphid|borer|weevil|nematode|predator/i.test(txt)){
+    d=drawCycleDoc("Typical pest life cycle","schematic - "+sub,["Egg","Larva / nymph","Pupa","Adult"]);
+  }else{var objs=(doc.secs[1]&&doc.secs[1].list)||[];var steps=objs.slice(0,4).map(function(o){return String(o).replace(/^To\s+/i,"").replace(/\.$/,"")});
+    if(steps.length>=3)d=drawFlowDoc("Assignment roadmap",sub,steps.concat(["Conclusion and outcomes"]))}
+  if(d)out.push({n:"diag0",b64:d});
+  return out}
+
+// ---------- DOCX builder ----------
+function _wPara(text,opts){opts=opts||{};var r='<w:p><w:pPr>';
+  if(opts.style)r+='<w:pStyle w:val="'+opts.style+'"/>';
+  if(opts.center)r+='<w:jc w:val="center"/>';else if(opts.just)r+='<w:jc w:val="both"/>';
+  if(opts.ind)r+='<w:ind w:left="457" w:hanging="229"/>';
+  if(opts.spc)r+='<w:spacing w:after="'+(opts.spc)+'"/>';
+  r+='</w:pPr><w:r><w:rPr>';
+  if(opts.b)r+='<w:b/>';
+  if(opts.i)r+='<w:i/>';
+  if(opts.color)r+='<w:color w:val="'+opts.color+'"/>';
+  if(opts.sz)r+='<w:sz w:val="'+opts.sz+'"/><w:szCs w:val="'+opts.sz+'"/>';
+  r+='</w:rPr><w:t xml:space="preserve">'+_xe(text)+'</w:t></w:r></w:p>';return r}
+function _wCell(text,bold,shade){return '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/>'+(shade?'<w:shd w:val="clear" w:fill="'+shade+'"/>':"")+'</w:tcPr>'+_wPara(text,{b:bold,spc:40})+'</w:tc>'}
+function _wTable(head,rows){var t='<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblW w:w="5000" w:type="pct"/><w:tblBorders><w:top w:val="single" w:sz="6" w:color="D6CDBF"/><w:left w:val="single" w:sz="6" w:color="D6CDBF"/><w:bottom w:val="single" w:sz="6" w:color="D6CDBF"/><w:right w:val="single" w:sz="6" w:color="D6CDBF"/><w:insideH w:val="single" w:sz="6" w:color="D6CDBF"/><w:insideV w:val="single" w:sz="6" w:color="D6CDBF"/></w:tblBorders></w:tblPr><w:tr><w:trPr><w:tblHeader/></w:trPr>';
+  head.forEach(function(h){t+=_wCell(h,1,"1C1917")});t+='</w:tr>';
+  rows.forEach(function(r,i){t+='<w:tr>';r.forEach(function(c){t+=_wCell(c,0,i%2?"":"F4EFE9")});t+='</w:tr>'});
+  return t+'</w:tbl>'}
+function _wPic(rid,cx,cy){return '<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="'+cx+'" cy="'+cy+'"/><wp:effectExtent l="0" t="0" r="0" b="0"/><wp:docPr id="'+rid+'" name="diagram'+rid+'"/><a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:nvPicPr><pic:cNvPr id="'+rid+'" name="d'+rid+'.png"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="rId'+rid+'"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+cx+'" cy="'+cy+'"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>'}
+function buildDocx(doc,pics){
+  var body='<w:p/><w:p/>'+_wPara(doc.title,{style:"MTitle",center:1,spc:60})
+   +_wPara(doc.course,{center:1,i:1,color:"57534E",sz:26})
+   +_wPara("Assignment  -  "+new Date().toLocaleDateString("en-GB",{day:"2-digit",month:"long",year:"numeric"}),{center:1,color:"78716C",sz:22})
+   +_wPara("Submitted by: ____________________     ID No.: ____________",{center:1,color:"78716C",sz:22,spc:240});
+  var rels='',used=[],picsrc=pics||[];
+  doc.secs.forEach(function(s){
+    body+=_wPara(s.h,{style:"MHeading"});
+    if(s.ps&&s.ps.length)s.ps.forEach(function(p){body+=_wPara(p,{just:1,spc:120})});
+    if(s.defs&&s.defs.length){body+=_wTable(["Term","Definition"],s.defs.map(function(d){return [d.t,d.d]}));body+=_wPara(" ",{spc:60})}
+    if(s.table&&s.table.rows&&s.table.rows.length){body+=_wTable(s.table.head,s.table.rows);body+=_wPara(" ",{spc:60})}
+    if(s.list&&s.list.length)s.list.forEach(function(li){body+=_wPara("- "+li,{ind:1,spc:60})});
+    if(s.cse){body+=_wPara(s.cse.t,{style:"MHeading"}) +_wPara(s.cse.b,{just:1,spc:120})}
+  });
+  if(picsrc.length){body+='<w:p/>';
+    picsrc.forEach(function(p,i){var rid=100+i;used.push(p);
+      rels+='<Relationship Id="rId'+rid+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/img'+i+'.png"/>';
+      body+=_wPic(rid,5486400,3086100)})}
+  body+='<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440"/></w:sectPr>';
+  var docxml='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"><w:body>'+body+'</w:body></w:document>';
+  var styles='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
+   +'<w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri"/><w:sz w:val="23"/><w:szCs w:val="23"/></w:rPr></w:rPrDefault></w:docDefaults>'
+   +'<w:style w:type="paragraph" w:styleId="Normal" w:default="1"><w:name w:val="Normal"/></w:style>'
+   +'<w:style w:type="paragraph" w:styleId="MTitle"><w:name w:val="MouRa Title"/><w:basedOn w:val="Normal"/><w:pPr><w:jc w:val="center"/></w:pPr><w:rPr><w:b/><w:sz w:val="52"/><w:szCs w:val="52"/><w:color w:val="1C1917"/></w:rPr></w:style>'
+   +'<w:style w:type="paragraph" w:styleId="MHeading"><w:name w:val="MouRa Heading"/><w:basedOn w:val="Normal"/><w:pPr><w:keepNext/><w:spacing w:before="280"/></w:pPr><w:rPr><w:b/><w:sz w:val="30"/><w:szCs w:val="30"/><w:color w:val="C2410C"/></w:rPr></w:style>'
+   +'<w:style w:type="table" w:styleId="TableGrid"><w:name w:val="Table Grid"/><w:tblPr><w:tblBorders><w:top w:val="single" w:sz="6" w:color="D6CDBF"/><w:left w:val="single" w:sz="6" w:color="D6CDBF"/><w:bottom w:val="single" w:sz="6" w:color="D6CDBF"/><w:right w:val="single" w:sz="6" w:color="D6CDBF"/><w:insideH w:val="single" w:sz="6" w:color="D6CDBF"/><w:insideV w:val="single" w:sz="6" w:color="D6CDBF"/></w:tblBorders></w:tblPr></w:style></w:styles>';
+  var files=[
+   {n:"[Content_Types].xml",d:_u8('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/></Types>')},
+   {n:"_rels/.rels",d:_u8('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>')},
+   {n:"word/document.xml",d:_u8(docxml)},
+   {n:"word/styles.xml",d:_u8(styles)}];
+  if(used.length){files.push({n:"word/_rels/document.xml.rels",d:_u8('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+rels+'</Relationships>')});
+    used.forEach(function(p,i){files.push({n:"word/media/img"+i+".png",d:_b64d(p.b64)})})}
+  return _zipStore(files)}
+
+// ---------- PPTX builder ----------
+var _PPTXC=2147483648;
+function _sp(id,x,y,w,h,fill,line){return '<p:sp><p:nvSpPr><p:cNvPr id="'+id+'" name="s'+id+'"/><p:cNvSpPr/></p:nvSpPr><p:spPr><a:xfrm><a:off x="'+x+'" y="'+y+'"/><a:ext cx="'+w+'" cy="'+h+'"/></a:xfrm><a:prstGeom prst="roundRect"><a:avLst><a:gd name="adj" fmla="val 8000"/></a:avLst></a:prstGeom>'+(fill?'<a:solidFill><a:srgbClr val="'+fill+'"/></a:solidFill>':'<a:noFill/>')+(line?'<a:ln w="19050"><a:solidFill><a:srgbClr val="'+line+'"/></a:solidFill></a:ln>':'')+'</p:spPr><p:txBody><a:bodyPr/><a:lstStyle/><a:p/></p:txBody></p:sp>'}
+function _tsp(id,x,y,w,h,paras){var t='<p:sp><p:nvSpPr><p:cNvPr id="'+id+'" name="t'+id+'"/><p:cNvSpPr txBox="1"/></p:nvSpPr><p:spPr><a:xfrm><a:off x="'+x+'" y="'+y+'"/><a:ext cx="'+w+'" cy="'+h+'"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:noFill/></p:spPr><p:txBody><a:bodyPr wrap="square" rtlCol="0"><a:normAutofit fontScale="92500" lnSpcReduction="10000"/></a:bodyPr><a:lstStyle/>';
+  paras.forEach(function(p){
+    var ppr='<a:pPr'+(p.align?' algn="'+p.align+'"':'')+'>';
+    if(p.bullet){ppr+='<a:buClr><a:srgbClr val="C2410C"/></a:buClr><a:buFont typeface="Arial"/><a:buChar char="'+p.bullet+'"/>'}else{ppr+='<a:buNone/>'}
+    if(p.spc)ppr+='<a:spcBef><a:spcPts val="'+p.spc+'"/></a:spcBef>';
+    ppr+='</a:pPr>';
+    t+='<a:p>'+ppr+'<a:r><a:rPr lang="en-US" dirty="0"'+(p.b?' b="1"':"")+' sz="'+(p.sz||1600)+'"><a:solidFill><a:srgbClr val="'+(p.color||"1C1917")+'"/></a:solidFill>'+(p.i?'<a:i/>':"")+'</a:rPr><a:t>'+_xe(p.t)+'</a:t></a:r></a:p>'});
+  return t+'</p:txBody></p:sp>'}
+function _pic(id,rid,x,y,w,h){return '<p:pic><p:nvPicPr><p:cNvPr id="'+id+'" name="p'+id+'"/><p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr></p:nvPicPr><p:blipFill><a:blip r:embed="rId'+rid+'"/><a:stretch><a:fillRect/></a:stretch></p:blipFill><p:spPr><a:xfrm><a:off x="'+x+'" y="'+y+'"/><a:ext cx="'+w+'" cy="'+h+'"/></a:xfrm><a:prstGeom prst="roundRect"><a:avLst><a:gd name="adj" fmla="val 2000"/></a:avLst></a:prstGeom><a:ln w="12700"><a:solidFill><a:srgbClr val="D6CDBF"/></a:solidFill></a:ln></p:spPr></p:pic>'}
+function _slideXML(shapes){return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>'+shapes+'</p:spTree><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:cSld></p:sld>'}
+function _hdSlide(doc,kind){ // shared header for content slides
+  var sh=_sp(2,430000,170000,36000,610000,"C2410C",null);
+  sh+=_tsp(3,548640,150000,10800000,560000,[{t:kind.t,sz:2400,b:1}]);
+  if(kind.sub)sh+=_tsp(4,548640,660000,10800000,300000,[{t:kind.sub,sz:1150,color:"78716C"}]);
+  sh+=_tsp(5,11092000,6350000,1000000,300000,[{t:"MouRa",sz:900,color:"A8A29E",align:"r"}]);
+  return sh}
+function _bulletsSlide(doc,title,sub,bullets,cont){
+  var paras=[{t:title+(cont?" (continued)":""),sz:2400,b:1}];
+  var sh=_hdSlide(doc,{t:title+(cont?" (cont.)":""),sub:sub});
+  var body=[];bullets.forEach(function(b,i){body.push({t:b,sz:1500,bullet:"\u2022",spc:900})});
+  sh+=_tsp(10,548640,1150000,10800000,5000000,body);
+  return _slideXML(sh)}
+function _imgSlide(doc,title,sub){
+  var sh=_hdSlide(doc,{t:title,sub:sub});
+  sh+=_pic(10,2,1000000,1250000,10200000,5737500);
+  return _slideXML(sh)}
+function buildPptx(doc,pics){
+  var slides=[],rels=[],imgrels=[],srels=[],imgi=0;
+  pics=pics||[];
+  function picRid(p){var rid=10+imgrels.length;imgrels.push({rid:rid,p:p});return rid}
+  // title slide
+  var t='<p:sp>'+'<p:nvSpPr><p:cNvPr id="2" name="band"/><p:cNvSpPr/></p:nvSpPr><p:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="12192000" cy="1600000"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:solidFill><a:srgbClr val="1C1917"/></a:solidFill></p:spPr><p:txBody><a:bodyPr/><a:lstStyle/><a:p/></p:txBody></p:sp>';
+  t+=_tsp(3,838200,330000,10515600,700000,[{t:doc.title,sz:3700,b:1,color:"FFFFFF"}]);
+  t+=_tsp(4,838200,1130000,10515600,380000,[{t:doc.course,sz:1500,color:"FDEEE4"}]);
+  t+=_sp(5,838200,1460000,360000,60000,"C2410C",null);
+  t+=_tsp(6,838200,1580000,9000000,380000,[{t:"Assignment  -  "+new Date().toLocaleDateString("en-GB",{day:"2-digit",month:"long",year:"numeric"}),sz:1150,color:"78716C"}]);
+  t+=_tsp(7,838200,6250000,6000000,300000,[{t:"Generated by MouRa - An Agri AI",sz:1000,color:"A8A29E"}]);
+  var hero=(pics.length>1&&pics[1]&&pics[1].b64)?pics[1]:pics[0];if(pics.length&&hero.b64){t+=_pic(8,picRid(hero),874000,2200000,10440000,3930000)}
+  slides.push(_slideXML(t));
+  // contents slide
+  var toc=doc.secs.map(function(s){return s.h.replace(/^\d+\.\s*/,"")}).filter(function(h){return h});
+  var csh=_hdSlide(doc,{t:"Contents",sub:doc.title});
+  var cps=[];toc.slice(0,12).forEach(function(h,i){cps.push({t:(i+1)+".  "+h,sz:1300,spc:600})});
+  csh+=_tsp(10,770000,1150000,10600000,5200000,cps);
+  slides.push(_slideXML(csh));
+  // topic diagram slide (pics[1] if present)
+  if(pics.length>1&&pics[1].b64){var dsh=_hdSlide(doc,{t:"Topic at a glance",sub:doc.title});dsh+=_pic(10,picRid(pics[1]),1000000,1300000,10200000,5737500);slides.push(_slideXML(dsh))}
+  // content slides
+  doc.secs.forEach(function(s){
+    var title=s.h.replace(/^\d+\.\s*/,""),sub=doc.title+"  -  "+doc.course,bullets=[];
+    if(s.ps&&s.ps.length)s.ps.forEach(function(p){
+      var sents=String(p).replace(/([.!?])\s+/g,"$1|").split("|").map(function(x){return x.trim()}).filter(function(x){return x.length>2});
+      sents.slice(0,4).forEach(function(sn){bullets.push(_short(sn,165))})});
+    if(s.defs&&s.defs.length)s.defs.slice(0,6).forEach(function(d){bullets.push(_short(d.t+" - "+d.d,160))});
+    if(s.list&&s.list.length)s.list.slice(0,7).forEach(function(li){bullets.push(_short(li,150))});
+    if(s.table&&s.table.rows){ // table -> chart slide (pics[0] is chart) placed before bullets
+      var chart=(pics.length&&pics[0].b64)?null:null;}
+    if(!bullets.length){if(s.cse)bullets.push(s.cse.t+": "+String(s.cse.b).slice(0,150)+"...")}
+    for(var i=0;i<bullets.length;i+=6){
+      slides.push(_bulletsSlide(doc,title,sub,bullets.slice(i,i+6),i>0))}
+    if(s.table&&s.table.rows&&s.table.rows.length&&pics.length&&pics[0].b64&&/^reference data/i.test(title)){
+      var rsh=_hdSlide(doc,{t:"Reference data - chart",sub:sub});rsh+=_pic(10,picRid(pics[0]),1000000,1250000,10200000,5737500);slides.push(_slideXML(rsh))}
+  });
+  // closing slide
+  var end=_hdSlide(doc,{t:"Thank you",sub:doc.title});
+  end+=_tsp(10,2000000,2600000,8000000,1600000,[{t:"Questions and discussion",sz:2000,b:1,align:"ctr",color:"78716C"},{t:"Prepared with MouRa - verify facts and write in your own words before submission",sz:1100,align:"ctr",color:"A8A29E",spc:900}]);
+  slides.push(_slideXML(end));
+  // rels
+  var pr='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster" Target="slideMasters/slideMaster1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/>';
+  slides.forEach(function(s,i){pr+='<Relationship Id="rId'+(3+i)+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide'+(i+1)+'.xml"/>'});
+  pr+='</Relationships>';
+  var pres='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:presentation xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" saveSubsetFonts="1"><p:sldMasterIdLst><p:sldMasterId id="2147483648" r:id="rId1"/></p:sldMasterIdLst><p:sldIdLst>';
+  slides.forEach(function(s,i){pres+='<p:sldId id="'+(256+i)+'" r:id="rId'+(3+i)+'"/>'});
+  pres+='</p:sldIdLst><p:sldSz cx="12192000" cy="6858000"/><p:notesSz cx="6858000" cy="9144000"/></p:presentation>';
+  var master='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:sldMaster xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"><p:cSld><p:spTree><p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr></p:spTree></p:cSld><p:clrMap bg1="lt1" tx1="dk1" bg2="lt2" tx2="dk2" accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" hlink="hlink" folHlink="folHlink"/><p:sldLayoutIdLst><p:sldLayoutId id="2147483649" r:id="rId1"/></p:sldLayoutIdLst></p:sldMaster>';
+  var layout='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:sldLayout xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" type="blank" preserve="1"><p:cSld name="Blank"><p:spTree><p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr></p:spTree></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sldLayout>';
+  var theme='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><a:theme xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" name="MouRa"><a:clrScheme name="MouRa"><a:dk1><a:srgbClr val="1C1917"/></a:dk1><a:lt1><a:srgbClr val="FFFFFF"/></a:lt1><a:dk2><a:srgbClr val="44403C"/></a:dk2><a:lt2><a:srgbClr val="FAF7F5"/></a:lt2><a:accent1><a:srgbClr val="C2410C"/></a:accent1><a:accent2><a:srgbClr val="65A30D"/></a:accent2><a:accent3><a:srgbClr val="78716C"/></a:accent3><a:accent4><a:srgbClr val="D6CDBF"/></a:accent4><a:accent5><a:srgbClr val="FDEEE4"/></a:accent5><a:accent6><a:srgbClr val="F4EFE9"/></a:accent6><a:hlink><a:srgbClr val="C2410C"/></a:hlink><a:folHlink><a:srgbClr val="78716C"/></a:folHlink></a:clrScheme><a:fontScheme name="MouRa"><a:majorFont><a:latin typeface="Calibri Light"/><a:ea typeface=""/><a:cs typeface=""/></a:majorFont><a:minorFont><a:latin typeface="Calibri"/><a:ea typeface=""/><a:cs typeface=""/></a:minorFont></a:fontScheme><a:fmtScheme name="MouRa"><a:fillStyleLst><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:srgbClr val="F4EFE9"/></a:solidFill><a:solidFill><a:srgbClr val="D6CDBF"/></a:solidFill></a:fillStyleLst><a:lnStyleLst><a:ln w="9525"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:ln><a:ln w="19050"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:ln><a:ln w="28575"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:ln></a:lnStyleLst><a:effectStyleLst><a:effectStyle><a:effectLst/></a:effectStyle><a:effectStyle><a:effectLst/></a:effectStyle><a:effectStyle><a:effectLst/></a:effectStyle></a:effectStyleLst><a:bgFillStyleLst><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:bgFillStyleLst></a:fmtScheme></a:theme>';
+  var ct='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/ppt/presentation.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml"/><Override PartName="/ppt/slideMasters/slideMaster1.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slideMaster+xml"/><Override PartName="/ppt/slideLayouts/slideLayout1.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slideLayout+xml"/><Override PartName="/ppt/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/>';
+  slides.forEach(function(s,i){ct+='<Override PartName="/ppt/slides/slide'+(i+1)+'.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/>'});
+  ct+='</Types>';
+  var files=[
+   {n:"[Content_Types].xml",d:_u8(ct)},
+   {n:"_rels/.rels",d:_u8('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="ppt/presentation.xml"/></Relationships>')},
+   {n:"ppt/presentation.xml",d:_u8(pres)},
+   {n:"ppt/_rels/presentation.xml.rels",d:_u8(pr)},
+   {n:"ppt/slideMasters/slideMaster1.xml",d:_u8(master)},
+   {n:"ppt/slideMasters/_rels/slideMaster1.xml.rels",d:_u8('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout" Target="../slideLayouts/slideLayout1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="../theme/theme1.xml"/></Relationships>')},
+   {n:"ppt/slideLayouts/slideLayout1.xml",d:_u8(layout)},
+   {n:"ppt/slideLayouts/_rels/slideLayout1.xml.rels",d:_u8('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster" Target="../slideMasters/slideMaster1.xml"/></Relationships>')},
+   {n:"ppt/theme/theme1.xml",d:_u8(theme)}];
+  var imgs={};
+  slides.forEach(function(s,i){
+    var rs='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';
+    var m=String(s).match(/r:embed="rId(\d+)"/g)||[];
+    var used={};m.forEach(function(mm){var rid=mm.match(/rId(\d+)/)[1];if(!used[rid]){used[rid]=1;
+      var pr=imgrels.filter(function(e){return String(e.rid)===rid})[0];
+      if(pr)rs+='<Relationship Id="rId'+rid+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="../media/img'+pr.rid+'.png"/>'}});
+    rs+='</Relationships>';
+    files.push({n:"ppt/slides/slide"+(i+1)+".xml",d:_u8(s)});
+    files.push({n:"ppt/slides/_rels/slide"+(i+1)+".xml.rels",d:_u8(rs)});
+    Object.keys(used).forEach(function(rid){var pr=imgrels.filter(function(e){return String(e.rid)===rid})[0];if(pr)imgs["img"+pr.rid]=pr.p})});
+  Object.keys(imgs).forEach(function(n){files.push({n:"ppt/media/"+n+".png",d:_b64d(imgs[n].b64)})});
+  return _zipStore(files)}
+
+// ---------- download buttons ----------
+function dlAssignDocx(){if(!_LASTDOC){toast("Generate an assignment first");return}
+  try{var pics=collectDiagrams(_LASTDOC);_dl(buildDocx(_LASTDOC,pics),"MouRa-"+_safeName(_LASTDOC.title)+".docx","application/vnd.openxmlformats-officedocument.wordprocessingml.document");toast("Word document downloaded")}
+  catch(e){toast("Could not build the Word file - "+e.message)}}
+function dlAssignPptx(){if(!_LASTDOC){toast("Generate an assignment first");return}
+  try{var pics=collectDiagrams(_LASTDOC);_dl(buildPptx(_LASTDOC,pics),"MouRa-"+_safeName(_LASTDOC.title)+"-slides.pptx","application/vnd.openxmlformats-officedocument.presentationml.presentation");toast("PowerPoint downloaded")}
+  catch(e){toast("Could not build the PowerPoint - "+e.message)}}
+
+function renderDoc(doc){_LASTDOC=doc;
   var html='<div class="cover"><div class="cv-course">'+esc(doc.course)+'</div>'
    +'<div class="cv-title">'+esc(doc.title)+'</div>'
    +'<div class="cv-meta">Assignment &middot; '+new Date().toLocaleDateString("en-GB",{day:"2-digit",month:"long",year:"numeric"})+'</div>'
@@ -1571,8 +1846,10 @@ function renderDoc(doc){
    :"Prepared with MouRa from curated TNAU / ICAR-aligned course material and published policy sources. Verify all data and statistics against official publications, and express the content in your own words before submission.")+'</p></div>'
    +'<div class="assactions">'
    +'<button class="btn sm" onclick="copyAssign()">Copy text</button>'
+   +'<button class="btn sm sec" onclick="dlAssignDocx()">Word (.docx)</button>'
+   +'<button class="btn sm sec" onclick="dlAssignPptx()">Slides (.pptx)</button>'
    +'<button class="btn sm sec" onclick="dlAssign()">Download .txt</button>'
-   +'<button class="btn sm sec" onclick="window.print()">Print / Save as PDF</button></div>';
+   +'<button class="btn sm sec" onclick="window.print()">Save as PDF</button></div>';
   var txt=html.replace(/<[^>]+>/g," ");
   var words=txt.replace(/&[^;]+;/g," ").trim().split(/\s+/).length;
   var label;
