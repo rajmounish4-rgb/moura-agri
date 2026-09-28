@@ -264,9 +264,10 @@ footer.appfoot{padding:14px 18px 20px;text-align:center;font-size:10.5px;color:v
         <button class="btn sm sec" type="button" onclick="var el=document.getElementById('aiCfg');el.style.display=(el.style.display==='none'?'block':'none')">Configure AI</button>
       </div>
       <div id="aiCfg" style="display:none;margin-top:12px">
-        <p class="sub" style="margin-bottom:10px">Optional: connect a free AI key so <b>any</b> topic &mdash; any course, any crop, creative essays &mdash; gets a full AI-written assignment in the MouRa format. The ten flagship topics always use their verified offline packs. Your key is stored only in this browser and sent only to the AI provider you choose.</p>
+        <p class="sub" style="margin-bottom:10px">Optional: switch on AI so <b>any</b> topic &mdash; any course, any crop, creative essays &mdash; gets a full AI-written assignment in the MouRa format. The <b>Free online AI</b> option needs no account and no key (compact output, slower, experimental); the key options write longer assignments. The ten flagship topics always use their verified offline packs. Your key is stored only in this browser and sent only to the AI provider you choose.</p>
         <label class="f">Provider</label>
         <select class="field" id="aiProv">
+          <option value="free">Free online AI &mdash; no key needed (experimental)</option>
           <option value="gemini">Google Gemini &mdash; free key</option>
           <option value="groq">Groq &mdash; free key</option>
           <option value="openai">OpenAI &mdash; paid key</option>
@@ -1603,21 +1604,22 @@ function quickAssign(id){
   kTab("assign");
   genAssign();
 }
-var AIPROV={gemini:{name:"Google Gemini",defModel:"gemini-2.0-flash"},
+var AIPROV={free:{name:"Free online AI",defModel:"free"},gemini:{name:"Google Gemini",defModel:"gemini-2.0-flash"},
  groq:{name:"Groq",defModel:"llama-3.3-70b-versatile"},
  openai:{name:"OpenAI",defModel:"gpt-4o-mini"}};
 function aiCfg(){
   try{
     var c=JSON.parse(localStorage.getItem("mouraAI")||"null");
-    if(!c||!c.key||!AIPROV[c.provider])return null;
+    if(!c||!AIPROV[c.provider]||(c.provider!=="free"&&!c.key))return null;
     if(!c.model)c.model=AIPROV[c.provider].defModel;
     return c;
   }catch(e){return null}
 }
 function aiSave(){
   var p=$("aiProv").value,m=$("aiModel").value.trim(),k=$("aiKey").value.trim();
-  if(k.length<10){toast("Enter a valid API key");return}
+  if(p!=="free"&&k.length<10){toast("Enter a valid API key");return}
   if(!m)m=AIPROV[p].defModel;
+  if(p==="free"){k="free"}
   localStorage.setItem("mouraAI",JSON.stringify({provider:p,model:m,key:k}));
   aiRefresh();toast("AI mode connected");
 }
@@ -1625,7 +1627,7 @@ function aiClear(){localStorage.removeItem("mouraAI");aiRefresh();toast("AI mode
 function aiRefresh(){
   var c=aiCfg();
   $("aiState").innerHTML=c
-   ?'<span class="badge o">AI mode ON</span> <span class="sub">'+esc(AIPROV[c.provider].name)+" &middot; "+esc(c.model)+" &middot; any topic</span>"
+   ?'<span class="badge o">AI mode ON</span> <span class="sub">'+esc(AIPROV[c.provider].name)+(c.provider==="free"?"":" &middot; "+esc(c.model))+" &middot; any topic</span>"
    :'<span class="badge">AI mode OFF</span> <span class="sub">offline engines only &middot; 10 flagship topics</span>';
 }
 function aiPrompt(topic,code){
@@ -1648,6 +1650,11 @@ function aiPrompt(topic,code){
   return s;
 }
 function aiCall(cfg,prompt){
+  if(cfg.provider==="free"){
+    return fetch("https://text.pollinations.ai/"+encodeURIComponent(prompt)+"?model=openai")
+    .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text()})
+    .then(function(t){if(!t||t.length<200)throw new Error("empty response");return t});
+  }
   if(cfg.provider==="gemini"){
     return fetch("https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(cfg.model)+":generateContent?key="+encodeURIComponent(cfg.key),{
       method:"POST",headers:{"Content-Type":"application/json"},
@@ -1715,10 +1722,19 @@ function aiParse(txt,topic,code){
 }
 function genAI(topic,code,cfg){
   var prov=AIPROV[cfg.provider];
-  $("asOut").innerHTML='<div class="alabel"><span class="kbtag" style="background:#7c3aed">AI mode</span>Writing your assignment on <b>'+esc(topic)+'</b> with '+esc(prov.name)+' - usually 10-40 seconds. Keep this page open.</div><div class="card"><p class="sub">Generating a complete, India-specific assignment in the MouRa format. Do not navigate away.</p></div>';
-  aiCall(cfg,aiPrompt(topic,code)).then(function(txt){
+  $("asOut").innerHTML='<div class="alabel"><span class="kbtag" style="background:#7c3aed">AI mode</span>Writing your assignment on <b>'+esc(topic)+'</b> with '+esc(prov.name)+' - usually 10-40 seconds (free mode can take up to 2 minutes). Keep this page open.</div><div class="card"><p class="sub">Generating a complete, India-specific assignment in the MouRa format. Do not navigate away.</p></div>';
+  var pr=aiPrompt(topic,code);
+  if(cfg.provider==="free"){pr=pr.replace("1. Length: 1800-2500 words","1. Length: 900-1200 words")}
+  aiCall(cfg,pr).then(function(txt){
+    if(cfg.provider==="free"&&txt.indexOf("## References")<0){
+      var tail=txt.slice(-600);
+      var pr2="You are continuing a university agriculture assignment that was cut off. Continue EXACTLY where it stops - no preamble, no repetition of text already written. Complete the remaining sections in the same markdown style (## headings), up to and including ## References. Keep each section brief. The assignment stopped at: ..."+tail;
+      return aiCall(cfg,pr2).then(function(t2){return txt+"\n"+t2});
+    }
+    return txt;
+  }).then(function(txt){
     var doc=aiParse(txt,topic,code);
-    doc.kbname=prov.name+" "+cfg.model;
+    doc.kbname=cfg.provider==="free"?prov.name:prov.name+" "+cfg.model;
     if(!doc.secs.length)throw new Error("unparseable response");
     renderDoc(doc);
   }).catch(function(){
