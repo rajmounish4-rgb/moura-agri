@@ -378,7 +378,7 @@ footer.appfoot{padding:14px 18px 20px;text-align:center;font-size:10.5px;color:v
           <option value="openai">OpenAI &mdash; paid key</option>
         </select>
         <label class="f">Model (leave blank for default)</label>
-        <input type="text" id="aiModel" placeholder="leave blank for default (gemini-2.5-flash)">
+        <input type="text" id="aiModel" placeholder="leave blank for default (gemini-flash-latest)">
         <label class="f">API key</label>
         <input type="password" id="aiKey" placeholder="Paste your API key - stored only in this browser">
         <div style="height:12px"></div>
@@ -2225,7 +2225,7 @@ function renderDoc(doc){_LASTDOC=doc;
   $("asOut").innerHTML=label+html;
   window.scrollTo(0,0);
 }
-var SHARED_AI_URL=""; /* class proxy: set to your deployed Apps Script web-app URL, e.g. https://script.google.com/macros/s/AKfy.../exec - the Gemini key stays only inside that private script, never in this file */
+var SHARED_AI_URL="https://script.google.com/macros/s/AKfycbx1LhXeaQGGadCJVOgc_jfVNEnBcoU19NR3XSFKYdq276C_GUpJv5aL_Sx0aa149w/exec"; /* class proxy: set to your deployed Apps Script web-app URL, e.g. https://script.google.com/macros/s/AKfy.../exec - the Gemini key stays only inside that private script, never in this file */
 var genMode="off";
 function setGenMode(m){
   genMode=m;
@@ -2304,7 +2304,7 @@ function quickAssign(id){
   kTab("assign");
   genAssign();
 }
-var AIPROV={free:{name:"Free online AI",defModel:"free"},gemini:{name:"Google Gemini",defModel:"gemini-2.5-flash"},
+var AIPROV={free:{name:"Free online AI",defModel:"free"},gemini:{name:"Google Gemini",defModel:"gemini-flash-latest"},
  groq:{name:"Groq",defModel:"llama-3.3-70b-versatile"},
  openai:{name:"OpenAI",defModel:"gpt-4o-mini"}};
 function aiCfg(){
@@ -2402,10 +2402,16 @@ function aiCall(cfg,prompt){
     return freeCall(prompt);
   }
   if(cfg.provider==="gemini"){
-    return fetch("https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(cfg.model)+":generateContent?key="+encodeURIComponent(cfg.key),{
-      method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({contents:[{role:"user",parts:[{text:prompt}]}],generationConfig:{temperature:0.55,maxOutputTokens:8192}})
-    }).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()})
+    function gemFetch(model){
+      return fetch("https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(model)+":generateContent?key="+encodeURIComponent(cfg.key),{
+        method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({contents:[{role:"user",parts:[{text:prompt}]}],generationConfig:{temperature:0.55,maxOutputTokens:8192}})
+      }).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()});
+    }
+    return gemFetch(cfg.model).catch(function(e){
+      if(String(e.message).indexOf("404")>=0&&cfg.model!=="gemini-flash-latest")return gemFetch("gemini-flash-latest");
+      throw e;
+    })
     .then(function(j){
       var t="";
       if(j&&j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts)
