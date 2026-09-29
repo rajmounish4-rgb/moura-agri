@@ -354,7 +354,13 @@ footer.appfoot{padding:14px 18px 20px;text-align:center;font-size:10.5px;color:v
     <input type="text" id="asTopic" placeholder="e.g. Types of entrepreneurs, Rice blast, Vermicompost">
     <label class="f">Course code (optional)</label>
     <input type="text" id="asCode" placeholder="e.g. ARM 301">
-    <div style="height:14px"></div>
+    <label class="f">HOW TO WRITE IT</label>
+    <div class="chiprow" id="genModes">
+      <button type="button" id="gmOff" class="chip on" onclick="setGenMode('off')">Offline &middot; instant</button>
+      <button type="button" id="gmFree" class="chip" onclick="setGenMode('free')">Free AI &middot; no key</button>
+      <button type="button" id="gmKey" class="chip" onclick="setGenMode('key')">My AI key</button>
+    </div>
+    <p class="sub" id="gmNote" style="margin:6px 0 10px">Uses the built-in packs and databases &mdash; works with zero internet, instantly.</p>
     <button class="btn" onclick="genAssign()">Generate Assignment</button>
     <div class="card" id="aiPanel" style="margin:14px 0 4px">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
@@ -371,17 +377,19 @@ footer.appfoot{padding:14px 18px 20px;text-align:center;font-size:10.5px;color:v
           <option value="openai">OpenAI &mdash; paid key</option>
         </select>
         <label class="f">Model (leave blank for default)</label>
-        <input type="text" id="aiModel" placeholder="e.g. gemini-2.0-flash">
+        <input type="text" id="aiModel" placeholder="leave blank for default (gemini-2.5-flash)">
         <label class="f">API key</label>
         <input type="password" id="aiKey" placeholder="Paste your API key - stored only in this browser">
         <div style="height:12px"></div>
         <button class="btn sm" type="button" onclick="aiSave()">Save key</button>
+        <button class="btn sm sec" type="button" onclick="aiTest()">Test key</button>
         <button class="btn sm sec" type="button" onclick="aiClear()">Remove key</button>
-        <p class="sub" style="margin-top:10px">Free keys: aistudio.google.com/apikey (Gemini) or console.groq.com/keys (Groq). Internet is needed only while generating.</p>
+        <div id="aiTestOut" class="sub" style="margin-top:8px"></div>
+        <p class="sub" style="margin-top:10px">Free keys: aistudio.google.com/apikey (Gemini) or console.groq.com/keys (Groq). The key is stored only in this browser and sent only to the provider you choose. Internet is needed only while generating.</p>
       </div>
     </div>
     <div id="asOut"></div>
-    <div class="notecard">Three quality levels: (1) ten flagship topics render instantly from verified offline deep-dive packs; (2) with a free AI key connected (Configure AI above), any other topic - any course, any crop, creative essays - is written live by AI in this same format; (3) without a key, other topics get a structured draft synthesised from the built-in databases. Always verify facts and write in your own words before submission.</div>
+    <div class="notecard">Two writing engines, your choice every time: <b>Offline</b> writes instantly from the verified packs and built-in databases with zero internet; <b>Free AI</b> (no key) and <b>My AI key</b> write any topic - any course, any crop, creative essays - live online in the same format. Always verify facts and write in your own words before submission.</div>
   </div>
 
   <div id="k-mock" style="display:none"></div>
@@ -2216,14 +2224,41 @@ function renderDoc(doc){_LASTDOC=doc;
   $("asOut").innerHTML=label+html;
   window.scrollTo(0,0);
 }
+var genMode="off";
+function setGenMode(m){
+  genMode=m;
+  [["gmOff","off"],["gmFree","free"],["gmKey","key"]].forEach(function(p){
+    var e=document.getElementById(p[0]);
+    if(e)e.className="chip"+(genMode===p[1]?" on":"");
+  });
+  var c=aiCfg();
+  var keyBtn=document.getElementById("gmKey");
+  if(keyBtn)keyBtn.innerHTML=(c&&c.provider!=="free")?("My "+esc(AIPROV[c.provider].name)+" key"):"My AI key";
+  var note=document.getElementById("gmNote");
+  if(!note)return;
+  if(m==="off")note.innerHTML="Uses the built-in packs and databases &mdash; works with zero internet, instantly.";
+  else if(m==="free")note.innerHTML="Writes online with the free keyless AI &mdash; slower and compact, but any topic. Internet needed.";
+  else if(c&&c.provider!=="free")note.innerHTML="Writes online with your saved "+esc(AIPROV[c.provider].name)+" key &mdash; longest and best quality.";
+  else note.innerHTML="No AI key saved yet &mdash; tap <b>Configure AI</b> below, choose Google Gemini and paste your free key (2 minutes at aistudio.google.com/apikey). It stays only on this phone.";
+}
 function genAssign(){
   var topic=$("asTopic").value.trim(),code=$("asCode").value.trim()||"B.Sc. (Hons.) Agriculture";
   if(topic.length<3){toast("Enter an assignment topic");return}
+  if(genMode==="free"){genAI(topic,code,{provider:"free",model:"free",key:"free"});return}
+  if(genMode==="key"){
+    var ck=aiCfg();
+    if(!ck||ck.provider==="free"){
+      toast("Save an AI key first - it takes 2 minutes and is free");
+      var p=document.getElementById("aiCfg");if(p)p.style.display="block";
+      var kf=document.getElementById("aiKey");if(kf)kf.focus();
+      setGenMode("key");
+      return;
+    }
+    genAI(topic,code,ck);return;
+  }
   var a=findAKB(topic);
   if(a&&code==="B.Sc. (Hons.) Agriculture"&&a.course){code=a.course.split(" - ")[0]}
   if(a){renderDoc(akbDoc(a,topic,code));return}
-  var cfg=aiCfg();
-  if(cfg){genAI(topic,code,cfg);return}
   renderDoc(synthDoc(topic,code));
 }
 function quickAssign(id){
@@ -2234,7 +2269,7 @@ function quickAssign(id){
   kTab("assign");
   genAssign();
 }
-var AIPROV={free:{name:"Free online AI",defModel:"free"},gemini:{name:"Google Gemini",defModel:"gemini-2.0-flash"},
+var AIPROV={free:{name:"Free online AI",defModel:"free"},gemini:{name:"Google Gemini",defModel:"gemini-2.5-flash"},
  groq:{name:"Groq",defModel:"llama-3.3-70b-versatile"},
  openai:{name:"OpenAI",defModel:"gpt-4o-mini"}};
 function aiCfg(){
@@ -2254,11 +2289,32 @@ function aiSave(){
   aiRefresh();toast("AI mode connected");
 }
 function aiClear(){localStorage.removeItem("mouraAI");aiRefresh();toast("AI mode removed")}
+function aiTest(){
+  var p=$("aiProv").value,k=$("aiKey").value.trim(),out=$("aiTestOut");
+  if(!out)return;
+  if(p==="free"){out.innerHTML="The free AI option needs no key - just save it.";return}
+  if(k.length<10){out.innerHTML="Paste the key in the field above first.";return}
+  out.innerHTML="Testing the key...";
+  var url,opts={};
+  if(p==="gemini"){url="https://generativelanguage.googleapis.com/v1beta/models?key="+encodeURIComponent(k)}
+  else{var base=p==="groq"?"https://api.groq.com/openai/v1":"https://api.openai.com/v1";
+    url=base+"/models";opts={headers:{"Authorization":"Bearer "+k}}}
+  fetch(url,opts).then(function(r){
+    if(r.ok)return r.json().then(function(j){
+      var n=(j&&j.models?j.models.length:(j&&j.data?j.data.length:0));
+      out.innerHTML='<b style="color:var(--sage)">Key works</b> - provider reachable'+(n>0?", "+n+" models available":"")+". Tap Save key.";
+    });
+    return r.json().catch(function(){return null}).then(function(){
+      out.innerHTML='<b style="color:var(--danger)">Key rejected</b> (HTTP "+r.status+") - check you copied the full key, and that it is a '+esc(AIPROV[p].name)+' key.';
+    });
+  }).catch(function(){out.innerHTML="Could not reach the provider - check your internet and retry."});
+}
 function aiRefresh(){
   var c=aiCfg();
   $("aiState").innerHTML=c
-   ?'<span class="badge o">AI mode ON</span> <span class="sub">'+esc(AIPROV[c.provider].name)+(c.provider==="free"?"":" &middot; "+esc(c.model))+" &middot; any topic</span>"
-   :'<span class="badge">AI mode OFF</span> <span class="sub">offline engines only &middot; 10 flagship topics</span>';
+   ?'<span class="badge o">AI connected</span> <span class="sub">'+esc(AIPROV[c.provider].name)+(c.provider==="free"?"":" &middot; "+esc(c.model))+' &middot; pick it in the mode picker below</span>'
+   :'<span class="badge">AI off</span> <span class="sub">offline engine &middot; connect a key below for online writing</span>';
+  setGenMode(genMode);
 }
 function aiPrompt(topic,code){
   var s='Write a complete university assignment for a B.Sc. (Hons.) Agriculture student in India.\n';
