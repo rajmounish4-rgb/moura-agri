@@ -357,6 +357,7 @@ footer.appfoot{padding:14px 18px 20px;text-align:center;font-size:10.5px;color:v
     <label class="f">HOW TO WRITE IT</label>
     <div class="chiprow" id="genModes">
       <button type="button" id="gmOff" class="chip on" onclick="setGenMode('off')">Offline &middot; instant</button>
+      <button type="button" id="gmClass" class="chip" style="display:none" onclick="setGenMode('class')">Class AI &middot; shared</button>
       <button type="button" id="gmFree" class="chip" onclick="setGenMode('free')">Free AI &middot; no key</button>
       <button type="button" id="gmKey" class="chip" onclick="setGenMode('key')">My AI key</button>
     </div>
@@ -2224,10 +2225,14 @@ function renderDoc(doc){_LASTDOC=doc;
   $("asOut").innerHTML=label+html;
   window.scrollTo(0,0);
 }
+var SHARED_AI_URL=""; /* class proxy: set to your deployed Apps Script web-app URL, e.g. https://script.google.com/macros/s/AKfy.../exec - the Gemini key stays only inside that private script, never in this file */
 var genMode="off";
 function setGenMode(m){
   genMode=m;
-  [["gmOff","off"],["gmFree","free"],["gmKey","key"]].forEach(function(p){
+  var cb=document.getElementById("gmClass");
+  if(cb)cb.style.display=SHARED_AI_URL?"inline-block":"none";
+  if(m==="class"&&!SHARED_AI_URL){m="off";genMode="off"}
+  [["gmOff","off"],["gmClass","class"],["gmFree","free"],["gmKey","key"]].forEach(function(p){
     var e=document.getElementById(p[0]);
     if(e)e.className="chip"+(genMode===p[1]?" on":"");
   });
@@ -2237,6 +2242,7 @@ function setGenMode(m){
   var note=document.getElementById("gmNote");
   if(!note)return;
   if(m==="off")note.innerHTML="Uses the built-in packs and databases &mdash; works with zero internet, instantly.";
+  else if(m==="class")note.innerHTML="Shared class AI &mdash; your teacher&rsquo;s connected Gemini writes any topic. No setup or key needed; a daily class limit applies.";
   else if(m==="free")note.innerHTML="Writes online with the free keyless AI &mdash; slower and compact, but any topic. Internet needed.";
   else if(c&&c.provider!=="free")note.innerHTML="Writes online with your saved "+esc(AIPROV[c.provider].name)+" key &mdash; longest and best quality.";
   else note.innerHTML="No AI key saved yet &mdash; tap <b>Configure AI</b> below, choose Google Gemini and paste your free key (2 minutes at aistudio.google.com/apikey). It stays only on this phone.";
@@ -2244,6 +2250,11 @@ function setGenMode(m){
 function genAssign(){
   var topic=$("asTopic").value.trim(),code=$("asCode").value.trim()||"B.Sc. (Hons.) Agriculture";
   if(topic.length<3){toast("Enter an assignment topic");return}
+  if(genMode==="class"){
+    if(SHARED_AI_URL){genShared(topic,code);return}
+    toast("Class AI is not connected yet - using the offline engine");
+    setGenMode("off");
+  }
   if(genMode==="free"){genAI(topic,code,{provider:"free",model:"free",key:"free"});return}
   if(genMode==="key"){
     var ck=aiCfg();
@@ -2260,6 +2271,30 @@ function genAssign(){
   if(a&&code==="B.Sc. (Hons.) Agriculture"&&a.course){code=a.course.split(" - ")[0]}
   if(a){renderDoc(akbDoc(a,topic,code));return}
   renderDoc(synthDoc(topic,code));
+}
+function genShared(topic,code){
+  $("asOut").innerHTML='<div class="alabel"><span class="kbtag" style="background:#0d9488">Class AI</span>Writing your assignment on <b>'+esc(topic)+'</b> with the shared class AI - usually 10-30 seconds. Keep this page open.</div><div class="card"><p class="sub">Generating a complete, India-specific assignment in the MouRa format. Do not navigate away.</p></div>';
+  var pr=aiPrompt(topic,code);
+  fetch(SHARED_AI_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body:JSON.stringify({prompt:pr,ref:"moura-agri"})})
+  .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()})
+  .then(function(j){
+    if(!j||j.ok!==true)throw new Error((j&&j.error)||"proxy error");
+    if(!j.text||j.text.length<200)throw new Error("empty response");
+    var doc=aiParse(j.text,topic,code);
+    doc.kbname="Class AI (shared Gemini)";
+    if(!doc.secs.length)throw new Error("unparseable response");
+    renderDoc(doc);
+  })
+  .catch(function(err){
+    var msg=String(err&&err.message||err);
+    renderDoc(synthDoc(topic,code));
+    var so=$("asOut");
+    so.innerHTML='<div class="card" style="border-color:var(--danger);margin-bottom:10px"><b style="color:var(--danger)">Class AI could not write it just now</b>'
+     +'<p style="font-size:12.5px;line-height:1.5;margin-top:4px">'+esc(msg)+'. Shown below is the <b>offline version</b> of your assignment instead - you can still edit, copy and export it.</p>'
+     +'<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn sm" onclick="setGenMode(\'class\');genAssign()">Retry Class AI</button>'
+     +'<button class="btn sm sec" onclick="setGenMode(\'free\');genAssign()">Try free AI</button></div></div>'+so.innerHTML;
+  });
 }
 function quickAssign(id){
   var a=null;AKB.forEach(function(x){if(x.id===id)a=x});
