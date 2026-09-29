@@ -2282,6 +2282,11 @@ function aiCfg(){
 }
 function aiSave(){
   var p=$("aiProv").value,m=$("aiModel").value.trim(),k=$("aiKey").value.trim();
+  if(p==="free"&&k.length>=20){
+    var det=(k.indexOf("gsk_")===0)?"groq":((k.indexOf("sk-")===0)?"openai":"gemini");
+    p=det;$("aiProv").value=det;
+    toast("Key detected - saved as "+AIPROV[det].name);
+  }
   if(p!=="free"&&k.length<10){toast("Enter a valid API key");return}
   if(!m)m=AIPROV[p].defModel;
   if(p==="free"){k="free"}
@@ -2292,7 +2297,12 @@ function aiClear(){localStorage.removeItem("mouraAI");aiRefresh();toast("AI mode
 function aiTest(){
   var p=$("aiProv").value,k=$("aiKey").value.trim(),out=$("aiTestOut");
   if(!out)return;
-  if(p==="free"){out.innerHTML="The free AI option needs no key - just save it.";return}
+  if(p==="free"){
+    out.innerHTML=(k.length>=20)?
+      "You pasted a key but the provider is Free online AI - it will be ignored. Tap Save key and it will be auto-detected and saved under the right provider.":
+      "The free AI option needs no key - just save it.";
+    return;
+  }
   if(k.length<10){out.innerHTML="Paste the key in the field above first.";return}
   out.innerHTML="Testing the key...";
   var url,opts={};
@@ -2335,11 +2345,26 @@ function aiPrompt(topic,code){
   s+='7. No preamble, no closing remarks, no markdown bold or extra headings. Start directly with ## Introduction.';
   return s;
 }
+function freeTryGet(url){
+  return fetch(url).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text()})
+    .then(function(t){if(!t||t.length<200||t.indexOf("{\"error")===0)throw new Error("bad response");return t});
+}
+function freeWait(ms){return new Promise(function(res){setTimeout(res,ms)})}
+function freeCall(prompt){
+  var enc=encodeURIComponent(prompt);
+  var a=freeTryGet("https://text.pollinations.ai/"+enc+"?model=openai&referrer=moura.agri.app");
+  var b=a.catch(function(){return freeWait(900).then(function(){return freeTryGet("https://text.pollinations.ai/"+enc+"?model=openai-fast&referrer=moura.agri.app")})});
+  return b.catch(function(){return freeWait(1200).then(function(){
+    return fetch("https://text.pollinations.ai/openai",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"openai",messages:[{role:"user",content:prompt}],referrer:"moura.agri.app"})})
+    .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()})
+    .then(function(j){var t=j&&j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content;
+      if(!t||t.length<200)throw new Error("empty response");return t});
+  })});
+}
 function aiCall(cfg,prompt){
   if(cfg.provider==="free"){
-    return fetch("https://text.pollinations.ai/"+encodeURIComponent(prompt)+"?model=openai")
-    .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text()})
-    .then(function(t){if(!t||t.length<200)throw new Error("empty response");return t});
+    return freeCall(prompt);
   }
   if(cfg.provider==="gemini"){
     return fetch("https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(cfg.model)+":generateContent?key="+encodeURIComponent(cfg.key),{
@@ -2424,8 +2449,16 @@ function genAI(topic,code,cfg){
     if(!doc.secs.length)throw new Error("unparseable response");
     renderDoc(doc);
   }).catch(function(){
-    toast("AI mode failed - showing the offline version");
-    renderDoc(synthDoc(topic,code));
+    if(cfg.provider==="free"){
+      renderDoc(synthDoc(topic,code));
+      var so=$("asOut");
+      so.innerHTML='<div class="card" style="border-color:var(--danger);margin-bottom:10px"><b style="color:var(--danger)">The free AI is not responding right now</b>'
+       +'<p style="font-size:12.5px;line-height:1.5;margin-top:4px">It is a free public service with daily limits, so it gets busy or throttled at times - that is why it failed. Shown below is the <b>offline version</b> of your assignment instead. Retry in a few minutes, or use your free Gemini key (My AI key mode) - it is faster and does not have this problem.</p>'
+       +'<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn sm" onclick="setGenMode(\'free\');genAssign()">Retry free AI</button>'
+       +'<button class="btn sm sec" onclick="setGenMode(\'key\');genAssign()">Use my Gemini key</button></div></div>'+so.innerHTML;
+      return;
+    }
+    toast("AI mode failed - check your internet and key, then retry");
   });
 }
 
