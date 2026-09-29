@@ -369,7 +369,7 @@ footer.appfoot{padding:14px 18px 20px;text-align:center;font-size:10.5px;color:v
         <button class="btn sm sec" type="button" onclick="var el=document.getElementById('aiCfg');el.style.display=(el.style.display==='none'?'block':'none')">Configure AI</button>
       </div>
       <div id="aiCfg" style="display:none;margin-top:12px">
-        <p class="sub" style="margin-bottom:10px">Optional: switch on AI so <b>any</b> topic &mdash; any course, any crop, creative essays &mdash; gets a full AI-written assignment in the MouRa format. The <b>Free online AI</b> option needs no account and no key (compact output, slower, experimental); the key options write longer assignments. The ten flagship topics always use their verified offline packs. Your key is stored only in this browser and sent only to the AI provider you choose.</p>
+        <p class="sub" style="margin-bottom:10px">No key or setup is needed &mdash; <b>Class AI</b> (shared) already works for everyone: pick it in the HOW TO WRITE IT chips above. Optional: switch on AI so <b>any</b> topic &mdash; any course, any crop, creative essays &mdash; gets a full AI-written assignment in the MouRa format. The <b>Free online AI</b> option needs no account and no key (compact output, slower, experimental); the key options write longer assignments. The ten flagship topics always use their verified offline packs. Your key is stored only in this browser and sent only to the AI provider you choose.</p>
         <label class="f">Provider</label>
         <select class="field" id="aiProv">
           <option value="free">Free online AI &mdash; no key needed (experimental)</option>
@@ -2355,8 +2355,11 @@ function renderDoc(doc){_LASTDOC=doc;
 }
 var SHARED_AI_URL="https://script.google.com/macros/s/AKfycbx1LhXeaQGGadCJVOgc_jfVNEnBcoU19NR3XSFKYdq276C_GUpJv5aL_Sx0aa149w/exec"; /* class proxy: set to your deployed Apps Script web-app URL, e.g. https://script.google.com/macros/s/AKfy.../exec - the Gemini key stays only inside that private script, never in this file */
 var genMode="off";
+try{var _gm=localStorage.getItem("mouraGenMode");if(_gm&&["off","class","free","key"].indexOf(_gm)>=0)genMode=_gm}catch(e){}
+if(genMode==="off"&&SHARED_AI_URL)genMode="class";
 function setGenMode(m){
   genMode=m;
+  try{localStorage.setItem("mouraGenMode",m)}catch(e){}
   var cb=document.getElementById("gmClass");
   if(cb)cb.style.display=SHARED_AI_URL?"inline-block":"none";
   if(m==="class"&&!SHARED_AI_URL){m="off";genMode="off"}
