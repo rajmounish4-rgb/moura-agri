@@ -284,6 +284,11 @@ footer.appfoot{padding:14px 18px 20px;text-align:center;font-size:10.5px;color:v
       <h3><span id="fc6h">Weather</span></h3><p><span id="fc6p">Forecast and spraying windows for your district.</span></p>
       <span class="goarr">›</span>
     </div>
+    <div class="feat" onclick="go('jobs')">
+      <div class="fic" style="background:var(--terra-soft);color:var(--terra)"><svg viewBox="0 0 24 24" width="19" height="19" fill="none"><rect x="3" y="7" width="18" height="13" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+      <h3><span id="fc7h">Agri Jobs</span></h3><p><span id="fc7p">Daily job posts from your class group, updated by Mounish.</span></p>
+      <span class="goarr">›</span>
+    </div>
   </div>
 
   <div class="offlinebadge" id="hm-off"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Built for the field &mdash; everything except live AI works fully offline, no internet needed.</div>
@@ -370,6 +375,10 @@ footer.appfoot{padding:14px 18px 20px;text-align:center;font-size:10.5px;color:v
       </div>
       <div id="aiCfg" style="display:none;margin-top:12px">
         <p class="sub" style="margin-bottom:10px">No key or setup is needed &mdash; <b>Class AI</b> (shared) already works for everyone: pick it in the HOW TO WRITE IT chips above. Optional: switch on AI so <b>any</b> topic &mdash; any course, any crop, creative essays &mdash; gets a full AI-written assignment in the MouRa format. The <b>Free online AI</b> option needs no account and no key (compact output, slower, experimental); the key options write longer assignments. The ten flagship topics always use their verified offline packs. Your key is stored only in this browser and sent only to the AI provider you choose.</p>
+        <label class="f" id="lb-adm">Unlimited code (only for Mounish)</label>
+        <input type="password" class="field" id="aiAdmin" placeholder="leave blank - not needed for students">
+        <div style="display:flex;gap:8px;margin-top:6px"><button class="btn sm" type="button" onclick="saveAdminCode()">Save code</button><button class="btn sm sec" type="button" onclick="clearAdminCode()">Remove</button></div>
+        <div style="height:8px"></div>
         <label class="f">Provider</label>
         <select class="field" id="aiProv">
           <option value="free">Free online AI &mdash; no key needed (experimental)</option>
@@ -426,6 +435,14 @@ footer.appfoot{padding:14px 18px 20px;text-align:center;font-size:10.5px;color:v
   <div id="alerts"></div>
 </section>
 
+<!-- ================= JOBS ================= -->
+<section class="page" id="pg-jobs">
+  <h2 class="pg" id="jobs-title">Agri Jobs</h2>
+  <p class="sub" id="jobs-sub">Daily job posts from your class group &mdash; government, bank and private openings.</p>
+  <div id="jobsAdmin"></div>
+  <div id="jobsOut"><div class="spinner"></div></div>
+</section>
+
 <!-- ================= WEATHER ================= -->
 <section class="page" id="pg-weather">
   <h2 class="pg" id="w-title">Weather & Field Report</h2>
@@ -478,10 +495,11 @@ function go(pg){
   document.querySelectorAll("#bnav button").forEach(function(b){b.classList.toggle("on",b.dataset.pg===pg)});
   window.scrollTo(0,0);
   if(location.hash!=="#"+pg){location.hash=pg}
+  if(pg==="jobs"&&jobsList===null)jobsFetch();
 }
 function routeFromHash(){
   var h=location.hash.replace("#","");
-  var valid=["home","doctor","knowledge","calc","calendar","weather"];
+  var valid=["home","doctor","knowledge","calc","calendar","weather","jobs"];
   go(valid.indexOf(h)>=0?h:"home");
 }
 window.addEventListener("hashchange",routeFromHash);
@@ -590,7 +608,8 @@ function applyLang(){
   L("doc-title","doc_title");L("doc-sub","doc_sub");L("doc-ai","doc_ai");L("doc-ph1","doc_ph1");L("doc-ph2","doc_ph2");L("doc-bp","doc_btn_photo");L("doc-bt","doc_btn_text");
   var ids={"homeQ":"hm_ph","asTopic":"as_ph","aiSymTxt":"doc_phph"};
   Object.keys(ids).forEach(function(i){var e=document.getElementById(i);if(e)e.setAttribute("placeholder",t(ids[i]))});
-  L("calc-title","calc_title");L("calc-sub","calc_sub");L("cal-title","cal_title");L("cal-sub","cal_sub");L("k-title","k_title");L("k-sub","k_sub");L("w-title","w_title");L("w-sub","w_sub");L("lb-crop","lb_crop");L("lb-area","lb_area");L("lb-unit","lb_unit");L("lb-soil","lb_soil");L("calc-go","calc_go");L("cal-alerts","cal_alerts");L("lb-city","lb_city");L("w-btn1","w_go");L("w-btn2","w_geo");
+  L("calc-title","calc_title");L("calc-sub","calc_sub");L("cal-title","cal_title");L("cal-sub","cal_sub");L("k-title","k_title");L("k-sub","k_sub");L("w-title","w_title");L("w-sub","w_sub");L("lb-crop","lb_crop");L("lb-area","lb_area");L("lb-unit","lb_unit");L("lb-soil","lb_soil");L("calc-go","calc_go");L("cal-alerts","cal_alerts");L("lb-city","lb_city");L("w-btn1","w_go");L("w-btn2","w_geo");L("jobs-title","jobs_title");L("jobs-sub","jobs_sub");L("fc7h","fc7h");L("fc7p","fc7p");L("lb-adm","adm_f");
+  if(jobsList&&jobsList.length)jobsRender();else if(jobsList&&jobsList.length===0)jobsRender();
   var wqEl=document.getElementById("wq");if(wqEl)wqEl.setAttribute("placeholder",t("wq_ph"));
   var u=document.getElementById("unit");if(u){var uv=u.value;u.innerHTML='<option value="acre">'+t("m_acre")+'</option><option value="ha">'+t("m_ha")+'</option>';u.value=uv;}
   setGenMode(genMode);buildHomeStats();
@@ -601,6 +620,74 @@ function langDirective(){
   if(LANG==="hi")return "\nLANGUAGE: Write the ENTIRE response in Hindi. Use formal Hindi with standard agricultural terminology; keep key technical terms in English in brackets at first use. All section headings must be in Hindi.";
   return "";
 }
+/* ---------------- DEVICE ID / ADMIN CODE / JOBS ---------------- */
+function deviceId(){var d="";try{d=localStorage.getItem("mouraId")||""}catch(e){}
+ if(!d){d="d"+Date.now().toString(36)+Math.random().toString(36).slice(2,10);try{localStorage.setItem("mouraId",d)}catch(e){}}
+ return d}
+function adminCode(){try{return localStorage.getItem("mouraAdminCode")||""}catch(e){return ""}}
+function saveAdminCode(){var v=(document.getElementById("aiAdmin")||{}).value||"";v=v.trim();try{localStorage.setItem("mouraAdminCode",v)}catch(e){};toast(v?"Code saved - unlimited AI on":"Code removed")}
+function clearAdminCode(){try{localStorage.removeItem("mouraAdminCode")}catch(e){};var el=document.getElementById("aiAdmin");if(el)el.value="";toast("Code removed")}
+function askAdminCode(){var c=prompt("Unlimited code (only for Mounish):");if(c&&c.trim()){try{localStorage.setItem("mouraAdminCode",c.trim())}catch(e){}}}
+
+var jobsList=null;
+function jobsFetch(){
+ var el=$("jobsOut");if(!el)return;
+ el.innerHTML='<div class="spinner"></div>';
+ fetch(SHARED_AI_URL+"?action=jobs&t="+Date.now()).then(function(r){return r.json()})
+ .then(function(j){jobsList=(j&&j.jobs)||[];jobsRender()})
+ .catch(function(){jobsList=[];jobsRender()})
+}
+function jobsRender(){
+ var el=$("jobsOut");if(!el)return;
+ jobsAdminBar();
+ if(!jobsList||!jobsList.length){el.innerHTML='<div class="empty">'+t("jobs_empty")+'</div>';return}
+ el.innerHTML=jobsList.map(function(j){
+   return '<div class="card"><h3>'+esc(j.title)+(adminCode()?' <a href="#" onclick="jobDel('+j.ts+');return false" style="color:var(--danger);font-size:16px;float:right;text-decoration:none" title="delete">&times;</a>':'')+'</h3>'
+    +(j.org?'<p style="font-size:12px;color:var(--ink-dim);margin-top:2px">'+esc(j.org)+'</p>':'')
+    +(j.text?'<p style="font-size:12.5px;line-height:1.5;margin-top:6px;white-space:pre-wrap">'+esc(j.text)+'</p>':'')
+    +'<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center">'
+    +(j.last?'<span class="kbtag" style="background:var(--terra-soft);color:var(--terra)">'+t("jobs_last")+': '+esc(j.last)+'</span>':"")
+    +(j.link?'<button class="btn sm" onclick="window.open(\''+esc(j.link)+'\',\'_blank\')">'+t("jobs_open")+'</button>':"")
+    +'<button class="btn sm sec" onclick="jobShare('+j.ts+')">'+t("jobs_share")+'</button></div>'
+    +'<p style="font-size:10.5px;color:var(--ink-dim);margin-top:6px">'+new Date(j.ts).toLocaleDateString()+'</p></div>'
+ }).join("");
+}
+function jobsAdminBar(){
+ var adm=$("jobsAdmin");if(!adm)return;
+ adm.innerHTML=adminCode()?'<button class="btn sm" onclick="jobFormOpen()">'+t("jobs_add")+'</button><div style="height:10px"></div>':"";
+}
+function jobFormOpen(){
+ var el=$("jobsAdmin");
+ el.innerHTML='<div class="card"><label class="f">'+t("jobs_f_title")+'</label><input type="text" id="jfTitle" class="field" placeholder="'+t("jobs_p_title")+'">'
+ +'<label class="f">'+t("jobs_f_org")+'</label><input type="text" id="jfOrg" class="field" placeholder="'+t("jobs_p_org")+'">'
+ +'<label class="f">'+t("jobs_f_last")+'</label><input type="text" id="jfLast" class="field" placeholder="'+t("jobs_p_last")+'">'
+ +'<label class="f">'+t("jobs_f_link")+'</label><input type="text" id="jfLink" class="field" placeholder="https://...">'
+ +'<label class="f">'+t("jobs_f_text")+'</label><textarea id="jfText" class="field" rows="3" placeholder="'+t("jobs_p_text")+'"></textarea>'
+ +'<div style="display:flex;gap:8px;margin-top:10px"><button class="btn sm" onclick="jobSave()">'+t("jobs_save")+'</button><button class="btn sm sec" onclick="jobsAdminBar()">'+t("jobs_cancel")+'</button></div></div>';
+}
+function jobSave(){
+ var ti=(document.getElementById("jfTitle")||{}).value||"";
+ if(!ti.trim()){toast(t("jobs_need_title"));return}
+ var job={title:ti.trim(),org:(document.getElementById("jfOrg")||{}).value.trim(),last:(document.getElementById("jfLast")||{}).value.trim(),link:(document.getElementById("jfLink")||{}).value.trim(),text:(document.getElementById("jfText")||{}).value.trim()};
+ jobsAdminBar();
+ $("jobsOut").innerHTML='<div class="spinner"></div>';
+ fetch(SHARED_AI_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"addjob",code:adminCode(),job:job})})
+ .then(function(r){return r.json()}).then(function(j){
+   if(!j||j.ok!==true){toast((j&&j.error)||"error");jobsFetch();return}
+   toast(t("jobs_ok"));jobsFetch();
+ }).catch(function(){toast("offline - could not save");jobsFetch()});
+}
+function jobDel(ts){
+ fetch(SHARED_AI_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"deljob",code:adminCode(),ts:ts})})
+ .then(function(r){return r.json()}).then(function(){jobsFetch()}).catch(function(){jobsFetch()});
+}
+function jobShare(ts){
+ var j=(jobsList||[]).filter(function(x){return x.ts===ts})[0];if(!j)return;
+ var txt=(j.title||"")+(j.org?" - "+j.org:"")+(j.last?"\n"+t("jobs_last")+": "+j.last:"")+(j.text?"\n"+j.text:"")+(j.link?"\n"+j.link:"")+"\n\nvia MouRa - An Agri AI";
+ if(navigator.share){navigator.share({text:txt}).catch(function(){})}
+ else{var ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");toast("copied")}catch(e){}document.body.removeChild(ta)}
+}
+
 /* ---------------- CONTENT TRANSLATION (crops, soils, stages, operations, weather) ---------------- */
 var TRN={
  ta:{"Rice":"நெல்","Wheat":"கோதுமை","Maize":"மக்காச்சோளம்","Sorghum":"சோளம்","Bajra":"கம்பு","Ragi":"ராகி","Cotton":"பருத்தி","Sugarcane":"கரும்பு","Groundnut":"நிலக்கடலை","Sunflower":"சூரியகாந்தி","Sesame":"எள்","Mustard":"கடுகு","Red Gram":"துவரை","Black Gram":"உளுந்து","Green Gram":"பாசிப்பயறு","Soybean":"சோயாபீன்","Bengal Gram":"கொண்டைக்கடலை","Potato":"உருளைக்கிழங்கு","Onion":"வெங்காயம்","Tomato":"தக்காளி","Chilli":"மிளகாய்","Bhendi":"வெண்டைக்காய்","Brinjal":"கத்தரிக்காய்","Banana":"வாழை","Mango":"மாம்பழம்","Coconut":"தேங்காய்","Grapes":"திராட்சை","Tea":"தேயிலை","Coffee":"காபி",
@@ -641,6 +728,23 @@ var TR2={
  hi:{calc_title:"\u0938\u094d\u092e\u093e\u0930\u094d\u091f \u0915\u0948\u0932\u0915\u0941\u0932\u0947\u091f\u0930",calc_sub:"29 \u092b\u093c\u0938\u0932\u094b\u0902 \u0914\u0930 12 \u092e\u093f\u091f\u094d\u091f\u0940 \u092a\u094d\u0930\u0915\u093e\u0930\u094b\u0902 \u0915\u0947 \u0932\u093f\u090f \u092c\u0940\u091c \u0914\u0930 \u0909\u0930\u094d\u0935\u0930\u0915 \u0926\u0930\u0947\u0902 \u2014 \u0928\u093f\u0930\u094d\u0926\u0947\u0936\u093e\u0924\u094d\u092e\u0915 \u0938\u0941\u091d\u093e\u0935\u0964",cal_title:"\u092b\u093c\u0938\u0932 \u0915\u0948\u0932\u0947\u0902\u0921\u0930",cal_sub:"29 \u092b\u093c\u0938\u0932\u094b\u0902 \u0915\u0947 \u0932\u093f\u090f \u0905\u0935\u0938\u094d\u0925\u093e-\u0935\u093e\u0930 \u0915\u093e\u092e \u2014 \u0915\u094d\u092f\u093e \u0915\u0930\u0947\u0902 \u0914\u0930 \u0915\u092c\u0964",k_title:"\u091c\u094d\u091e\u093e\u0928 \u0915\u0947\u0902\u0926\u094d\u0930",k_sub:"\u092a\u093e\u0920\u094d\u092f\u0915\u094d\u0930\u092e, \u0936\u092c\u094d\u0926\u0915\u094b\u0936, \u0905\u0938\u093e\u0907\u0928\u092e\u0947\u0902\u091f \u0914\u0930 \u092a\u0930\u0940\u0915\u094d\u0937\u093e \u0905\u092d\u094d\u092f\u093e\u0938 \u2014 \u0938\u092c \u090f\u0915 \u091c\u0917\u0939\u0964",w_title:"\u092e\u094c\u0938\u092e \u0914\u0930 \u0916\u0947\u0924 \u0930\u093f\u092a\u094b\u0930\u094d\u091f",w_sub:"\u0932\u093e\u0907\u0935 \u0938\u094d\u0925\u093f\u0924\u093f\u092f\u093e\u0901, \u092b\u093c\u0938\u0932-\u0935\u093f\u0936\u0947\u0937 \u0938\u0932\u093e\u0939 \u0914\u0930 29 \u092b\u093c\u0938\u0932\u094b\u0902 \u0915\u0947 \u0932\u093f\u090f \u092e\u094c\u0938\u092e \u0917\u093e\u0907\u0921\u0964",lb_crop:"\u092b\u093c\u0938\u0932",lb_area:"\u092d\u0942\u092e\u093f \u0915\u094d\u0937\u0947\u0924\u094d\u0930",lb_unit:"\u0907\u0915\u093e\u0908",lb_soil:"\u092e\u093f\u091f\u094d\u091f\u0940 \u092a\u094d\u0930\u0915\u093e\u0930",calc_go:"\u0906\u0935\u0936\u094d\u092f\u0915\u0924\u093e \u092a\u0930 \u0915\u0948\u0932\u0915\u0941\u0932\u0947\u091f \u0915\u0930\u0947\u0902",cal_alerts:"\u092e\u094c\u0938\u092e\u0940 \u091a\u0947\u0924\u093e\u0935\u0928\u093f\u092f\u093e\u0901",lb_city:"\u0936\u0939\u0930 \u092f\u093e \u0917\u093e\u0901\u0935 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902",wq_ph:"\u091c\u0948\u0938\u0947 \u0915\u094b\u090f\u0902\u092c\u091f\u0942\u0930, \u0924\u0902\u091c\u093e\u0935\u0942\u0930...",kv_season:"\u092e\u094c\u0938\u092e",kv_dur:"\u0905\u0935\u0927\u093f",kv_seed:"\u092c\u0940\u091c \u0926\u0930",kv_fert:"\u0909\u0930\u094d\u0935\u0930\u0915",kv_spac:"\u0926\u0942\u0930\u0940",kv_nurs:"\u0928\u0930\u094d\u0938\u0930\u0940",kv_irr:"\u0938\u093f\u0902\u091a\u093e\u0908",kv_note:"\u092b\u093c\u0940\u0932\u094d\u0921 \u0928\u094b\u091f",kv_yield:"\u0909\u092a\u091c",kv_avoid:"\u092c\u091a\u0947\u0902",calc_req:"\u0906\u0935\u0936\u094d\u092f\u0915\u0924\u093e\u090f\u0901",kv_ph:"pH \u0938\u0940\u092e\u093e",kv_suits:"\u0909\u092a\u092f\u0941\u0915\u094d\u0924 \u092b\u093c\u0938\u0932\u0947\u0902",for_soil:"\u0906\u092a\u0915\u0940 {s} \u092e\u093f\u091f\u094d\u091f\u0940 \u0915\u0947 \u0932\u093f\u090f",mgmt:"\u092a\u094d\u0930\u092c\u0902\u0927\u0928: ",calc_disc:"\u0926\u0930\u0947\u0902 \u0928\u093f\u0930\u094d\u0926\u0947\u0936\u093e\u0924\u094d\u092e\u0915 \u0939\u0948\u0902 \u2014 \u092e\u0943\u0926\u093e \u0938\u094d\u0935\u093e\u0938\u094d\u0925\u094d\u092f \u0915\u093e\u0930\u094d\u0921 \u0914\u0930 \u0938\u094d\u0925\u093e\u0928\u0940\u092f KVK / TNAU \u0938\u093f\u092b\u093c\u093e\u0930\u0936\u093f\u0938\u0902 \u0938\u0947 \u0905\u0935\u0936\u094d\u092f\u0915 \u092a\u0941\u0937\u094d\u091f\u093f \u0915\u0930\u0947\u0902\u0964",calc_toast:"\u092e\u093e\u0928\u094d\u092f \u092d\u0942\u092e\u093f \u0915\u094d\u0937\u0947\u0924\u094d\u0930 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902",an_ha:" (\u092a\u094d\u0930\u0924\u093f \u090f\u0915\u0921\u093c \u0926\u093f\u0916\u093e\u092f\u093e \u0917\u092f\u093e; \u0915\u0941\u0932 {n} \u090f\u0915\u0921\u093c)",an_ac:" (\u092a\u094d\u0930\u0924\u093f \u090f\u0915\u0921\u093c \u0926\u093f\u0916\u093e\u092f\u093e \u0917\u092f\u093e; \u0905\u092a\u0928\u0947 \u0916\u0947\u0924 \u0915\u0947 \u0932\u093f\u090f {n} \u0917\u0941\u0923\u093e)",m_acre:"\u090f\u0915\u0921\u093c",m_ha:"\u0939\u0947\u0915\u094d\u091f\u0947\u092f\u0930",feels_like:"\u092e\u0939\u0938\u0942\u0938 \u0939\u094b \u0930\u0939\u093e ",humidity:" &middot; \u0906\u0930\u094d\u0926\u094d\u0930\u0924\u093e ",wind:" &middot; \u0939\u0935\u093e ",next7:"\u0905\u0917\u0932\u0947 7 \u0926\u093f\u0928",advisory:"\u0915\u0943\u0937\u093f \u0938\u0932\u093e\u0939",season_window:"\u092e\u094c\u0938\u092e \u0905\u0935\u0927\u093f",conds1:"\u092c\u093e\u0930\u093f\u0936 / \u0917\u0940\u0932\u093e \u092e\u094c\u0938\u092e",conds2:"\u0917\u0930\u094d\u092e\u0940 / \u0917\u0930\u092e \u0926\u093f\u0928",conds3:"\u0920\u0902\u0921 \u0932\u0939\u0930 / \u092a\u093e\u0932\u093e",conds4:"\u0924\u0947\u091c\u093c \u0939\u0935\u093e / \u0906\u0902\u0927\u0940",conds5:"\u0906\u0930\u094d\u0926\u094d\u0930 / \u0915\u094b\u0939\u0930\u093e",conds6:"\u0927\u0941\u0942\u092a / \u0938\u093e\u092b\u093c",w_toast:"\u0936\u0939\u0930 \u092f\u093e \u0917\u093e\u0901\u0935 \u0915\u093e \u0928\u093e\u092e \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902",kv_best:"उपयुक्त मिट्टियाँ",w_go:"रिपोर्ट लें",w_geo:"मेरी लोकेशन",what_do:"क्या करें",wxg_note:"पूरी सिफ़ारिशें (बीज, उर्वरक, दूरी, सिंचाई): Calc टैब खोलकर यह फसल चुनें।"}
 };
 Object.keys(TR2).forEach(function(l){ var src=TR[l]||{}; Object.keys(TR2[l]).forEach(function(k){src[k]=TR2[l][k]}); TR[l]=src; });
+
+var TR3={
+ en:{limit_title:"Today's AI assignment is used up",limit_below:"The offline version of your assignment is ready below - it is always unlimited.",limit_code:"Enter unlimited code",
+  jobs_title:"Agri Jobs",jobs_sub:"Daily job posts from your class group - government, bank and private openings.",jobs_empty:"No job posts yet - check back daily.",jobs_add:"+ Add job",jobs_last:"Last date",jobs_open:"Apply",jobs_share:"Share",
+  jobs_f_title:"Job title",jobs_p_title:"e.g. Agricultural Officer - TNPSC",jobs_f_org:"Organisation",jobs_p_org:"e.g. TNAU, NABARD, IFFCO",jobs_f_last:"Last date (optional)",jobs_p_last:"e.g. 15 Oct 2026",jobs_f_link:"Apply link (optional)",jobs_f_text:"Details (optional)",jobs_p_text:"Qualifications, salary, vacancy count...",jobs_save:"Post job",jobs_cancel:"Cancel",jobs_need_title:"Enter the job title",jobs_ok:"Job posted - everyone sees it now",
+  fc7h:"Agri Jobs",fc7p:"Daily job posts from your class group, updated by Mounish.",adm_f:"Unlimited code (only for Mounish)"},
+ ta:{limit_title:"\u0b87\u0ba9\u0bcd\u0bb1\u0bc8\u0baf AI \u0baa\u0ba3\u0bbf \u0baa\u0baf\u0ba9\u0bcd\u0baa\u0b9f\u0bc1\u0ba4\u0bcd\u0ba4\u0baa\u0bcd\u0baa\u0b9f\u0bcd\u0b9f\u0ba4\u0bc1",limit_below:"\u0b89\u0b99\u0bcd\u0b95\u0bb3\u0bcd \u0baa\u0ba3\u0bbf\u0baf\u0bbf\u0ba9\u0bcd \u0b86\u0b83\u0baa\u0bcd\u0bb2\u0bc8\u0ba9\u0bcd \u0baa\u0ba4\u0bbf\u0baa\u0bcd\u0baa\u0bc1 \u0b95\u0bc0\u0bb4\u0bcd \u0ba4\u0baf\u0bbe\u0bb0\u0bcd \u0ba8\u0bcd\u0ba4\u0bc1\u0bb3\u0bcd\u0bb3\u0ba4\u0bc1 \u2014 \u0b85\u0ba4\u0bc1 \u0b8e\u0baa\u0bcd\u0baa\u0bcb\u0ba4\u0bc1\u0bae\u0bcd \u0bb5\u0bb0\u0bae\u0bcd\u0baa\u0bc1 \u0b87\u0bb2\u0bcd\u0bb2\u0bc8.",limit_code:"\u0bb5\u0bb0\u0bae\u0bcd\u0baa\u0bb1\u0bcd\u0bb1 \u0b95\u0bc1\u0bb1\u0bbf\u0baf\u0bc0\u0b9f\u0bc8 \u0b89\u0bb3\u0bcd\u0bb3\u0bbf\u0b9f\u0bc1",
+  jobs_title:"\u0bb5\u0bc7\u0bb3\u0bbe\u0ba3\u0bcd \u0bb5\u0bc7\u0bb2\u0bc8\u0b95\u0bb3\u0bcd",jobs_sub:"\u0bb5\u0b95\u0bc1\u0baa\u0bcd\u0baa\u0bc1 \u0b95\u0bc1\u0bb4\u0bc1\u0bae\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bbf\u0bb0\u0bc1\u0ba8\u0bcd\u0ba4\u0bc1 \u0ba4\u0bbf\u0ba9\u0b9a\u0bb0\u0bbf \u0bb5\u0bc7\u0bb2\u0bc8 \u0b85\u0bb1\u0bbf\u0bb5\u0bbf\u0baa\u0bcd\u0baa\u0bc1\u0b95\u0bb3\u0bcd \u2014 \u0b85\u0bb0\u0b9a\u0bc1, \u0bb5\u0b99\u0bcd\u0b95\u0bbf \u0bae\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bcd \u0ba4\u0ba9\u0bbf\u0baf\u0bbe\u0bb0\u0bcd \u0bb5\u0bc7\u0bb2\u0bc8\u0bb5\u0bbe\u0baf\u0bcd\u0baa\u0bcd\u0baa\u0bc1\u0b95\u0bb3\u0bcd.",jobs_empty:"\u0b87\u0ba9\u0bcd\u0ba9\u0bc1\u0bae\u0bcd \u0bb5\u0bc7\u0bb2\u0bc8 \u0b85\u0bb1\u0bbf\u0bb5\u0bbf\u0baa\u0bcd\u0baa\u0bc1\u0b95\u0bb3\u0bcd \u0b87\u0bb2\u0bcd\u0bb2\u0bc8 \u2014 \u0ba4\u0bbf\u0ba9\u0bae\u0bc1\u0bae\u0bcd \u0baa\u0bbe\u0bb0\u0bc1\u0b99\u0bcd\u0b95\u0bb3\u0bcd.",jobs_add:"+ \u0bb5\u0bc7\u0bb2\u0bc8 \u0b9a\u0bc7\u0bb0\u0bcd",jobs_last:"\u0b95\u0b9f\u0bc8\u0b9a\u0bbf \u0ba4\u0bc7\u0ba4\u0bbf",jobs_open:"\u0bb5\u0bbf\u0ba3\u0bcd\u0ba3\u0baa\u0bcd\u0baa\u0bbf",jobs_share:"\u0baa\u0b99\u0bcd\u0b95\u0bbf\u0b9f\u0bc1",
+  jobs_f_title:"\u0baa\u0ba4\u0bb5\u0bbf\u0baa\u0bcd \u0baa\u0bc6\u0baf\u0bb0\u0bcd",jobs_p_title:"\u0b8e.\u0b95\u0bbe. \u0bb5\u0bc7\u0bb3\u0bbe\u0ba3\u0bcd \u0b85\u0ba4\u0bbf\u0b95\u0bbe\u0bb0\u0bbf - TNPSC",jobs_f_org:"\u0ba8\u0bbf\u0bb1\u0bc1\u0bb5\u0ba9\u0bae\u0bcd",jobs_p_org:"\u0b8e.\u0b95\u0bbe. TNAU, NABARD, IFFCO",jobs_f_last:"\u0b95\u0b9f\u0bc8\u0b9a\u0bbf \u0ba4\u0bc7\u0ba4\u0bbf (\u0bb5\u0bbf\u0bb0\u0bc1\u0baa\u0bcd\u0baa\u0bae\u0bcd)",jobs_p_last:"\u0b8e.\u0b95\u0bbe. 15 \u0b85\u0b95\u0bcd 2026",jobs_f_link:"\u0bb5\u0bbf\u0ba3\u0bcd\u0ba3\u0baa\u0bcd\u0baa\u0bc1 \u0b87\u0ba3\u0bc8\u0baa\u0bcd\u0baa\u0bc1 (\u0bb5\u0bbf\u0bb0\u0bc1\u0baa\u0bcd\u0baa\u0bae\u0bcd)",jobs_f_text:"\u0bb5\u0bbf\u0bb5\u0bb0\u0bae\u0bcd (\u0bb5\u0bbf\u0bb0\u0bc1\u0baa\u0bcd\u0baa\u0bae\u0bcd)",jobs_p_text:"\u0ba4\u0b95\u0bc1\u0ba4\u0bbf\u0b95\u0bb3\u0bcd, \u0b9a\u0bae\u0bcd\u0baa\u0bb3\u0bae\u0bcd, \u0b95\u0bbe\u0bb2\u0bbf\u0baf\u0bbf\u0b9f\u0b99\u0bcd\u0b95\u0bb3\u0bcd...",jobs_save:"\u0bb5\u0bc6\u0bb3\u0bbf\u0baf\u0bbf\u0b9f\u0bc1",jobs_cancel:"\u0bb0\u0ba4\u0bcd\u0ba4\u0bc1",jobs_need_title:"\u0baa\u0ba4\u0bb5\u0bbf\u0baa\u0bcd \u0baa\u0bc6\u0baf\u0bb0\u0bc8 \u0b89\u0bb3\u0bcd\u0bb3\u0bbf\u0b9f\u0bc1\u0b99\u0bcd\u0b95\u0bb3\u0bcd",jobs_ok:"\u0bb5\u0bc7\u0bb2\u0bc8 \u0bb5\u0bc6\u0bb3\u0bbf\u0baf\u0bbf\u0b9f\u0baa\u0bcd\u0baa\u0b9f\u0bcd\u0b9f\u0ba4\u0bc1 \u2014 \u0b85\u0ba9\u0bc8\u0bb5\u0bb0\u0bc1\u0bae\u0bcd \u0b87\u0baa\u0bcd\u0baa\u0bcb\u0ba4\u0bc1 \u0baa\u0bbe\u0bb0\u0bcd\u0b95\u0bb2\u0bbe\u0bae\u0bcd",
+  fc7h:"\u0bb5\u0bc7\u0bb3\u0bbe\u0ba3\u0bcd \u0bb5\u0bc7\u0bb2\u0bc8\u0b95\u0bb3\u0bcd",fc7p:"\u0bb5\u0b95\u0bc1\u0baa\u0bcd\u0baa\u0bc1 \u0b95\u0bc1\u0bb4\u0bc1\u0bae\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bbf\u0bb0\u0bc1\u0ba8\u0bcd\u0ba4\u0bc1 \u0ba4\u0bbf\u0ba9\u0b9a\u0bb0\u0bbf \u0bb5\u0bc7\u0bb2\u0bc8 \u0b85\u0bb1\u0bbf\u0bb5\u0bbf\u0baa\u0bcd\u0baa\u0bc1\u0b95\u0bb3\u0bcd.",adm_f:"\u0bb5\u0bb0\u0bae\u0bcd\u0baa\u0bb1\u0bcd\u0bb1 \u0b95\u0bc1\u0bb1\u0bbf\u0baf\u0bc0\u0b9f\u0bc1 (Mounish \u0bae\u0b9f\u0bcd\u0b9f\u0bc1\u0bae\u0bcd)"},
+ hi:{limit_title:"\u0906\u091c \u0915\u093e AI \u0905\u0938\u093e\u0907\u0928\u092e\u0947\u0902\u091f \u092a\u0942\u0930\u093e \u0939\u094b \u0917\u092f\u093e",limit_below:"\u0906\u092a\u0915\u0940 \u0b85\u0938\u093e\u0907\u0928\u092e\u0947\u0902\u091f \u0915\u093e \u0911\u092b\u093c\u0932\u093e\u0907\u0928 \u0938\u0902\u0938\u094d\u0915\u0930\u0923 \u0928\u0940\u091a\u0947 \u0924\u0948\u092f\u093e\u0930 \u0939\u0948 - \u092f\u0939 \u0939\u092e\u0947\u0936\u093e \u0b85\u0938\u0940\u092e\u0924 \u0939\u0948\u0964",limit_code:"\u0b85\u0938\u0940\u092e\u0924 \u0915\u094b\u0921 \u0921\u093e\u0932\u0947\u0902",
+  jobs_title:"\u0915\u0943\u0937\u093f \u0928\u094c\u0915\u0930\u093f\u092f\u093e\u0901",jobs_sub:"\u0915\u094d\u0932\u093e\u0938 \u0917\u094d\u0930\u0941\u092a \u0938\u0947 \u0930\u094b\u095e\u093c\u093e\u0928\u093e \u0928\u094c\u0915\u0930\u0940 \u0b85\u092a\u0921\u0947\u091f - \u0938\u0930\u0915\u093e\u0930\u0940, \u092c\u0948\u0902\u0915 \u0914\u0930 \u092a\u094d\u0930\u093e\u0907\u0935\u0947\u091f \u0928\u094c\u0915\u0930\u093f\u092f\u093e\u0901\u0964",jobs_empty:"\u0b85\u092d\u0940 \u0915\u094b\u0908 \u0928\u094c\u0915\u0930\u0940 \u092a\u094b\u0938\u094d\u091f \u0928\u0939\u0940\u0902 - \u0930\u094b\u095f\u093e\u0928\u093e \u0926\u0947\u0916\u0947\u0902\u0964",jobs_add:"+ \u0928\u094c\u0915\u0930\u0940 \u091c\u094b\u0921\u093c\u0947\u0902",jobs_last:"\u0b85\u0902\u0924\u093f\u092e \u0924\u093f\u0925\u093f",jobs_open:"\u0906\u0935\u0947\u0926\u0928",jobs_share:"\u0938\u093e\u091d\u093e \u0915\u0930\u0947\u0902",
+  jobs_f_title:"\u092a\u0926 \u0915\u093e \u0928\u093e\u092e",jobs_p_title:"\u091c\u0948\u0938\u0947 \u0915\u0943\u0937\u093f \u0b85\u0927\u093f\u0915\u093e\u0930\u0940 - \u0915\u0943\u0937\u093f \u0935\u093f\u092d\u093e\u0917",jobs_f_org:"\u0938\u0902\u0938\u094d\u0925\u093e",jobs_p_org:"\u091c\u0948\u0938\u0947 TNAU, NABARD, IFFCO",jobs_f_last:"\u0b85\u0902\u0924\u093f\u092e \u0924\u093f\u0925\u093f (\u0935\u0948\u0915\u0932\u094d\u092a\u093f\u0915)",jobs_p_last:"\u091c\u0948\u0938\u0947 15 \u0b85\u0915\u094d\u091f\u0942 2026",jobs_f_link:"\u0906\u0935\u0947\u0926\u0928 \u0932\u093f\u0902\u0915 (\u0935\u0948\u0915\u0932\u094d\u092a\u093f\u0915)",jobs_f_text:"\u0935\u093f\u0935\u0930\u0923 (\u0935\u0948\u0915\u0932\u094d\u092a\u093f\u0915)",jobs_p_text:"\u092f\u094b\u0917\u094d\u092f\u0924\u093e, \u0935\u0947\u0924\u0928, \u0930\u093f\u0915\u094d\u0924\u093f\u092f\u093e\u0901...",jobs_save:"\u092a\u094b\u0938\u094d\u091f \u0915\u0930\u0947\u0902",jobs_cancel:"\u0930\u0926\u094d\u0926 \u0915\u0930\u0947\u0902",jobs_need_title:"\u092a\u0926 \u0915\u093e \u0928\u093e\u092e \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902",jobs_ok:"\u0928\u094c\u0915\u0930\u0940 \u092a\u094b\u0938\u094d\u091f \u0939\u0941\u0908 - \u0b85\u092c \u0938\u092c \u0926\u0947\u0916 \u0938\u0915\u0924\u0947 \u0939\u0948\u0902",
+  fc7h:"\u0915\u0943\u0937\u093f \u0928\u094c\u0915\u0930\u093f\u092f\u093e\u0901",fc7p:"\u0915\u094d\u0932\u093e\u0938 \u0917\u094d\u0930\u0941\u092a \u0938\u0947 \u0930\u094b\u095f\u093e\u0928\u093e \u0928\u094c\u0915\u0930\u0940 \u0b85\u092a\u0921\u0947\u091f\u0964",adm_f:"\u0b85\u0938\u0940\u092e\u0924 \u0915\u094b\u0921 (\u0915\u0947\u0935\u0932 Mounish)"}
+};
+Object.keys(TR3).forEach(function(l){ var src=TR[l]||{}; Object.keys(TR3[l]).forEach(function(k){src[k]=TR3[l][k]}); TR[l]=src; });
+
 
 function buildDoctor(){
   var quick=["Leaf spots","Yellowing leaves","Wilting / drying","Holes in leaves","Stem borer dead hearts","Sucking pests - hoppers/whitefly","Powdery coating","Sooty mould","Fruit / pod damage","Root rot / wilting at base","Tuber / corm damage","Stunted growth"];
@@ -2407,9 +2511,15 @@ function genShared(topic,code){
   $("asOut").innerHTML='<div class="alabel"><span class="kbtag" style="background:#0d9488">Class AI</span>Writing your assignment on <b>'+esc(topic)+'</b> with the shared class AI - usually 10-30 seconds. Keep this page open.</div><div class="card"><p class="sub">Generating a complete, India-specific assignment in the MouRa format. Do not navigate away.</p></div>';
   var pr=aiPrompt(topic,code);
   fetch(SHARED_AI_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
-    body:JSON.stringify({prompt:pr,ref:"moura-agri",lang:LANG})})
+    body:JSON.stringify({prompt:pr,ref:"moura-agri",lang:LANG,id:deviceId(),code:adminCode()})})
   .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()})
   .then(function(j){
+    if(j&&j.limit===true){
+      renderDoc(synthDoc(topic,code));
+      var so0=$("asOut");
+      so0.innerHTML='<div class="card" style="border-color:var(--terra);margin-bottom:10px"><b style="color:var(--terra)">'+t("limit_title")+'</b><p style="font-size:12.5px;line-height:1.5;margin-top:4px">'+esc(j.error||"")+'</p><p style="font-size:12.5px;line-height:1.5;margin-top:4px">'+t("limit_below")+'</p><div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn sm" onclick="askAdminCode();genAssign()">'+t("limit_code")+'</button></div></div>'+so0.innerHTML;
+      return;
+    }
     if(!j||j.ok!==true)throw new Error((j&&j.error)||"proxy error");
     if(!j.text||j.text.length<200)throw new Error("empty response");
     var doc=aiParse(j.text,topic,code);
