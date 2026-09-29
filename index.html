@@ -226,7 +226,7 @@ footer.appfoot{padding:14px 18px 20px;text-align:center;font-size:10.5px;color:v
       <div class="mark">M</div>
       <div><h1>MouRa</h1><small>An Agri AI &middot; Ask. Learn. Grow.</small></div>
     </div>
-    <div class="lang">EN</div>
+    <button class="lang" id="langBtn" onclick="cycleLang()" style="cursor:pointer">EN</button>
   </div>
 </header>
 <main id="main">
@@ -236,80 +236,80 @@ footer.appfoot{padding:14px 18px 20px;text-align:center;font-size:10.5px;color:v
 <section class="page" id="pg-home">
   <div class="hero">
     <svg class="leafbg" viewBox="0 0 24 24" fill="none"><path d="M5 21c.5-4.5 2.3-8.6 5.6-11.4C13.9 6.8 18 5.5 21 5.5c0 3-1.3 7.1-4.1 10.4C14.1 18.7 10 20.5 5 21Z" stroke="#fff" stroke-width="1.4"/><path d="M5 21c4-6 8-9.5 13-13" stroke="#fff" stroke-width="1.4"/></svg>
-    <div class="hi"><svg viewBox="0 0 24 24" width="13" height="13" fill="none"><path d="M12 3v3M4.9 5.9l2.1 2.1M19.1 5.9 17 8M8 21h8M12 8c-3 0-5 2.5-5 5.5V17h10v-3.5c0-3-2-5.5-5-5.5Z" stroke="#a3e635" stroke-width="2" stroke-linecap="round"/></svg>MOURA &middot; AN AGRI AI</div>
-    <h2>Your farm and your degree, <em>one app</em>.</h2>
-    <p>Scan a sick plant, write university-ready assignments, revise every course and calculate anything &mdash; works in the field, even offline.</p>
+    <div class="hi" id="hm-kick"><svg viewBox="0 0 24 24" width="13" height="13" fill="none"><path d="M12 3v3M4.9 5.9l2.1 2.1M19.1 5.9 17 8M8 21h8M12 8c-3 0-5 2.5-5 5.5V17h10v-3.5c0-3-2-5.5-5-5.5Z" stroke="#a3e635" stroke-width="2" stroke-linecap="round"/></svg>MOURA &middot; AN AGRI AI</div>
+    <h2 id="hm-title">Your farm and your degree, <em>one app</em>.</h2>
+    <p id="hm-tag">Scan a sick plant, write university-ready assignments, revise every course and calculate anything &mdash; works in the field, even offline.</p>
     <div class="ctas">
-      <div class="cta main" onclick="go('doctor')"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v3M4.9 5.9l2.1 2.1M19.1 5.9 17 8M8 21h8M12 8c-3 0-5 2.5-5 5.5V17h10v-3.5c0-3-2-5.5-5-5.5Z" stroke="#1a2e05" stroke-width="2" stroke-linecap="round"/></svg>Scan a plant</div>
-      <div class="cta ghost" onclick="go('knowledge');setTimeout(function(){kTab('assign')},60)"><svg viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" stroke="#fff" stroke-width="2"/><path d="M14 2v6h6M9 13h6M9 17h6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>Write an assignment</div>
+      <div class="cta main" onclick="go('doctor')"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v3M4.9 5.9l2.1 2.1M19.1 5.9 17 8M8 21h8M12 8c-3 0-5 2.5-5 5.5V17h10v-3.5c0-3-2-5.5-5-5.5Z" stroke="#1a2e05" stroke-width="2" stroke-linecap="round"/></svg><span id="hm-cta1t">Scan a plant</span></div>
+      <div class="cta ghost" onclick="go('knowledge');setTimeout(function(){kTab('assign')},60)"><svg viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" stroke="#fff" stroke-width="2"/><path d="M14 2v6h6M9 13h6M9 17h6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg><span id="hm-cta2">Write an assignment</span></div>
     </div>
   </div>
 
   <div class="homesearch">
     <input id="homeQ" class="in" placeholder="Search a topic - blast, heterosis, MSP..." onkeydown="if(event.key==='Enter')homeSearch()">
-    <button class="btn sm" onclick="homeSearch()">Go</button>
+    <button class="btn sm" onclick="homeSearch()" id="hm-go">Go</button>
   </div>
 
   <div class="homestats" id="homeStats"></div>
 
-  <div class="section-label">WHAT'S INSIDE</div>
+  <div class="section-label" id="hm-inside">WHAT'S INSIDE</div>
   <div class="featgrid">
     <div class="feat" onclick="go('doctor')">
       <div class="fic" style="background:var(--terra-soft);color:var(--terra)"><svg viewBox="0 0 24 24" width="19" height="19" fill="none"><path d="M12 3v3M4.9 5.9l2.1 2.1M19.1 5.9 17 8M8 21h8M12 8c-3 0-5 2.5-5 5.5V17h10v-3.5c0-3-2-5.5-5-5.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
-      <h3>Plant Doctor</h3><p>Photo scan & symptom check for diseases and pests, with organic and chemical remedies.</p>
+      <h3><span id="fc1h">Plant Doctor</span></h3><p><span id="fc1p">Photo scan & symptom check for diseases and pests, with organic and chemical remedies.</span></p>
       <span class="goarr">›</span>
     </div>
     <div class="feat" onclick="go('knowledge');setTimeout(function(){kTab('assign')},60)">
       <div class="fic" style="background:var(--sage-soft);color:var(--sage)"><svg viewBox="0 0 24 24" width="19" height="19" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" stroke="currentColor" stroke-width="2"/><path d="M14 2v6h6M9 13h6M9 17h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
-      <h3>Assignments</h3><p>Full write-ups with numbers and tables &mdash; export to Word, PowerPoint or PDF.</p>
+      <h3><span id="fc2h">Assignments</span></h3><p><span id="fc2p">Full write-ups with numbers and tables &mdash; export to Word, PowerPoint or PDF.</span></p>
       <span class="goarr">›</span>
     </div>
     <div class="feat" onclick="go('knowledge');setTimeout(function(){kTab('courses')},60)">
       <div class="fic" style="background:#eef2ff;color:#4f46e5"><svg viewBox="0 0 24 24" width="19" height="19" fill="none"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V4H6.5A2.5 2.5 0 0 0 4 6.5v13Z" stroke="currentColor" stroke-width="2"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5" stroke="currentColor" stroke-width="2"/></svg></div>
-      <h3>Courses & Notes</h3><p>Every B.Sc. subject with lecture-wise study material and exam kits.</p>
+      <h3><span id="fc3h">Courses & Notes</span></h3><p><span id="fc3p">Every B.Sc. subject with lecture-wise study material and exam kits.</span></p>
       <span class="goarr">›</span>
     </div>
     <div class="feat" onclick="go('knowledge');setTimeout(function(){kTab('dict')},60)">
       <div class="fic" style="background:#fdf2f8;color:#be185d"><svg viewBox="0 0 24 24" width="19" height="19" fill="none"><path d="m19 11-8-8-8.6 8.6a2 2 0 0 0 0 2.8l5.2 5.2a2 2 0 0 0 2.8 0L19 11ZM5 2l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M2 22h20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
-      <h3>Dictionary</h3><p>Hundreds of agri terms explained for quick revision and vivas.</p>
+      <h3><span id="fc4h">Dictionary</span></h3><p><span id="fc4p">Hundreds of agri terms explained for quick revision and vivas.</span></p>
       <span class="goarr">›</span>
     </div>
     <div class="feat" onclick="go('calc')">
       <div class="fic" style="background:#fefce8;color:#a16207"><svg viewBox="0 0 24 24" width="19" height="19" fill="none"><rect x="4" y="2" width="16" height="20" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h.01M12 19h.01M16 19h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
-      <h3>Calculators</h3><p>Fertiliser doses, irrigation, economics, seed rates and more.</p>
+      <h3><span id="fc5h">Calculators</span></h3><p><span id="fc5p">Fertiliser doses, irrigation, economics, seed rates and more.</span></p>
       <span class="goarr">›</span>
     </div>
     <div class="feat" onclick="go('weather')">
       <div class="fic" style="background:#e0f2fe;color:#0369a1"><svg viewBox="0 0 24 24" width="19" height="19" fill="none"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
-      <h3>Weather</h3><p>Forecast and spraying windows for your district.</p>
+      <h3><span id="fc6h">Weather</span></h3><p><span id="fc6p">Forecast and spraying windows for your district.</span></p>
       <span class="goarr">›</span>
     </div>
   </div>
 
-  <div class="offlinebadge"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Built for the field &mdash; everything except live AI works fully offline, no internet needed.</div>
+  <div class="offlinebadge" id="hm-off"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Built for the field &mdash; everything except live AI works fully offline, no internet needed.</div>
 </section>
 
 <!-- ================= DOCTOR ================= -->
 <section class="page" id="pg-doctor">
-  <h2 class="pg">Plant Doctor</h2>
-  <p class="sub">Three quick steps to a diagnosis &mdash; or let AI read a photo of the sick plant.</p>
+  <h2 class="pg" id="doc-title">Plant Doctor</h2>
+  <p class="sub" id="doc-sub">Three quick steps to a diagnosis &mdash; or let AI read a photo of the sick plant.</p>
   <div class="card" style="background:var(--sage-soft);border-color:#cfe3b2;padding:13px">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-      <div style="font-size:12px;font-weight:800;color:var(--sage)">AI PLANT DOCTOR</div>
+      <div style="font-size:12px;font-weight:800;color:var(--sage)" id="doc-ai">AI PLANT DOCTOR</div>
       <div id="docAIBadge" style="font-family:var(--mono);font-size:9.5px;letter-spacing:.4px;border:1px solid #cfe3b2;background:#fff;border-radius:999px;padding:3px 9px;color:#3f6212"></div>
     </div>
     <label for="photoIn" style="display:flex;align-items:center;gap:10px;border:1.5px dashed #a3c47c;border-radius:12px;padding:11px 12px;cursor:pointer;background:rgba(255,255,255,.6)">
       <svg viewBox="0 0 24 24" width="21" height="21" fill="none" style="flex:0 0 21px"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z" stroke="#65a30d" stroke-width="1.8"/><circle cx="12" cy="13.5" r="3.2" stroke="#65a30d" stroke-width="1.8"/></svg>
-      <div><div style="font-size:12.5px;font-weight:700">Take or choose a photo of the plant</div>
-      <div style="font-size:10.5px;color:var(--ink-dim)">Leaf, stem, fruit, pest or the whole plant</div></div>
+      <div><div style="font-size:12.5px;font-weight:700" id="doc-ph1">Take or choose a photo of the plant</div>
+      <div style="font-size:10.5px;color:var(--ink-dim)" id="doc-ph2">Leaf, stem, fruit, pest or the whole plant</div></div>
     </label>
     <input type="file" id="photoIn" accept="image/*" capture="environment" style="display:none">
     <img id="photoPrev" style="width:100%;border-radius:10px;margin-top:10px;display:none" alt="photo of the sick plant">
     <textarea id="aiSymTxt" class="ta" rows="3" style="margin-top:9px" placeholder="Describe what you saw - e.g. rice leaves with oval grey spots with dark borders, field patchy, started after last week's rain"></textarea>
     <div class="chiprow" style="margin:6px 0 0" id="docQuick"></div>
     <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-      <button class="btn sm" style="background:var(--terra);border-color:var(--terra);color:#fff" onclick="aiPhotoDiag()">Diagnose from photo</button>
-      <button class="btn sm" onclick="aiTextDiag()">Diagnose from description</button>
+      <button class="btn sm" style="background:var(--terra);border-color:var(--terra);color:#fff" onclick="aiPhotoDiag()"><span id="doc-bp">Diagnose from photo</span></button>
+      <button class="btn sm" onclick="aiTextDiag()"><span id="doc-bt">Diagnose from description</span></button>
     </div>
     <div id="aiDocOut"></div>
   </div>
@@ -328,11 +328,11 @@ footer.appfoot{padding:14px 18px 20px;text-align:center;font-size:10.5px;color:v
   <h2 class="pg">Knowledge Hub</h2>
   <p class="sub">Courses, dictionary, assignments and exam practice &mdash; the student side of MouRa.</p>
   <div class="subnav" id="knav">
-    <button class="chip" data-k="search" onclick="kTab('search')">Search</button>
-    <button class="chip on" data-k="courses" onclick="kTab('courses')">Course Finder</button>
-    <button class="chip" data-k="dict" onclick="kTab('dict')">Dictionary</button>
-    <button class="chip" data-k="assign" onclick="kTab('assign')">Assignments</button>
-    <button class="chip" data-k="mock" onclick="kTab('mock')">Mock Test</button>
+    <button class="chip" data-k="search" onclick="kTab('search')"><span id="kn-search">Search</span></button>
+    <button class="chip on" data-k="courses" onclick="kTab('courses')"><span id="kn-courses">Course Finder</span></button>
+    <button class="chip" data-k="dict" onclick="kTab('dict')"><span id="kn-dict">Dictionary</span></button>
+    <button class="chip" data-k="assign" onclick="kTab('assign')"><span id="kn-assign">Assignments</span></button>
+    <button class="chip" data-k="mock" onclick="kTab('mock')"><span id="kn-mock">Mock Test</span></button>
   </div>
 
   <div id="k-search" style="display:none">
@@ -350,19 +350,19 @@ footer.appfoot{padding:14px 18px 20px;text-align:center;font-size:10.5px;color:v
   </div>
 
   <div id="k-assign" style="display:none">
-    <label class="f">Assignment topic</label>
+    <label class="f" id="lb-topic">Assignment topic</label>
     <input type="text" id="asTopic" placeholder="e.g. Types of entrepreneurs, Rice blast, Vermicompost">
-    <label class="f">Course code (optional)</label>
+    <label class="f" id="lb-code">Course code (optional)</label>
     <input type="text" id="asCode" placeholder="e.g. ARM 301">
-    <label class="f">HOW TO WRITE IT</label>
+    <label class="f" id="lb-how">HOW TO WRITE IT</label>
     <div class="chiprow" id="genModes">
-      <button type="button" id="gmOff" class="chip on" onclick="setGenMode('off')">Offline &middot; instant</button>
-      <button type="button" id="gmClass" class="chip" style="display:none" onclick="setGenMode('class')">Class AI &middot; shared</button>
-      <button type="button" id="gmFree" class="chip" onclick="setGenMode('free')">Free AI &middot; no key</button>
+      <button type="button" id="gmOff" class="chip on" onclick="setGenMode('off')"><span id="gm-off-l">Offline &middot; instant</span></button>
+      <button type="button" id="gmClass" class="chip" style="display:none" onclick="setGenMode('class')"><span id="gm-class-l">Class AI &middot; shared</span></button>
+      <button type="button" id="gmFree" class="chip" onclick="setGenMode('free')"><span id="gm-free-l">Free AI &middot; no key</span></button>
       <button type="button" id="gmKey" class="chip" onclick="setGenMode('key')">My AI key</button>
     </div>
     <p class="sub" id="gmNote" style="margin:6px 0 10px">Uses the built-in packs and databases &mdash; works with zero internet, instantly.</p>
-    <button class="btn" onclick="genAssign()">Generate Assignment</button>
+    <button class="btn" onclick="genAssign()" id="btn-gen">Generate Assignment</button>
     <div class="card" id="aiPanel" style="margin:14px 0 4px">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
         <div id="aiState"></div>
@@ -448,12 +448,12 @@ footer.appfoot{padding:14px 18px 20px;text-align:center;font-size:10.5px;color:v
 </main>
 <footer class="appfoot">MouRa &middot; built on TNAU / ICAR course content &middot; works offline after first load except live weather<br>Verify field recommendations with your local KVK.</footer>
 <nav class="bottomnav" id="bnav">
-  <button data-pg="home" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/></svg>Home</button>
-  <button data-pg="doctor" onclick="go('doctor')"><svg viewBox="0 0 24 24"><path d="M12 3v3M4.9 5.9l2.1 2.1M19.1 5.9 17 8M8 21h8M12 8c-3 0-5 2.5-5 5.5V17h10v-3.5c0-3-2-5.5-5-5.5z"/></svg>Doctor</button>
-  <button data-pg="knowledge" onclick="go('knowledge')"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V4H6.5A2.5 2.5 0 0 0 4 6.5v13zM4 19.5A2.5 2.5 0 0 0 6.5 22H20"/></svg>Knowledge</button>
-  <button data-pg="calc" onclick="go('calc')"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01"/></svg>Calc</button>
-  <button data-pg="calendar" onclick="go('calendar')"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18M8 15h3"/></svg>Calendar</button>
-  <button data-pg="weather" onclick="go('weather')"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 19h14a3 3 0 1 0-1.9-5.4A6 6 0 0 0 5.2 15 3 3 0 0 0 5 19z"/></svg>Weather</button>
+  <button data-pg="home" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/></svg><span id="nv-home">Home</span></button>
+  <button data-pg="doctor" onclick="go('doctor')"><svg viewBox="0 0 24 24"><path d="M12 3v3M4.9 5.9l2.1 2.1M19.1 5.9 17 8M8 21h8M12 8c-3 0-5 2.5-5 5.5V17h10v-3.5c0-3-2-5.5-5-5.5z"/></svg><span id="nv-doctor">Doctor</span></button>
+  <button data-pg="knowledge" onclick="go('knowledge')"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V4H6.5A2.5 2.5 0 0 0 4 6.5v13zM4 19.5A2.5 2.5 0 0 0 6.5 22H20"/></svg><span id="nv-knowledge">Knowledge</span></button>
+  <button data-pg="calc" onclick="go('calc')"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01"/></svg><span id="nv-calc">Calc</span></button>
+  <button data-pg="calendar" onclick="go('calendar')"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18M8 15h3"/></svg><span id="nv-calendar">Calendar</span></button>
+  <button data-pg="weather" onclick="go('weather')"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 19h14a3 3 0 1 0-1.9-5.4A6 6 0 0 0 5.2 15 3 3 0 0 0 5 19z"/></svg><span id="nv-weather">Weather</span></button>
 </nav>
 </div>
 <div class="toast" id="toast"></div>
@@ -491,10 +491,10 @@ function buildHomeStats(){
   Object.keys(CURR).forEach(function(p){Object.keys(CURR[p]).forEach(function(s){(CURR[p][s]||[]).forEach(function(c){if(c.code&&c.code.indexOf("SYLLABUS")<0)subj++})})});
   var el=document.getElementById("homeStats");
   if(el)el.innerHTML=
-   '<div class="hs"><b>'+subj+'</b><span>Subjects</span></div>'+
-   '<div class="hs"><b>'+(AKB.length)+'</b><span>Topic packs</span></div>'+
-   '<div class="hs"><b>'+(DIS.length)+'</b><span>Diseases DB</span></div>'+
-   '<div class="hs"><b>'+(DICT.length)+'</b><span>Terms</span></div>';
+   '<div class="hs"><b>'+subj+'</b><span>'+t('st_subj')+'</span></div>'+
+   '<div class="hs"><b>'+(AKB.length)+'</b><span>'+t('st_pack')+'</span></div>'+
+   '<div class="hs"><b>'+(DIS.length)+'</b><span>'+t('st_dis')+'</span></div>'+
+   '<div class="hs"><b>'+(DICT.length)+'</b><span>'+t('st_terms')+'</span></div>';
 }
 function homeSearch(){
   var q=document.getElementById("homeQ").value.trim();
@@ -513,6 +513,89 @@ function symGroup(s){
   if(/(wilt|stunt|dying|dead|dwarf|whole|patch|collar|stand|lodg|suck|hopper|grub|beetle|aphid|thrips)/.test(t))return "Whole plant & insects";
   if(/(rot|gall|ear|head|panicle|boll|pod|fruit|grain|tuber|bunch|nut|berry|seed|flower|bloom)/.test(t))return "Fruit, ear & storage";
   return "Other signs";
+}
+/* ---------------- LANGUAGE ---------------- */
+var LANG="en";
+try{LANG=localStorage.getItem("mouraLang")||"en"}catch(e){}
+var TR={
+ en:{nav_home:"Home",nav_doctor:"Doctor",nav_knowledge:"Knowledge",nav_calc:"Calc",nav_calendar:"Calendar",nav_weather:"Weather",
+  kn_search:"Search",kn_courses:"Course Finder",kn_dict:"Dictionary",kn_assign:"Assignments",kn_mock:"Mock Test",
+  hm_kick:"MOURA \u00b7 AN AGRI AI",hm_title:"Your farm and your degree, <em>one app</em>.",hm_tag:"Scan a sick plant, write university-ready assignments, revise every course and calculate anything \u2014 works in the field, even offline.",
+  hm_cta1:"Scan a plant",hm_cta2:"Write an assignment",hm_go:"Go",hm_inside:"WHAT'S INSIDE",
+  hm_ph:"Search a topic - blast, heterosis, MSP...",hm_off:"Built for the field \u2014 everything except live AI works fully offline, no internet needed.",
+  fc1h:"Plant Doctor",fc1p:"Photo scan & symptom check for diseases and pests, with organic and chemical remedies.",
+  fc2h:"Assignments",fc2p:"Full write-ups with numbers and tables \u2014 export to Word, PowerPoint or PDF.",
+  fc3h:"Courses & Notes",fc3p:"Every B.Sc. subject with lecture-wise study material and exam kits.",
+  fc4h:"Dictionary",fc4p:"Hundreds of agri terms explained for quick revision and vivas.",
+  fc5h:"Calculators",fc5p:"Fertiliser doses, irrigation, economics, seed rates and more.",
+  fc6h:"Weather",fc6p:"Forecast and spraying windows for your district.",
+  st_subj:"Subjects",st_pack:"Topic packs",st_dis:"Diseases DB",st_terms:"Terms",
+  lb_topic:"Assignment topic",lb_code:"Course code (optional)",lb_how:"HOW TO WRITE IT",gen:"Generate Assignment",
+  m_off:"Offline \u00b7 instant",m_class:"Class AI \u00b7 shared",m_free:"Free AI \u00b7 no key",m_key:"My AI key",
+  doc_title:"Plant Doctor",doc_sub:"Three quick steps to a diagnosis \u2014 or let AI read a photo of the sick plant.",
+  doc_ai:"AI PLANT DOCTOR",doc_ph1:"Take or choose a photo of the plant",doc_ph2:"Leaf, stem, fruit, pest or the whole plant",
+  doc_phph:"Describe what you saw - e.g. rice leaves with oval grey spots, field patchy, started after last week's rain",
+  doc_btn_photo:"Diagnose from photo",doc_btn_text:"Diagnose from description",
+  as_ph:"e.g. Types of entrepreneurs, Rice blast, Vermicompost"},
+ ta:{nav_home:"முகப்பு",nav_doctor:"மருத்துவர்",nav_knowledge:"அறிவு",nav_calc:"கணிப்பான்",nav_calendar:"நாட்காட்டி",nav_weather:"வானிலை",
+  kn_search:"தேடு",kn_courses:"பாடத்திட்டம்",kn_dict:"அகராதி",kn_assign:"பணிகள்",kn_mock:"மாதிரி தேர்வு",
+  hm_kick:"MOURA \u00b7 ஒரு வேளாண் AI",hm_title:"உங்கள் பண்ணையும் பட்டப்படிப்பும், <em>ஒரே ஆப்</em>.",hm_tag:"நோயுள்ள பயிரை ஸ்கேன் செய்யுங்கள், பல்கலைக்கழக தரத்தில் பணிகளை எழுதுங்கள், ஒவ்வொரு பாடத்தையும் திரும்பப் படியுங்கள் \u2014 இணையம் இல்லாமலும் வேலை செய்யும்.",
+  hm_cta1:"பயிரை ஸ்கேன் செய்",hm_cta2:"பணி எழுது",hm_go:"செல்",hm_inside:"உள்ளே என்ன இருக்கிறது",
+  hm_ph:"ஒரு தலைப்பைத் தேடுங்கள்...",hm_off:"வயலுக்காக உருவாக்கப்பட்டது \u2014 AI ஐத் தவிர மற்ற எல்லாம் இணையம் இல்லாமலேயே வேலை செய்யும்.",
+  fc1h:"பயிர் மருத்துவர்",fc1p:"நோய் மற்றும் பூச்சி அறியும் பரிசோதனை \u2014 இயற்கை மற்றும் வேதியியல் தீர்வுகளுடன்.",
+  fc2h:"பணிகள்",fc2p:"எண்கள் மற்றும் அட்டவணைகளுடன் முழு பணிகள் \u2014 Word, PowerPoint, PDF ஏற்றுமதி.",
+  fc3h:"பாடங்கள் & குறிப்புகள்",fc3p:"ஒவ்வொரு B.Sc. பாடத்திற்கும் விரிவுரை அடிப்படையிலான படிப்புக் குறிப்புகள்.",
+  fc4h:"அகராதி",fc4p:"விரைவான மீள்பார்வைக்கு நூற்றுக்கணக்கான வேளாண் சொற்கள்.",
+  fc5h:"கணிப்பான்கள்",fc5p:"உரம், நீர்ப்பாசனம், பொருளாதாரம், விதை அளவுகள்.",
+  fc6h:"வானிலை",fc6p:"உங்கள் மாவட்டத்திற்கான வானிலை மற்றும் தெளிக்கும் நேரம்.",
+  st_subj:"பாடங்கள்",st_pack:"தொகுப்புகள்",st_dis:"நோய் DB",st_terms:"சொற்கள்",
+  lb_topic:"பணியின் தலைப்பு",lb_code:"பாடத்திட்டக் குறியீடு (விருப்பத்தேர்வு)",lb_how:"எப்படி எழுதுவது",gen:"பணியை உருவாக்கு",
+  m_off:"ஆஃப்லைன் \u00b7 உடனடி",m_class:"வகுப்பு AI \u00b7 பகிர்வு",m_free:"இலவச AI \u00b7 சாவி இல்லை",m_key:"என் AI சாவி",
+  doc_title:"பயிர் மருத்துவர்",doc_sub:"நோயைக் கண்டறிய மூன்று எளிய படிகள் \u2014 அல்லது AI பயிரின் படத்தைப் பார்க்கட்டும்.",
+  doc_ai:"AI பயிர் மருத்துவர்",doc_ph1:"பயிரின் புகைப்படத்தை எடுக்கவும் அல்லது தேர்ந்தெடுக்கவும்",doc_ph2:"இலை, தண்டு, காய், பூச்சி அல்லது முழு பயிர்",
+  doc_phph:"நீங்கள் கண்டதை விவரியுங்கள் \u2014 எ.கா. நெல் இலைகளில் சாம்பல் புள்ளிகள்...",
+  doc_btn_photo:"புகைப்படத்திலிருந்து கண்டறி",doc_btn_text:"விவரணையிலிருந்து கண்டறி",
+  as_ph:"எ.கா. நெல் அறுவடை, மேலாண்மை, மண்புழு உரம்"},
+ hi:{nav_home:"होम",nav_doctor:"डॉक्टर",nav_knowledge:"ज्ञान",nav_calc:"कैल्क",nav_calendar:"कैलेंडर",nav_weather:"मौसम",
+  kn_search:"खोजें",kn_courses:"कोर्स",kn_dict:"शब्दकोश",kn_assign:"असाइनमेंट",kn_mock:"मॉक टेस्ट",
+  hm_kick:"MOURA \u00b7 एक कृषि AI",hm_title:"आपका खेत और आपकी डिग्री, <em>एक ही ऐप</em>.",hm_tag:"बीमार पौधे को स्कैन करें, यूनिवर्सिटी स्तर के असाइनमेंट लिखें, हर विषय दोहराएँ \u2014 बिना इंटरनेट भी चलता है।",
+  hm_cta1:"पौधा स्कैन करें",hm_cta2:"असाइनमेंट लिखें",hm_go:"जाओ",hm_inside:"अंदर क्या है",
+  hm_ph:"कोई विषय खोजें...",hm_off:"खेत के लिए बनाया गया \u2014 AI के अलावा सब कुछ बिना इंटरनेट काम करता है।",
+  fc1h:"प्लांट डॉक्टर",fc1p:"रोग और कीट पहचान \u2014 जैविक और रासायनिक उपायों के साथ।",
+  fc2h:"असाइनमेंट",fc2p:"आंकड़ों और तालिकाओं के साथ पूर्ण लेखन \u2014 Word, PowerPoint, PDF में।",
+  fc3h:"पाठ्यक्रम और नोट्स",fc3p:"हर B.Sc. विषय के लिए व्याख्यान आधारित अध्ययन सामग्री।",
+  fc4h:"शब्दकोश",fc4p:"त्वरित दोहराव के लिए सैकड़ों कृषि शब्द।",
+  fc5h:"कैलकुलेटर",fc5p:"उर्वरक, सिंचाई, अर्थशास्त्र, बीज दरें।",
+  fc6h:"मौसम",fc6p:"आपके जिले का मौसम और छिड़काव समय।",
+  st_subj:"विषय",st_pack:"टॉपिक पैक",st_dis:"रोग DB",st_terms:"शब्द",
+  lb_topic:"असाइनमेंट विषय",lb_code:"कोर्स कोड (वैकल्पिक)",lb_how:"कैसे लिखें",gen:"असाइनमेंट बनाएँ",
+  m_off:"ऑफ़लाइन \u00b7 तुरंत",m_class:"क्लास AI \u00b7 शेयर्ड",m_free:"फ्री AI \u00b7 बिना की",m_key:"मेरी AI की",
+  doc_title:"प्लांट डॉक्टर",doc_sub:"निदान के लिए तीन आसान कदम \u2014 या AI को पौधे की फोटो पढ़ने दें।",
+  doc_ai:"AI प्लांट डॉक्टर",doc_ph1:"पौधे की फोटो लें या चुनें",doc_ph2:"पत्ता, तना, फल, कीट या पूरा पौधा",
+  doc_phph:"जो देखा उसे लिखें \u2014 जैसे धान के पत्तों पर भूरे धब्बे...",
+  doc_btn_photo:"फोटो से निदान",doc_btn_text:"विवरण से निदान",
+  as_ph:"जैसे धान झुलसा, खेती प्रबंधन, वर्मीकम्पोस्ट"}
+};
+function t(k){return (TR[LANG]&&TR[LANG][k])||TR.en[k]||k}
+function setLang(l){LANG=l;try{localStorage.setItem("mouraLang",l)}catch(e){}applyLang()}
+function cycleLang(){setLang(LANG==="en"?"ta":(LANG==="ta"?"hi":"en"))}
+function L(id,key){var e=document.getElementById(id);if(e)e.innerHTML=t(key)}
+function applyLang(){
+  var b=document.getElementById("langBtn");if(b)b.textContent=(LANG==="en")?"EN":(LANG==="ta"?"\u0ba4":"\u0939\u093f");
+  L("nv-home","nav_home");L("nv-doctor","nav_doctor");L("nv-knowledge","nav_knowledge");L("nv-calc","nav_calc");L("nv-calendar","nav_calendar");L("nv-weather","nav_weather");
+  L("kn-search","kn_search");L("kn-courses","kn_courses");L("kn-dict","kn_dict");L("kn-assign","kn_assign");L("kn-mock","kn_mock");
+  L("hm-kick","hm_kick");L("hm-title","hm_title");L("hm-tag","hm_tag");L("hm-cta1t","hm_cta1");L("hm-cta2","hm_cta2");L("gm-off-l","m_off");L("gm-class-l","m_class");L("gm-free-l","m_free");L("hm-go","hm_go");L("hm-inside","hm_inside");L("hm-off","hm_off");
+  L("fc1h","fc1h");L("fc1p","fc1p");L("fc2h","fc2h");L("fc2p","fc2p");L("fc3h","fc3h");L("fc3p","fc3p");L("fc4h","fc4h");L("fc4p","fc4p");L("fc5h","fc5h");L("fc5p","fc5p");L("fc6h","fc6h");L("fc6p","fc6p");
+  L("lb-topic","lb_topic");L("lb-code","lb_code");L("lb-how","lb_how");L("btn-gen","gen");
+  L("doc-title","doc_title");L("doc-sub","doc_sub");L("doc-ai","doc_ai");L("doc-ph1","doc_ph1");L("doc-ph2","doc_ph2");L("doc-bp","doc_btn_photo");L("doc-bt","doc_btn_text");
+  var ids={"homeQ":"hm_ph","asTopic":"as_ph","aiSymTxt":"doc_phph"};
+  Object.keys(ids).forEach(function(i){var e=document.getElementById(i);if(e)e.setAttribute("placeholder",t(ids[i]))});
+  setGenMode(genMode);buildHomeStats();
+}
+function langDirective(){
+  if(LANG==="ta")return "\nLANGUAGE: Write the ENTIRE response in Tamil. Use formal Tamil with standard agricultural terminology; keep key technical terms in English in brackets at first use. All section headings must be in Tamil.";
+  if(LANG==="hi")return "\nLANGUAGE: Write the ENTIRE response in Hindi. Use formal Hindi with standard agricultural terminology; keep key technical terms in English in brackets at first use. All section headings must be in Hindi.";
+  return "";
 }
 function buildDoctor(){
   var quick=["Leaf spots","Yellowing leaves","Wilting / drying","Holes in leaves","Stem borer dead hearts","Sucking pests - hoppers/whitefly","Powdery coating","Sooty mould","Fruit / pod damage","Root rot / wilting at base","Tuber / corm damage","Stunted growth"];
@@ -616,7 +699,7 @@ function aiTextDiag(){
    +'ORGANIC & CULTURAL CONTROL - specific to India: neem or other botanical formulations with concentration, Trichoderma or other biocontrol agents, pheromone/sticky traps, and the cultural practices that matter\n'
    +'CHEMICAL CONTROL - CIB&RC registered products available in India, each with common name, dose per litre or per ha, and spray timing; mention pre-harvest interval and safety gear\n'
    +'PREVENTION - 2-3 points\n'
-   +'Keep it under 350 words. '+docPromptBase();
+   +'Keep it under 350 words. '+langDirective()+docPromptBase();
   docAIThink("Thinking - usually 10-30 seconds...");
   aiCall(cfg,p).then(function(txt){docAICard("AI diagnosis - organic & chemical options",txt)})
    .catch(function(){docAIThink("AI call failed - check your internet and try again. The offline symptom tool below always works.")});
@@ -664,7 +747,7 @@ function aiPhotoDiag(){
      +'ORGANIC & CULTURAL CONTROL - specific to India: neem or other botanical formulations with concentration, Trichoderma or other biocontrol agents, pheromone/sticky traps, and the cultural practices that matter\n'
      +'CHEMICAL CONTROL - CIB&RC registered products available in India, each with common name, dose per litre or per ha, and spray timing; mention pre-harvest interval and safety gear\n'
      +'PREVENTION - 2-3 points\n'
-     +'Keep it under 350 words. If the photo is unclear or the problem is not visible, say exactly that and list what to photograph instead. '+docPromptBase();
+     +'Keep it under 350 words. If the photo is unclear or the problem is not visible, say exactly that and list what to photograph instead. '+langDirective()+docPromptBase();
     fetch("https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(cfg.model)+":generateContent?key="+encodeURIComponent(cfg.key),{
       method:"POST",headers:{"Content-Type":"application/json"},
       body:JSON.stringify({contents:[{role:"user",parts:[{text:p},{inline_data:{mime_type:"image/jpeg",data:b64}}]}],generationConfig:{temperature:0.4,maxOutputTokens:2048}})
@@ -2238,7 +2321,7 @@ function setGenMode(m){
   });
   var c=aiCfg();
   var keyBtn=document.getElementById("gmKey");
-  if(keyBtn)keyBtn.innerHTML=(c&&c.provider!=="free")?("My "+esc(AIPROV[c.provider].name)+" key"):"My AI key";
+  if(keyBtn)keyBtn.innerHTML=(c&&c.provider!=="free")?(esc(AIPROV[c.provider].name)+" \u00b7 key"):t("m_key");
   var note=document.getElementById("gmNote");
   if(!note)return;
   if(m==="off")note.innerHTML="Uses the built-in packs and databases &mdash; works with zero internet, instantly.";
@@ -2276,7 +2359,7 @@ function genShared(topic,code){
   $("asOut").innerHTML='<div class="alabel"><span class="kbtag" style="background:#0d9488">Class AI</span>Writing your assignment on <b>'+esc(topic)+'</b> with the shared class AI - usually 10-30 seconds. Keep this page open.</div><div class="card"><p class="sub">Generating a complete, India-specific assignment in the MouRa format. Do not navigate away.</p></div>';
   var pr=aiPrompt(topic,code);
   fetch(SHARED_AI_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
-    body:JSON.stringify({prompt:pr,ref:"moura-agri"})})
+    body:JSON.stringify({prompt:pr,ref:"moura-agri",lang:LANG})})
   .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()})
   .then(function(j){
     if(!j||j.ok!==true)throw new Error((j&&j.error)||"proxy error");
@@ -2377,7 +2460,7 @@ function aiPrompt(topic,code){
   s+='4. Reference Data section: exactly one table. First row is the header. Every row is pipe-separated, like: | Parameter | Value | Relevance |\n';
   s+='5. References: real verifiable sources (textbooks, TNAU Agritech Portal, ICAR and government publications); never invent page numbers.\n';
   s+='6. Case Study: 150-250 words, a real Indian example with named institutions where you are confident.\n';
-  s+='7. No preamble, no closing remarks, no markdown bold or extra headings. Start directly with ## Introduction.';
+  s+='7. No preamble, no closing remarks, no markdown bold or extra headings. Start directly with ## Introduction.'+langDirective();
   return s;
 }
 function freeTryGet(url){
@@ -2652,7 +2735,7 @@ document.addEventListener("DOMContentLoaded",function(){
 var kCurrentTab="courses";
 var _origKTab=kTab;
 kTab=function(t){kCurrentTab=t;_origKTab(t)};
-buildDoctor();buildHomeStats();buildCourses();renderDict();buildCalc();buildCal();buildMock();
+buildDoctor();buildHomeStats();buildCourses();renderDict();buildCalc();buildCal();buildMock();applyLang();
 routeFromHash();
 </script>
 </body>
