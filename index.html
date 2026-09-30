@@ -368,7 +368,7 @@ header.topbar::after{content:"";position:absolute;left:0;right:0;bottom:0;height
   background:linear-gradient(90deg,#a3e635,#f59e0b,#c2410c)}
 .brand h1{color:#fff;letter-spacing:-.3px}
 .brand small{color:rgba(255,255,255,.82)}
-.brand small::after{content:"  \00b7  v45";color:#a3e635;font-weight:600}
+.brand small::after{content:"  \00b7  v46";color:#a3e635;font-weight:600}
 .lang{background:rgba(255,255,255,.20);color:#fff;font-weight:700;border-color:rgba(255,255,255,.38);
   backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .lang:active{transform:scale(.93)}
@@ -504,6 +504,40 @@ body[data-s="summer"] header.topbar{background:linear-gradient(120deg,#431407 0%
 body[data-s="summer"] .hero::before{background:radial-gradient(circle at 30% 30%,rgba(251,146,60,.26),transparent 55%)}
 }
 /* ============== end v45 ============== */
+
+/* ================= v46 EXAM ARENA ================= */
+.xqsel{width:100%;font-family:var(--font);font-size:13.5px;font-weight:600;color:var(--ink);
+  background:var(--surface2);border:1.5px solid var(--line);border-radius:12px;padding:11px 12px;margin-top:4px;cursor:pointer}
+.xqsel:focus{border-color:var(--sage);box-shadow:0 0 0 3px rgba(101,163,13,.15);outline:none}
+.xqgo{display:flex;gap:10px;margin-top:14px}
+.xqgo .btn{flex:1}
+.xqtop{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.xtl{font-family:var(--mono);font-size:13px;font-weight:600;color:#b91c1c;white-space:nowrap}
+.mbarw{flex:1;height:6px;background:var(--surface2);border-radius:99px;overflow:hidden}
+.mbar{height:100%;background:linear-gradient(90deg,#65a30d,#a3e635);border-radius:99px;width:100%;transition:width 1s linear}
+.xqsub{width:auto!important;padding:9px 18px!important}
+.xqnav{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.xqnav .btn{flex:1;padding:11px 8px;font-size:13px;min-width:70px}
+.pal{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:7px}
+.palb{height:38px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);
+  font-family:var(--font);font-size:13px;font-weight:700;color:var(--ink-dim);cursor:pointer}
+.palb.st-a{background:#eef5e4;border-color:#65a30d;color:#3f6212}
+.palb.st-f{background:#fdf3e3;border-color:#f59e0b;color:#92400e}
+.palb.st-a.st-f{background:#fdeee4;border-color:#f59e0b;color:#9a3412}
+.palb.st-cur{box-shadow:0 0 0 2.5px var(--terra);border-color:var(--terra)}
+.paleg{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;font-size:11.5px;color:var(--ink-dim);font-weight:600}
+.pd{display:inline-block;width:11px;height:11px;border-radius:3.5px;margin-right:5px;vertical-align:-1px;border:1px solid var(--line)}
+.pd.pa{background:#eef5e4;border-color:#65a30d}
+.pd.pf{background:#fdf3e3;border-color:#f59e0b}
+.pd.pu{background:var(--surface)}
+.opt.sel{border-color:var(--terra);background:var(--terra-soft);color:var(--ink)}
+.xqexp{margin-top:9px;font-size:12px;line-height:1.5;color:#0c4a6e;background:#e3f2fa;border-radius:9px;padding:8px 11px}
+.xqu{display:flex;align-items:center;gap:10px;margin:9px 0;font-size:12.5px;font-weight:600}
+.xqu>span:first-child{width:64px;flex:none;font-family:var(--mono);font-size:10.5px;color:var(--ink-dim)}
+.xqb{flex:1;height:9px;background:var(--surface2);border-radius:99px;overflow:hidden}
+.xqb i{display:block;height:100%;background:linear-gradient(90deg,#4d7c0f,#84cc16);border-radius:99px}
+.xqu>span:last-child{flex:none;font-family:var(--mono);font-size:11px}
+@media(max-width:380px){.xqnav .btn{min-width:58px;font-size:12px}}
 </style>
 </head>
 <body>
@@ -836,7 +870,7 @@ var LANG="en";
 try{LANG=localStorage.getItem("mouraLang")||"en"}catch(e){}
 var TR={
  en:{nav_home:"Home",nav_doctor:"Doctor",nav_knowledge:"Knowledge",nav_calc:"Calc",nav_calendar:"Calendar",nav_weather:"Weather",
-  kn_search:"Search",kn_courses:"Course Finder",kn_dict:"Dictionary",kn_assign:"Assignments",kn_mock:"Mock Test",
+  kn_search:"Search",kn_courses:"Course Finder",kn_dict:"Dictionary",kn_assign:"Assignments",kn_mock:"Mock Test",xq_arena:"Exam Arena",xq_picksub:"All 62 B.Sc. courses - verified banks for the current semester courses, AI papers for everything else.",xq_pick:"Choose any course",xq_sem:"Semester",xq_qs:"questions",xq_nobank:"No question bank yet",xq_handbank:"Verified bank",xq_aipaper:"AI paper",xq_best:"Best",xq_gen:"Generate AI question paper",xq_genfirst:"Generate an AI question paper for this course first, or pick a course with a ready bank.",xq_mode:"Choose your mode",xq_count:"Number of questions",xq_neg:"Negative marking",xq_negoff:"Off · tap for ICAR +4/-1",xq_quick:"Quick practice",xq_full:"Full exam",xq_genmore:"Tip: you can also generate a fresh AI paper for this course anytime.",xq_qsub:"Tap an option for instant feedback. Answers are revealed as you go.",xq_time:"Time",xq_submit:"Submit",xq_palette:"Question palette",xq_ans:"Answered",xq_unans:"Unanswered",xq_flagged:"Flagged",xq_next:"Next",xq_prev:"Prev",xq_flag:"Flag",xq_clear:"Clear",xq_results:"Result",xq_marks:"Marks",xq_unitb:"Unit-wise performance",xq_review:"Full review",xq_retake:"Retake test",xq_back:"Back",xq_v1:"Exam-ready. Move to the next unit.",xq_v2:"Good base - revise the wrong ones.",xq_v3:"Rebuild the basics, then retry.",xq_submitq:"Submit the exam?",xq_genwait:"Writing 50 exam-standard questions with your selected AI mode. This can take 30-90 seconds - do not navigate away.",xq_pfail:"Could not generate a valid paper - try again or switch AI mode",xq_pok:"Question paper saved - it now works offline forever",xq_needmode:"Pick an AI mode first (Class AI, Free AI or My AI key)",xq_needkey:"Save an AI key first",
   hm_kick:"MOURA \u00b7 AN AGRI AI",hm_title:"Your farm and your degree, <em>one app</em>.",hm_tag:"Scan a sick plant, write university-ready assignments, revise every course and calculate anything \u2014 works in the field, even offline.",
   hm_cta1:"Scan a plant",hm_cta2:"Write an assignment",hm_go:"Go",hm_inside:"WHAT'S INSIDE",
   hm_ph:"Search a topic - blast, heterosis, MSP...",hm_off:"Built for the field \u2014 everything except live AI works fully offline, no internet needed.",
@@ -855,7 +889,7 @@ var TR={
   doc_btn_photo:"Diagnose from photo",doc_btn_text:"Diagnose from description",
   as_ph:"e.g. Types of entrepreneurs, Rice blast, Vermicompost"},
  ta:{nav_home:"முகப்பு",nav_doctor:"மருத்துவர்",nav_knowledge:"அறிவு",nav_calc:"கணிப்பான்",nav_calendar:"நாட்காட்டி",nav_weather:"வானிலை",
-  kn_search:"தேடு",kn_courses:"பாடத்திட்டம்",kn_dict:"அகராதி",kn_assign:"பணிகள்",kn_mock:"மாதிரி தேர்வு",
+  kn_search:"தேடு",kn_courses:"பாடத்திட்டம்",kn_dict:"அகராதி",kn_assign:"பணிகள்",kn_mock:"மாதிரி தேர்வு",xq_arena:"தேர்வு மையம்",xq_picksub:"62 பாடங்களும் உள்ளன - இந்தப் பருவப் பாடங்களுக்கு சரிபார்க்கப்பட்ட வினாக்கள், மற்றவற்றுக்கு AI தாள்.",xq_pick:"பாடத்தைத் தேர்ந்தெடுக்கவும்",xq_sem:"பருவம்",xq_qs:"வினாக்கள்",xq_nobank:"வினாத் தொகுப்பு இல்லை",xq_handbank:"சரிபார்க்கப்பட்ட வங்கி",xq_aipaper:"AI தாள்",xq_best:"சிறந்தது",xq_gen:"AI வினாத்தாளை உருவாக்கு",xq_genfirst:"முதலில் இந்தப் பாடத்திற்கு AI வினாத்தாளை உருவாக்கவும், அல்லது தயாரான வங்கி உள்ள பாடத்தைத் தேர்ந்தெடுக்கவும்.",xq_mode:"முறையைத் தேர்ந்தெடுக்கவும்",xq_count:"வினாக்களின் எண்ணிக்கை",xq_neg:"கழித்தல் மதிப்பெண்",xq_negoff:"முடக்கு · ICAR +4/-1 க்கு தட்டவும்",xq_quick:"விரைவுப் பயிற்சி",xq_full:"முழுத் தேர்வு",xq_genmore:"உதவிக்�ுறிப்பு: இந்தப் பாடத்திற்கு எப்போதும் புதிய AI தாளை உருவாக்கலாம்.",xq_qsub:"விரைவான பின்னூட்டத்திற்கு விருப்பத்தைத் தட்டவும்.",xq_time:"நேரம்",xq_submit:"சமர்ப்பிக்கவும்",xq_palette:"வினா அட்டவணை",xq_ans:"பதிலளிக்கப்பட்டது",xq_unans:"பதிலில்லாதவை",xq_flagged:"கொடியிடப்பட்டது",xq_next:"அடுத்து",xq_prev:"முந்தையது",xq_flag:"கொடியிடு",xq_clear:"அழி",xq_results:"முடிவு",xq_marks:"மதிப்பெண்கள்",xq_unitb:"அலகு வாரியான செயல்திறன்",xq_review:"முழு மதிப்பாய்வு",xq_retake:"மீண்டும் எழுது",xq_back:"பின்செல்",xq_v1:"தேர்வுக்குத் தயார். அடுத்த அலகுக்குச் செல்லுங்கள்.",xq_v2:"நல்ல அடித்தளம் - தவறானவற்றை மீண்டும் படியுங்கள்.",xq_v3:"அடிப்படைகளை மீண்டும் கற்று, மீண்டும் முயலுங்கள்.",xq_submitq:"தேர்வைச் சமர்ப்பிக்கவா?",xq_genwait:"தேர்ந்த AI முறையில் 50 தேர்வு தரமான வினாக்கள் எழுதப்படுகின்றன. 30-90 வினாடி ஆகலாம் - பக்கத்தை விட்டு வெளியேறாதீர்கள்.",xq_pfail:"சரியான தாளை உருவாக்க முடியவில்லை - மீண்டும் முயற்சிக்கவும் அல்லது AI முறையை மாற்றவும்",xq_pok:"வினாத்தாள் சேமிக்கப்பட்டது - இனி இணையம் இல்லாமலும் வேலை செய்யும்",xq_needmode:"முதலில் ஒரு AI முறையைத் தேர்ந்துகொள்ளுங்கள் (Class AI, Free AI அல்லது My AI key)",xq_needkey:"முதலில் AI key ஐச் சேமிக்கவும்",
   hm_kick:"MOURA \u00b7 ஒரு வேளாண் AI",hm_title:"உங்கள் பண்ணையும் பட்டப்படிப்பும், <em>ஒரே ஆப்</em>.",hm_tag:"நோயுள்ள பயிரை ஸ்கேன் செய்யுங்கள், பல்கலைக்கழக தரத்தில் பணிகளை எழுதுங்கள், ஒவ்வொரு பாடத்தையும் திரும்பப் படியுங்கள் \u2014 இணையம் இல்லாமலும் வேலை செய்யும்.",
   hm_cta1:"பயிரை ஸ்கேன் செய்",hm_cta2:"பணி எழுது",hm_go:"செல்",hm_inside:"உள்ளே என்ன இருக்கிறது",
   hm_ph:"ஒரு தலைப்பைத் தேடுங்கள்...",hm_off:"வயலுக்காக உருவாக்கப்பட்டது \u2014 AI ஐத் தவிர மற்ற எல்லாம் இணையம் இல்லாமலேயே வேலை செய்யும்.",
@@ -874,7 +908,7 @@ var TR={
   doc_btn_photo:"புகைப்படத்திலிருந்து கண்டறி",doc_btn_text:"விவரணையிலிருந்து கண்டறி",
   as_ph:"எ.கா. நெல் அறுவடை, மேலாண்மை, மண்புழு உரம்"},
  hi:{nav_home:"होम",nav_doctor:"डॉक्टर",nav_knowledge:"ज्ञान",nav_calc:"कैल्क",nav_calendar:"कैलेंडर",nav_weather:"मौसम",
-  kn_search:"खोजें",kn_courses:"कोर्स",kn_dict:"शब्दकोश",kn_assign:"असाइनमेंट",kn_mock:"मॉक टेस्ट",
+  kn_search:"खोजें",kn_courses:"कोर्स",kn_dict:"शब्दकोश",kn_assign:"असाइनमेंट",kn_mock:"मॉक टेस्ट",xq_arena:"परीक्षा केंद्र",xq_picksub:"सभी 62 पाठ्यक्रम - इस सेमेस्टर के पाठ्यक्रमों के लिए सत्यापित बैंक, बाकी के लिए AI पेपर।",xq_pick:"पाठ्यक्रम चुनें",xq_sem:"सेमेस्टर",xq_qs:"प्रश्न",xq_nobank:"अभी प्रश्न बैंक नहीं है",xq_handbank:"सत्यापित बैंक",xq_aipaper:"AI पेपर",xq_best:"बेस्ट",xq_gen:"AI प्रश्नपत्र बनाएं",xq_genfirst:"पहले इस पाठ्यक्रम के लिए AI प्रश्नपत्र बनाएं, या तैयार बैंक वाला पाठ्यक्रम चुनें।",xq_mode:"मोड चुनें",xq_count:"प्रश्नों की संख्या",xq_neg:"निगेटिव मार्किंग",xq_negoff:"बंद · ICAR +4/-1 के लिए टैप करें",xq_quick:"त्वरित अभ्यास",xq_full:"पूरी परीक्षा",xq_genmore:"सुझाव: इस पाठ्यक्रम के लिए कभी भी नया AI पेपर बना सकते हैं।",xq_qsub:"तुरंत जानने के लिए विकल्प पर टैप करें।",xq_time:"समय",xq_submit:"जमा करें",xq_palette:"प्रश्न पैलेट",xq_ans:"उत्तरित",xq_unans:"अनुत्तरित",xq_flagged:"फ्लैग किए",xq_next:"अगला",xq_prev:"पिछला",xq_flag:"फ्लैग",xq_clear:"हटाएं",xq_results:"परिणाम",xq_marks:"अंक",xq_unitb:"यूनिट-वार प्रदर्शन",xq_review:"पूरी समीक्षा",xq_retake:"दोबारा दें",xq_back:"वापस",xq_v1:"परीक्षा के लिए तैयार। अगले यूनिट पर जाएं।",xq_v2:"अच्छा आधार - गलत प्रश्न दोहराएं।",xq_v3:"मूल बातें दोहराकर फिर कोशिश करें।",xq_submitq:"परीक्षा जमा करें?",xq_genwait:"चुने गए AI मोड से 50 परीक्षा-स्तर के प्रश्न लिखे जा रहे हैं। 30-90 सेकंड लग सकते हैं - पेज न छोड़ें।",xq_pfail:"मान्य पेपर नहीं बन सका - फिर कोशिश करें या AI मोड बदलें",xq_pok:"प्रश्नपत्र सेव हो गया - अब हमेशा ऑफलाइन चलेगा",xq_needmode:"पहले AI मोड चुनें (Class AI, Free AI या My AI key)",xq_needkey:"पहले AI key सेव करें",
   hm_kick:"MOURA \u00b7 एक कृषि AI",hm_title:"आपका खेत और आपकी डिग्री, <em>एक ही ऐप</em>.",hm_tag:"बीमार पौधे को स्कैन करें, यूनिवर्सिटी स्तर के असाइनमेंट लिखें, हर विषय दोहराएँ \u2014 बिना इंटरनेट भी चलता है।",
   hm_cta1:"पौधा स्कैन करें",hm_cta2:"असाइनमेंट लिखें",hm_go:"जाओ",hm_inside:"अंदर क्या है",
   hm_ph:"कोई विषय खोजें...",hm_off:"खेत के लिए बनाया गया \u2014 AI के अलावा सब कुछ बिना इंटरनेट काम करता है।",
@@ -1578,14 +1612,226 @@ function prAns(i,j){
 
 /* ---------------- MOCK TEST ---------------- */
 var mock={qs:[],i:0,ans:[],t:0,timer:null};
-function buildMock(){
-  $("k-mock").innerHTML='<div class="section-label">Mock test &mdash; ARM 301</div>'
-   +'<div class="card"><h3>Exam simulation</h3><p>Random questions from the 87-question bank with a countdown timer, just like the mid-semester pattern. Answers are revealed at the end with review.</p></div>'
-   +'<label class="f">Number of questions</label><div class="chiprow" id="mn">'
-   +[10,25,50,87].map(function(n){return '<button class="chip'+(n===25?" on":"")+'" onclick="mockN(this,'+n+')">'+n+'</button>'}).join("")+'</div>'
-   +'<div style="height:14px"></div><button class="btn" onclick="mockStart()">Start Test</button>';
-  mock.n=25;
+var XQB={"aen301":[["The paddy yellow stem borer is scientifically known as:",["Chilo partellus","Scirpophaga incertulas","Sesamia inferens","Orseolia oryzae"],1,1,"Scirpophaga incertulas; larva causes dead hearts and white ears."],["The 'silver shoot' or 'onion leaf' gall symptom in rice is caused by:",["Gall midge","Yellow stem borer","Whorl maggot","Case worm"],0,1,"Gall midge Orseolia oryzae maggot modifies leaf sheath into gall."],["Which virus disease of rice is transmitted by the brown planthopper, Nilaparvata lugens?",["Rice tungro virus","Rice yellow dwarf","Transitory yellowing","Ragged stunt virus"],3,1,"BPH vectors grassy, ragged and wilted stunt viruses of rice."],["The economic threshold level (ETL) of the rice yellow stem borer at flowering stage is:",["10% dead hearts","2 egg masses/sq. metre","5% white ears","2% white ears"],3,1,"Economic threshold at flowering stage is two percent white ears."],["The egg parasitoid recommended for release against the rice yellow stem borer is:",["Trichogramma chilonis","Platygaster oryzae","Trichogramma japonicum","Tetrastichus nyemitavus"],2,1,"Released twice on 30 and 37 DAT at 5 cc/ha."],["The rice earhead bug, Leptocorisa acuta, damages the crop by:",["Sucking sap from milky grains making them chaffy","Boring into stems causing dead hearts","Scraping chlorophyll from leaves","Feeding on roots in patches"],0,1,"Leptocorisa acuta sucks milky grains; yield loss 10-40 percent."],["White parallel streaks on rice leaves along with blister-like leaf mines are caused by:",["Rice thrips","Grasshopper","Blue beetle","Rice hispa"],3,1,"Adults scrape chlorophyll; grubs mine leaves near leaf tips."],["The TNAU low-cost fishmeal trap against sorghum shoot fly is set up at:",["25 per ha till flowering","12 per ha till the crop is 30 days old","5 per ha at 60 days after sowing","50 per ha throughout the crop season"],1,1,"Hanging plastic fishmeal traps attract and kill shoot fly adults."],["The typical 'shot hole' symptom in young maize and sorghum leaves is caused by:",["Atherigona soccata","Chilo partellus","Helicoverpa armigera","Mythimna separata"],1,1,"Young Chilo partellus larvae feed on folded tender leaves."],["Against the sorghum stem borer, granular insecticide mixed with sand to a total of 50 kg/ha is applied in the leaf whorls. The dose of carbofuran 3G in this mixture is:",["8 kg/ha","20 kg/ha","17 kg/ha","33 kg/ha"],2,1,"Carbofuran 3G 17 kg mixed with sand makes 50 kg."],["The ghujia weevil, a pest of young wheat, causes damage by:",["Boring into stems of earing crops","Sucking sap from flag leaves","Cutting and feeding on the plumule of seedlings up to 6 cm height","Feeding on roots of mature plants"],2,1,"Tanymecus indicus cuts plumule; seedlings above 6 cm escape."],["In redgram, the pod fly can cause seed damage up to:",["60-70%","5-10%","20-25%","35-40%"],0,2,"Melanagromyza obtusa maggots bore soft seeds; damaged seeds fail germination."],["The plume moth damaging buds and pods of redgram is:",["Maruca testulalis","Exelastis atomosa","Lampides boeticus","Etiella zinckenella"],1,2,"Exelastis atomosa is a delicate brown moth with plumed wings."],["Webbing together of flowers and pods in greengram is caused by:",["Spotted pod borer","Pod fly","Bean aphid","Thrips"],0,2,"Maruca testulalis larvae web flowers and pods, feeding on seeds."],["A single blister beetle adult can destroy how many redgram flowers per day?",["5-10","60-80","20-30","100-150"],2,2,"Mylabris adults feed voraciously on redgram buds and flowers."],["The economic threshold level of the groundnut leaf miner, Aproaerema modicella, is:",["1 larva per metre row","8 egg masses per 100 m","2 larvae per hill","10% damaged leaves"],0,2,"Aproaerema modicella mines leaflets; severe infestation looks burnt."],["The red hairy caterpillar of groundnut, Amsacta albistriga, survives the unfavourable season by:",["Larval diapause inside pods","Adult hibernation on trees","Egg diapause on leaf undersurface","Pupal diapause in earthen cells 10-20 cm deep"],3,2,"Amsacta albistriga pupates in earthen cells and undergoes pupal diapause."],["The poison bait per hectare against Spodoptera litura contains rice bran 12.5 kg and carbaryl 50 WP 1.25 kg along with:",["500 g of molasses","5 kg of molasses","10 kg of jaggery","2.5 kg of molasses or brown sugar"],3,2,"Bait: rice bran 12.5 kg, molasses 2.5 kg, carbaryl 1.25 kg."],["In mustard, insecticidal spraying is initiated when the aphid population reaches (per 10 cm terminal shoot):",["10-15 aphids","50-60 aphids","100-120 aphids","5-6 aphids"],1,2,"Lipaphis erysimi ETL: 50-60 aphids per 10 cm terminal shoot."],["The larva of the mustard sawfly can be distinguished by having:",["Four pairs of abdominal prolegs","Five pairs of abdominal prolegs","Two pairs of abdominal prolegs","Eight pairs of abdominal prolegs"],3,2,"Athalia lugens, Tenthredinidae: Hymenoptera; larva feigns death when disturbed."],["The adults of the castor semilooper, Achaea janata, are serious pests of citrus as:",["Fruit-sucking moths","Leaf feeders","Bark borers","Root feeders"],0,2,"Achaea janata adults puncture and suck juices from citrus fruits."],["The economic threshold level of the gingelly (sesame) leaf webber, Antigastra catalaunalis, is:",["8 egg masses per 100 m","5 bugs per panicle","2 leaves/sq. m or 10% damage","1 larva per metre row"],2,2,"Antigastra catalaunalis larva webs top leaves and bores tender shoots."],["'Hopper burn' in cotton with bronze or brick red coloured leaves is caused by:",["Bemisia tabaci","Amrasca devastans","Aphis gossypii","Thrips tabaci"],1,3,"Amrasca devastans nymphs and adults suck under-surface sap."],["The cotton whitefly, Bemisia tabaci, transmits:",["Leaf curl virus","Bunchy top","Wilt","Phyllody"],0,3,"Bemisia tabaci also causes sooty mould and poor boll opening."],["'Rosette' flowers in cotton indicate the attack of:",["Spotted bollworm","American bollworm","Tobacco cutworm","Pink bollworm"],3,3,"Pectinophora gossypiella larvae feed inside; flowers fail opening."],["Which bollworm appears first in the season, as soon as the cotton plant is about 15-20 cm tall?",["Pink bollworm","American bollworm","Spotted bollworm","Dusky cotton bug"],2,3,"Earias vittella is earliest bollworm, attacking young cotton shoots."],["Staining of cotton lint by the red cotton bug is due to which bacterium entering the injury site?",["Bacillus thuringiensis","Serratia marcescens","Nematospora gossypii","Erwinia amylovora"],2,3,"Nematospora gossypii enters punctures; Dysdercus called cotton boll stainer."],["The cotton stem weevil is managed by basal application of neem cake at:",["25 t/ha","1000 kg/ha","12.5 kg/ha","250 kg/ha"],3,3,"Basal dose: FYM 25 t/ha or neem cake 250 kg/ha."],["Imidacloprid 70 WS is recommended as a seed treatment in cotton against sucking pests at:",["4 ml/kg seed","2 g/kg seed","7 g/kg seed","10 g/kg seed"],2,3,"Imidacloprid 70 WS seed treatment protects early season sucking pests."],["In sugarcane, a dead heart that can be easily pulled out and emits an offensive odour indicates:",["Early shoot borer","Internode borer","Top borer","Gurdaspur borer"],0,3,"Chilo infuscatellus attacks one to three month old crop."],["A dead heart that cannot be easily pulled out, with a 'bunchy top' in sugarcane, indicates:",["Top borer","Early shoot borer","Internode borer","Root borer"],0,3,"Scirpophaga excerptalis larva mines midribs; side shoots form bunchy top."],["Against the sugarcane internode borer, Trichogramma chilonis is released:",["Once at planting","Twice on 30 and 37 DAT","Three times weekly from 45 DAS","Six times at 15-day intervals from the fourth month"],3,3,"Six releases at 2.5 ml/ha from fourth month at 15-day intervals."],["Presoaking of sugarcane setts in 0.1% malathion solution is recommended against:",["Mealybugs","Whiteflies","Scale insects","Root aphid"],2,3,"Melanaspis glomerata crawlers encrust nodes of infested canes."],["The hairy caterpillar seriously defoliating sunhemp and feeding on its developing pods is:",["Amsacta albistriga","Utethesia pulchella","Spilosoma obliqua","Euproctis fraterna"],1,4,"Utethesia pulchella feeds on leaves and developing pod contents."],["The 'jumping lice' causing wilting and die back of growing shoots in subabul is:",["Heteropsylla cubana","Amrasca biguttula","Empoasca kerri","Aphis craccivora"],0,4,"Heteropsylla cubana infests growing shoots; honeydew leads to sooty mould."],["Which bird damages maize, sorghum and bajra earheads with its short, stout, deeply hooked red bill?",["House sparrow","Crow","Parrot","Common mynah"],2,4,"Psittacula krameri also damages guava, fig, mango and pomegranate fruits."],["The rice weevil, Sitophilus oryzae, can be identified by:",["Saw-like teeth on the pronotum","Four yellow spots on the elytra","Humped thorax appearance","Reddish brown thorax and legs"],1,4,"Sitophilus oryzae makes irregular 1.5 mm holes in cereal grains."],["The khapra beetle, Trogoderma granarium, is most serious on:",["Paddy and rice","Pulses","Spices","Wheat and wheat products"],3,4,"Trogoderma granarium chews seed coat irregularly on wheat grains."],["The Pusa bin achieves moisture-proof and air-tight grain storage by embedding polythene film of gauge:",["200","1000","700","300"],2,4,"Pusa bin embeds 700 gauge polythene for moisture-proof storage."],["For cover fumigation of grain with aluminium phosphide, the recommended dose is:",["21 tablets per 28 cu. m","22 g per cu. m","3 tablets of 3 g each per tonne for 5 days","2 tablets per 10 tonnes for 3 days"],2,4,"Cover fumigation: three 3 g tablets per tonne, five days exposure."],["Ethylene dibromide fumigation should NOT be used on:",["Bagged wheat","Bulk grain in silos","Maize in stacks","Oilseeds, moist grains and milled products"],3,4,"EDB is unsafe for oils, moist grains and milled products."],["The rodent making deep ramifying burrows (1-1.5 m) and hoarding grain in Tamil Nadu rice fields is:",["Lesser bandicoot","House mouse","Gerbil rat","Grass rat"],0,4,"Bandicota bengalensis burrows 1-1.5 m deep, hoarding 2 kg grain."],["In rodent management, zinc phosphide bait should not be used at a concentration above:",["0.5%","2%","5%","10%"],1,4,"Above two percent, bait acceptability falls and poison aversion increases."],["India has only one locust breeding season, which is:",["Winter breeding (November-December)","Spring breeding (January-June)","Summer breeding (July-October)","Both spring and summer breeding"],2,4,"India has only summer locust breeding; Pakistan has spring and summer."],["The sterility mosaic disease of redgram is transmitted by the mite:",["Bemisia tabaci","Aceria cajani","Orosius albicinctus","Amrasca devastans"],1,4,"Eriophyid mite Aceria cajani vectors redgram sterility mosaic disease."]],"aec301":[["The word 'market' has its root in which Latin word?",["Mercanti","Marcatus","Mercato","Martus"],1,1,"Latin marcatus means merchandise, trade or a place."],["The four Ps of the traditional marketing mix are:",["Product, People, Politics, Price","Price, Packaging, Positioning, Place","Product, Price, Promotion, Place","Product, Promotion, Packaging, People"],2,1,"4Ps: Price, Product, Promotion, Place; others are later additions."],["Markets located near the seashore, meant mainly for import and export of goods, are called:",["Terminal markets","Seaboard markets","Secondary wholesale markets","Periodic markets"],1,1,"Seaboard markets like Kochi and Mumbai serve mainly import and export."],["A market where the produce is either finally disposed of to consumers or processors, or assembled for export, is a:",["Primary wholesale market","Village market","Secondary wholesale market","Terminal market"],3,1,"Terminal markets finally dispose produce to consumers, processors or export."],["In short-period markets dealing in highly perishable commodities, prices are governed mainly by:",["Supply of the commodity","Demand for the commodity","Storage costs","Government regulation"],1,1,"Short-period markets handle perishables; prices governed mainly by demand."],["When farmers choose between various makes of insecticides, pump sets, fertilizers and equipment, the input market situation is:",["Perfect competition","Monopsony","Monopolistic competition","Duopsony"],2,1,"Differentiated branded inputs make input markets monopolistically competitive."],["A market situation in which there are only two sellers of a commodity is called:",["Oligopoly","Duopoly","Duopsony","Bilateral monopoly"],1,1,"Duopoly: exactly two sellers; two buyers is duopsony."],["The quantity of produce actually sold in the market, irrespective of its availability, is termed:",["Marketable surplus","Marketed surplus","Producer surplus","Buffer stock"],1,1,"Marketed surplus is actual sales; marketable surplus is theoretical availability."],["A farmer produces 80 quintals of paddy and retains 20 quintals for family consumption, seed and feed. The marketable surplus is:",["50 quintals","70 quintals","80 quintals","60 quintals"],3,1,"Marketable surplus = production 80 minus requirements 20 = 60 quintals."],["Whose definition of agricultural marketing explicitly does NOT include the input side of agriculture?",["Prof. Faruque","National Commission on Agriculture","Thomsen","Philip Kotler"],2,1,"Thomsen's definition covers movement of farm produce, not farm inputs."],["Grading, branding, packaging, standardization and financing are examples of:",["Exchange functions","Physical functions","Facilitating functions","Pricing functions"],2,2,"Facilitating functions aid exchange: grading, branding, packaging, financing, standardization."],["The processing function that converts paddy into rice adds:",["Place utility","Form utility","Time utility","Possession utility"],1,2,"Processing changes form, converting paddy to rice."],["Storage and warehousing that make tamarind available throughout the year create:",["Time utility","Form utility","Possession utility","Place utility"],0,2,"Storage adds time utility, making produce available when needed."],["After the introduction stage, the correct order of product life cycle stages is:",["Growth, maturity, decline","Maturity, growth, decline","Growth, decline, maturity","Decline, maturity, growth"],0,2,"PLC runs introduction, growth, maturity, then decline."],["The unit cost of a processed food product is Rs 100 and the processor adds a 25 per cent mark-up. The selling price is:",["Rs 115","Rs 125","Rs 150","Rs 120"],1,2,"Cost-plus price = 100 + 25% of 100 = Rs 125."],["For a farm enterprise, fixed cost is Rs 1,00,000, price is Rs 250 per quintal and average variable cost is Rs 200 per quintal. The break-even output is:",["1,000 quintals","1,500 quintals","4,000 quintals","2,000 quintals"],3,2,"Break-even output = fixed cost / (price - variable cost) = 100000/50."],["Setting a relatively low initial price to enter a competitive market and raising it later is called:",["Price skimming","Cost-plus pricing","Penetration pricing","Going-rate pricing"],2,2,"Penetration pricing uses low entry price, raised later."],["According to the Structure-Conduct-Performance paradigm, market structure determines:",["Only the prices of commodities","Government trade policy alone","Consumer tastes and preferences directly","Market conduct and, through it, market performance"],3,2,"SCP paradigm: structure shapes conduct, which determines performance."],["A marketing channel in which the producer sells directly to the consumer with no intermediary is a:",["One-level channel","Two-level channel","Zero-level channel","Reverse channel"],2,3,"Zero-level channel: producer sells directly, no intermediary."],["Kohls and Uhl defined market integration as the expansion of firms by:",["Fixing common prices across markets","Reducing product differentiation","Consolidating additional marketing functions under a single management","Increasing the number of intermediaries"],2,3,"Kohls and Uhl: consolidation of marketing functions under single management."],["A primary milk producers' cooperative society formed by farmers to sell produce in bulk is an example of:",["Vertical integration","Horizontal integration","Conglomerate integration","Market speculation"],1,3,"Horizontal integration combines firms at the same marketing level."],["A rice processing firm that also undertakes wholesale and retailing illustrates:",["Horizontal integration","Product differentiation","Vertical integration","Bilateral monopoly"],2,3,"Vertical integration links successive marketing functions under one ownership."],["Allocating farm products over time, across space and among users so that no other allocation would make producers and consumers better off is:",["Technical efficiency","Operational efficiency","Physical efficiency","Pricing or allocative efficiency"],3,3,"Pricing efficiency ensures optimal allocation over time, space, users."],["If the consumer pays Rs 40 per kg and the producer receives Rs 28 per kg, the producer's share in the consumer's rupee is:",["70 per cent","60 per cent","80 per cent","72 per cent"],0,3,"Producer's share = 28/40 x 100 = 70 per cent."],["The difference between the price paid by the consumer and the price received by the producer for an equivalent quantity of the commodity is:",["Mark-up","Marketing cost","Price spread","Absolute margin of one intermediary"],2,3,"Price spread = consumer price minus producer price, per PDF definition."],["A retailer buys at Rs 32 per kg and sells at Rs 40 per kg. The percentage margin and mark-up respectively are:",["25 per cent and 20 per cent","20 per cent and 25 per cent","20 per cent and 20 per cent","12.5 per cent and 15 per cent"],1,3,"Percentage margin 8/40 = 20; mark-up 8/32 = 25."],["Using Shepherd's formula, if the retail price V is Rs 40 and the total marketing cost I is Rs 10, the index of marketing efficiency is:",["400","30","250","300"],3,3,"Shepherd: ME = (40/10 - 1) x 100 = 300."],["NAFED is the apex organization of which marketing system in India?",["Regulated market committees","Agri export zones","Commodity exchanges","Cooperative marketing"],3,4,"NAFED is India's apex cooperative marketing federation for farm produce."],["The Food Corporation of India (FCI) was set up in:",["1965","1957","1975","1963"],0,4,"FCI was set up in 1965 under Food Corporation Act, 1964."],["The Central Warehousing Corporation provides safe and reliable storage facilities for about how many agricultural and industrial commodities?",["100","163","60","120"],3,4,"CWC offers storage for about 120 agricultural and industrial commodities."],["The total share capital of a State Warehousing Corporation is contributed equally by:",["Farmers and the state government","The concerned state government and CWC","Central and state governments","FCI and NABARD"],1,4,"SWC share capital is shared equally by state government and CWC."],["AGMARK is the abbreviation of:",["Agricultural Marketing","Approved Grade Mark","Agricultural Marking","Agri Market Guarantee"],0,4,"AGMARK abbreviates Agricultural Marketing, under the 1937 Grading and Marking Act."],["Which of the following is a salient feature of the APMC Model Act, 2003?",["Compulsory levy on all farm produce","Ban on contract farming","Prohibition of private markets","Single market fee in the market area"],3,4,"APMC Model Act 2003 features single market fee and contract farming."],["The policy of setting up Agri Export Zones (AEZs) across India was announced in:",["March 2001","January 1995","April 1994","January 2005"],0,4,"GoI announced the AEZ policy in March 2001; 60 zones sanctioned."],["The four A's of market intelligence are:",["Accuracy, Availability, Applicability, Analysis","Accuracy, Adequacy, Applicability, Assessment","Availability, Affordability, Accessibility, Analysis","Audit, Accuracy, Applicability, Action"],0,4,"Four A's: Accuracy, Availability, Applicability, Analysis."],["APEDA, which builds links between Indian producers and global markets, is attached to:",["Ministry of Agriculture","Ministry of Finance","Ministry of Commerce","Ministry of Food Processing Industries"],2,4,"APEDA functions under the Ministry of Commerce, Government of India."],["The theory of absolute advantage in international trade was propounded by:",["David Ricardo","Adam Smith","Bertin Ohlin","Eli Heckscher"],1,5,"Adam Smith gave absolute advantage in Wealth of Nations, 1776."],["The theory of comparative advantage was introduced by David Ricardo in:",["1776","1817","1933","1953"],1,5,"David Ricardo introduced comparative advantage in 1817."],["The Heckscher-Ohlin theory of international trade is also known as:",["Country similarity theory","Product life cycle theory","Mercantilism","Factor proportions theory"],3,5,"Heckscher-Ohlin theory is also called factor proportions theory."],["The Leontief paradox refers to the finding that the United States:",["Exported capital-intensive goods as the theory predicted","Imported capital-intensive goods despite being capital-abundant","Exported only agricultural products","Conducted no trade with Europe"],1,5,"Leontief found capital-rich USA exporting labour-intensive goods, contradicting factor proportions."],["With one labour-day, India can produce 20 kg of rice or 10 kg of wheat, while Vietnam can produce 15 kg of rice or 15 kg of wheat. The opportunity cost of 1 kg of rice in India is:",["0.5 kg of wheat","1.0 kg of wheat","1.5 kg of wheat","2.0 kg of wheat"],0,5,"Opportunity cost of rice = 10/20 = 0.5 kg wheat."],["If a country's export price index is 125 and its import price index is 100, its terms of trade equal:",["80","100","225","125"],3,5,"TOT = export price index / import price index x 100."],["The World Trade Organization, which replaced GATT, came into effect on:",["1 January 1994","15 April 1994","1 January 1995","1 April 1995"],2,5,"WTO replaced GATT, effective 1 January 1995, headquartered at Geneva."],["The three main components (pillars) of the Agreement on Agriculture are:",["Market access, domestic support, export subsidies","Tariffs, quotas, embargoes","MSP, FRP and SAP","MFN treatment, national treatment, consultation"],0,5,"AoA pillars: market access, domestic support, export subsidies."],["Which ordering of administered prices for food grains in India is correct?",["MSP > Procurement price > Issue price","Procurement price > Issue price > MSP","Issue price > Procurement price > MSP","Issue price > MSP > Procurement price"],2,5,"Issue price exceeds procurement price, which exceeds MSP."]],"abt301":[["The term 'biotechnology' was first coined in 1919 by:",["Karl Ereky","Louis Pasteur","Robert Koch","Herbert Boyer"],0,1,"Karl Ereky coined the term biotechnology in 1919."],["Who is regarded as the father of plant tissue culture?",["F. Skoog","G. Haberlandt","P. R. White","E. C. Cocking"],1,1,"Haberlandt first cultured isolated plant cells in 1902."],["Totipotency refers to the inherent ability of a plant cell to:",["Undergo photosynthesis","Produce only callus","Give rise to a whole plant","Synthesize growth hormones"],2,1,"Totipotency is a cell's potential to form whole plants."],["The term 'totipotency' was coined by:",["T. H. Morgan","G. Haberlandt","F. Skoog","C. D. La Rue"],0,1,"T. H. Morgan coined the term totipotency in 1901."],["The most widely used medium for plant tissue culture was developed by:",["Gamborg et al.","White","Murashige and Skoog","Nitsch and Nitsch"],2,1,"Murashige and Skoog (1962) formulated the most widely used medium."],["According to Skoog and Miller, shoot and root initiation in cultured callus is regulated by the:",["Auxin to cytokinin ratio","Gibberellin content","Sucrose concentration","Light intensity"],0,1,"Skoog and Miller: organogenesis depends on auxin-cytokinin ratio."],["Aseptic clonal propagation of plants under in vitro conditions is called:",["Micropropagation","Somatic hybridization","Embryo rescue","Androgenesis"],0,1,"Micropropagation is aseptic in vitro clonal propagation of plants."],["Anther culture of Datura innoxia, which first produced haploid plants, was reported by:",["Guha and Maheshwari","Cocking and Takebe","Steward and Mapes","Kasha and Kao"],0,2,"Guha and Maheshwari first produced anther-culture haploids in Datura."],["Haploids are sporophytes having the:",["Diploid chromosome number","Gametophytic chromosome number","Polyploid chromosome number","Triploid chromosome number"],1,2,"Haploids carry the gametic (gametophytic) chromosome number."],["In the bulbosum technique, barley haploids are obtained through:",["Protoplast fusion","Chromosome elimination after interspecific hybridization","Colchicine treatment","Irradiation of pollen"],1,2,"Bulbosum chromosomes are eliminated after crossing with cultivated barley."],["The term 'somaclonal variation' was proposed by:",["Larkin and Scowcroft","Skoog and Miller","Murashige and Skoog","Guha and Maheshwari"],0,2,"Larkin and Scowcroft proposed the term in 1981."],["Enzymatic isolation of protoplasts by degrading cell walls was first demonstrated by:",["Klercker","E. C. Cocking","G. Haberlandt","W. H. Muir"],1,2,"Cocking (1960) used cellulase to isolate protoplasts."],["The enzyme combination most commonly used for plant protoplast isolation is:",["Amylase and lipase","Cellulase and macerozyme","Protease and ligase","DNase and RNase"],1,2,"Cellulase digests cellulose; macerozyme degrades pectin."],["A cybrid is a cell or plant possessing the:",["Fused nuclei of both parents","Nuclear genome of one parent and cytoplasmic genome of another","Cytoplasm of one parent and nuclei of both","Doubled chromosome number"],1,2,"Cybrids have one parent's nucleus and the other's cytoplasm."],["Airlift bioreactors are preferred over mechanically stirred ones for plant cell cultures because stirring:",["Increases oxygen demand","Damages plant cells and reduces viability","Raises the medium pH","Causes contamination"],1,2,"Mechanical stirrers rupture fragile plant cells; airlift avoids shearing."],["Reverse transcriptase synthesizes DNA using a:",["DNA template","RNA template","Protein template","Lipid template"],1,3,"Reverse transcriptase is an RNA-dependent DNA polymerase."],["Type II restriction endonucleases are the most useful in rDNA technology because they:",["Cut DNA at random distant sites","Cut within their recognition sequence","Require ATP for cleavage","Cut only methylated DNA"],1,3,"Type II enzymes cleave precisely within their recognition sequences."],["Majority of the recognition sequences of restriction endonucleases are:",["Palindromic","Random","Telomeric repeats","AT-rich only"],0,3,"Palindromic sites read identically on both complementary strands."],["Single-stranded protruding termini generated by staggered cuts are called:",["Blunt ends","Sticky ends","Ragged ends","Hairpin ends"],1,3,"Sticky cohesive ends facilitate complementary base pairing of fragments."],["Restriction enzymes isolated from different bacterial species but recognizing the same sequence are called:",["Isoenzymes","Isoschizomers","Isoacceptors","Zymogens"],1,3,"Isoschizomers from different bacteria recognize identical sequences."],["Homopolymer tailing of blunt-ended DNA molecules is catalysed by:",["DNA ligase","Alkaline phosphatase","Terminal deoxynucleotidyl transferase","Polynucleotide kinase"],2,3,"Terminal transferase adds homopolymer tails to 3' ends."],["Blunt-end ligation of DNA fragments is best achieved with:",["E. coli DNA ligase","T4 DNA ligase","Reverse transcriptase","Klenow fragment"],1,3,"T4 DNA ligase efficiently joins blunt-ended DNA fragments."],["The antibiotic resistance markers present in plasmid pBR322 are:",["Ampicillin and tetracycline","Kanamycin and chloramphenicol","Streptomycin and ampicillin","Tetracycline and gentamicin"],0,3,"pBR322 carries ampicillin and tetracycline resistance genes."],["A plasmid carrying bacteriophage cos sites, used to clone large DNA fragments, is a:",["Phasmid","Cosmid","Shuttle vector","Expression vector"],1,3,"Cosmids combine plasmid replication with phage packaging."],["Which cloning vector has the largest insert capacity (100-1000 kb)?",["pUC19","Cosmid","Bacterial artificial chromosome","Yeast artificial chromosome"],3,3,"YACs clone 100-1000 kb, the largest insert capacity."],["Agrobacterium tumefaciens is called nature's genetic engineer of plants because it:",["Fixes atmospheric nitrogen","Transfers T-DNA into the plant genome","Produces opines in soil","Kills insect pests"],1,4,"It naturally transfers T-DNA into the plant nuclear genome."],["The T-DNA of the Ti plasmid is flanked by:",["25 bp direct repeat border sequences","35 bp inverted repeats","12 bp cos sites","50 bp telomeric sequences"],0,4,"T-DNA borders are 25 bp direct repeats acting in cis."],["The phenolic compound from wounded plant cells sensed by the VirA protein to induce vir genes is:",["Acetosyringone","Salicylic acid","Jasmonic acid","Ethylene"],0,4,"VirA senses acetosyringone, activating VirG and other vir genes."],["In the biolistic method, DNA-coated microprojectiles are usually made of:",["Gold or tungsten","Silver or copper","Iron or nickel","Platinum or zinc"],0,4,"Tungsten or gold particles carry DNA into plant cells."],["Electroporation-mediated gene transfer into plant protoplasts uses:",["Calcium chloride and heat shock","Short electrical impulses of high field strength","Ultrasound waves","Laser beams"],1,4,"Electrical pulses transiently increase protoplast membrane permeability."],["Polyethylene glycol (PEG) mediates direct gene transfer by:",["Stimulating DNA uptake by protoplasts","Forming liposomes around DNA","Coating gold particles","Digesting the cell wall"],0,4,"PEG precipitates DNA and stimulates its uptake by protoplasts."],["The insecticidal crystal proteins of Bacillus thuringiensis are especially toxic to:",["Lepidopteran insects","Birds","Mammals","Earthworms"],0,4,"Bt insecticidal crystal proteins specifically target Lepidopteran larvae."],["The bar gene conferring resistance to the herbicides bialaphos and phosphinotricin was isolated from:",["Bacillus thuringiensis","Streptomyces hygroscopicus","Escherichia coli","Agrobacterium tumefaciens"],1,4,"bar from S. hygroscopicus encodes phosphinotricin acetyltransferase."],["Flavr Savr, the first genetically modified food crop to be commercialized, is a tomato with:",["Insect resistance","Herbicide tolerance","Delayed ripening","Virus resistance"],2,4,"Calgene's Flavr Savr tomato ripened slowly, extending shelf life."],["Southern blotting is used to detect:",["RNA","DNA","Protein","Lipids"],1,5,"Southern blot detects specific DNA sequences by probe hybridization."],["Northern blotting is used to study gene expression by detecting:",["DNA","Protein","RNA","Polysaccharides"],2,5,"Northern blot analyses RNA to study gene expression."],["Western blotting detects specific proteins in a sample using:",["Labelled antibodies","Radiolabelled cDNA probes","Ethidium bromide staining","Restriction enzymes"],0,5,"Western blot detects proteins using specific antibodies."],["The term 'DNA fingerprinting' was introduced by:",["Edwin Southern","Alec Jeffreys","Kary Mullis","Hamilton Smith"],1,5,"Alec Jeffreys introduced the term in 1985."],["Minisatellite (VNTR) repeat units are typically:",["1 to 6 bp","11 to 60 bp","100 to 500 bp","1000 to 5000 bp"],1,5,"Minisatellite VNTR monomers span 11-60 base pairs."],["Which molecular marker system is hybridization-based and codominant?",["RAPD","AFLP","RFLP","ISSR"],2,5,"RFLP is codominant, revealed by Southern hybridization with probes."],["The RAPD assay employs:",["Two gene-specific primers","A single primer of arbitrary sequence","Labelled cDNA probes","Restriction enzymes only"],1,5,"RAPD amplifies genomic DNA with one arbitrary primer."],["Microsatellite or SSR markers consist of tandem repeats of motifs that are:",["1 to 6 bp long","11 to 60 bp long","50 to 100 bp long","Over 200 bp long"],0,5,"SSR motifs are short 1-6 bp tandem repeats."],["When a target gene differs from its allele only by a difficult-to-detect single nucleotide polymorphism, the most realistic marker option is:",["No marker can ever be used","A closely linked polymorphism that is easier to detect, such as a short tandem repeat","Only RAPD markers work","Direct protein electrophoresis"],1,5,"Easily scored linked markers substitute for difficult SNP detection."],["A quantitative trait locus (QTL) is best defined as:",["A single gene always controlling a qualitative trait","A genomic region associated with an effect on a quantitative trait","Any dominant DNA marker","A technique for protein separation"],1,5,"A QTL is a genome region affecting a quantitative trait."],["For reliable marker-assisted selection, a marker should be located within what maximum distance of the target gene?",["50 cM","20 cM","10 cM","Less than 5 cM"],3,5,"Markers within 5 cM keep recombinant selection errors minimal."]]};
+
+/* ================= v46 EXAM ARENA ================= */
+function xqBank(ck){
+ if(ck==="arm301")return MCQS.map(function(q){return [q[0],q[1],q[2],String(q[3]),q[4]||""]});
+ if(XQB[ck]&&XQB[ck].length)return XQB[ck];
+ var ai=xqLoad(ck);return ai?ai.qs:null;
 }
+function xqLoad(ck){try{var j=JSON.parse(localStorage.getItem("moura-xq-"+ck)||"null");return (j&&j.qs&&j.qs.length)?j:null}catch(e){return null}}
+function xqSave(ck,qs){try{localStorage.setItem("moura-xq-"+ck,JSON.stringify({d:Date.now(),qs:qs}))}catch(e){}}
+function xqBestGet(ck){try{return parseInt(localStorage.getItem("moura-xq-best-"+ck)||"",10)||null}catch(e){return null}}
+function xqBestSet(ck,pct){var b=xqBestGet(ck);if(b===null||pct>b){try{localStorage.setItem("moura-xq-best-"+ck,String(pct))}catch(e){}}}
+function xqCourse(){return COURSES.filter(function(x){return x.k===XQ.c})[0]||null}
+function xqName(){var c=xqCourse();return c?c.c:(XQ.c||"").toUpperCase()}
+function xqN(btn,n){XQ.n=n;document.querySelectorAll("#xqModeC .chip")[0];var cs=document.querySelectorAll("#xqModeC .chiprow")[0];if(cs)[].forEach.call(cs.children,function(b){b.classList.toggle("on",parseInt(b.textContent,10)===n)})}
+function xqNeg(btn){XQ.neg=!XQ.neg;if(btn)btn.classList.toggle("on",XQ.neg)}
+
+function buildMock(){
+ XQ.c=XQ.c||(function(){try{return localStorage.getItem("moura-xq-c")||"arm301"}catch(e){return "arm301"}})();
+ try{localStorage.setItem("moura-xq-c",XQ.c)}catch(e){}
+ var sel='<select id="xqCourse" class="xqsel" onchange="xqSel()">';
+ var bys={};COURSES.forEach(function(c){(bys[c.s]=bys[c.s]||[]).push(c)});
+ Object.keys(bys).map(Number).sort(function(a,b){return a-b}).forEach(function(s){
+  sel+='<optgroup label="'+t("xq_sem")+" "+s+'">';
+  bys[s].forEach(function(c){sel+='<option value="'+c.k+'"'+(c.k===XQ.c?" selected":"")+'>'+esc(c.c+" \u00b7 "+c.n)+'</option>'});
+  sel+='</optgroup>'});
+ sel+='</select>';
+ $("k-mock").innerHTML='<div class="section-label">'+t("xq_arena")+'</div>'
+  +'<div class="card"><h3>'+t("xq_pick")+'</h3><p class="sub">'+t("xq_picksub")+'</p>'+sel
+  +'<div id="xqStat" style="margin-top:12px"></div></div>'
+  +'<div class="card" id="xqModeC"></div>';
+ xqRender();
+}
+function xqSel(){XQ.c=$("xqCourse").value;try{localStorage.setItem("moura-xq-c",XQ.c)}catch(e){}xqRender()}
+function xqRender(){
+ var st=$("xqStat");if(!st)return;
+ var hand=XQB[XQ.c]&&XQB[XQ.c].length, ai=xqLoad(XQ.c), arm=XQ.c==="arm301";
+ var total=(XQ.c==="arm301")?MCQS.length:(hand?XQB[XQ.c].length:(ai?ai.qs.length:0));
+ var src=arm?t("xq_handbank"):(hand?t("xq_handbank"):(ai?t("xq_aipaper")+" \u00b7 "+new Date(ai.d).toLocaleDateString():""));
+ var best=xqBestGet(XQ.c);
+ st.innerHTML='<div class="chiprow">'+(total?'<span class="kbtag">'+total+" "+t("xq_qs")+'</span>':'<span class="kbtag" style="background:#fdeaea;color:#b91c1c">'+t("xq_nobank")+'</span>')
+  +(src?'<span class="kbtag" style="background:#f1ebfc;color:#5b21b6">'+src+'</span>':"")
+  +(best!==null?'<span class="kbtag" style="background:#eef5e4;color:#4d7c0f">'+t("xq_best")+": "+best+'%</span>':"")+'</div>'
+  +(total?'':'<button class="btn" style="margin-top:12px" onclick="xqGenerate()">'+t("xq_gen")+'</button>');
+ var mc=$("xqModeC");if(!mc)return;
+ if(!total){mc.innerHTML='<p class="sub">'+t("xq_genfirst")+'</p>';return}
+ var counts=[10,25,50,total].filter(function(v,i,a){return v<=total&&a.indexOf(v)===i});
+ if(XQ.n>total)XQ.n=total;
+ mc.innerHTML='<h3>'+t("xq_mode")+'</h3>'
+  +'<label class="f">'+t("xq_count")+'</label><div class="chiprow">'
+  +counts.map(function(n){return '<button class="chip'+(n===XQ.n?" on":"")+'" onclick="xqN(this,'+n+')">'+n+'</button>'}).join("")+'</div>'
+  +'<label class="f">'+t("xq_neg")+'</label><div class="chiprow">'
+  +'<button class="chip'+(XQ.neg?" on":"")+'" onclick="xqNeg(this)">'+(XQ.neg?"+4 / -1 \u00b7 ICAR JRF":t("xq_negoff"))+'</button></div>'
+  +'<div class="xqgo"><button class="btn sec" onclick="xqQuick()">'+t("xq_quick")+'</button>'
+  +'<button class="btn" onclick="xqExam()">'+t("xq_full")+'</button></div>'
+  +(!hand&&XQ.c!=="arm301"&&XQ.c!=="?"?'<p class="sub" style="margin-top:10px">'+t("xq_genmore")+'</p>':"");
+}
+
+/* ---- quick practice ---- */
+function xqQuick(){
+ var b=xqBank(XQ.c);if(!b||!b.length){toast(t("xq_nobank"));return}
+ XQ.mode="q";XQ.qs=shuffle(b.slice()).slice(0,XQ.n);XQ.ans=[];
+ $("k-mock").innerHTML='<div class="section-label">'+t("xq_arena")+" \u00b7 "+esc(xqName())+'</div>'
+  +'<p class="sub">'+t("xq_qsub")+'</p><div id="xqQs"></div><div id="xqEnd"></div>';
+ $("xqQs").innerHTML=XQ.qs.map(function(q,i){
+  return '<div class="qcard" id="xqq'+i+'"><div class="qn">Q'+(i+1)+" \u00b7 UNIT "+esc(String(q[3]))+'</div><div class="qt">'+esc(q[0])+'</div>'
+  +q[1].map(function(o,j){return '<button class="opt" onclick="xqQA('+i+','+j+')">'+String.fromCharCode(97+j)+") "+esc(o)+'</button>'}).join("")+'</div>'}).join("");
+}
+function xqQA(i,j){
+ var q=XQ.qs[i];if(XQ.ans[i]!==undefined)return;XQ.ans[i]=j;
+ var card=$("xqq"+i);if(card){[].forEach.call(card.querySelectorAll(".opt"),function(o,k){o.style.cursor="default";if(k===q[2])o.classList.add("ok");else if(k===j)o.classList.add("bad")});
+  if(q[4]){var ex=document.createElement("div");ex.className="xqexp";ex.textContent="\u2192 "+q[4];card.appendChild(ex)}}
+ if(XQ.ans.length===XQ.qs.length){
+  var ok=0;XQ.ans.forEach(function(a,k){if(a===XQ.qs[k][2])ok++});
+  var pct=Math.round(100*ok/XQ.qs.length);xqBestSet(XQ.c,pct);
+  $("xqEnd").innerHTML='<div class="scorebig"><div class="n">'+ok+" / "+XQ.qs.length+'</div><div class="l">'+pct+"% \u00b7 "+xqVerdict(pct)+'</div></div>'
+   +'<div class="xqgo"><button class="btn sec" onclick="buildMock()">'+t("xq_back")+'</button><button class="btn" onclick="xqQuick()">'+t("xq_retake")+'</button></div>';
+  window.scrollTo(0,$("xqEnd").offsetTop-90);
+ }
+}
+function xqVerdict(pct){return pct>=75?t("xq_v1"):(pct>=50?t("xq_v2"):t("xq_v3"))}
+
+/* ---- full CBT exam ---- */
+function xqExam(){
+ var b=xqBank(XQ.c);if(!b||!b.length){toast(t("xq_nobank"));return}
+ XQ.mode="e";XQ.qs=shuffle(b.slice()).slice(0,XQ.n);
+ XQ.ans=new Array(XQ.qs.length);XQ.fl=new Array(XQ.qs.length);XQ.i=0;
+ XQ.t=XQ.qs.length*60;
+ if(XQ.timer)clearInterval(XQ.timer);
+ $("k-mock").innerHTML='<div class="xqtop"><div class="xtl">'+t("xq_time")+' <b id="mt">--:--</b></div>'
+  +'<div class="mbarw"><div class="mbar" id="mbar"></div></div>'
+  +'<button class="btn sec xqsub" onclick="xqSubmit()">'+t("xq_submit")+'</button></div>'
+  +'<div class="card" id="xqCard"></div>'
+  +'<div class="card"><label class="f">'+t("xq_palette")+'</label><div class="pal" id="xqPal"></div>'
+  +'<div class="paleg"><span><i class="pd pa"></i>'+t("xq_ans")+'</span><span><i class="pd pf"></i>'+t("xq_flagged")+'</span><span><i class="pd pu"></i>'+t("xq_unans")+'</span></div></div>';
+ var xqTick=function(){XQ.t--;var m=$("mt");if(m)m.textContent=Math.floor(XQ.t/60)+":"+String(XQ.t%60).padStart(2,"0");var bb=$("mbar");if(bb)bb.style.width=(100*XQ.t/(XQ.qs.length*60))+"%";if(XQ.t<=0)xqFinish()};
+ var m0=$("mt");if(m0)m0.textContent=Math.floor(XQ.t/60)+":"+String(XQ.t%60).padStart(2,"0");
+ XQ.timer=setInterval(xqTick,1000);
+ xqShow();
+}
+function xqShow(){
+ var q=XQ.qs[XQ.i];
+ $("xqCard").innerHTML='<div class="qn">Q'+(XQ.i+1)+" / "+XQ.qs.length+" \u00b7 UNIT "+esc(String(q[3]))+(XQ.fl[XQ.i]?" \u00b7 \u2691":"")+'</div>'
+  +'<div class="qt">'+esc(q[0])+'</div>'
+  +q[1].map(function(o,j){return '<button class="opt'+(XQ.ans[XQ.i]===j?" sel":"")+'" onclick="xqEA('+j+')">'+String.fromCharCode(97+j)+") "+esc(o)+'</button>'}).join("")
+  +'<div class="xqnav"><button class="btn sec" onclick="xqMove(-1)">&larr; '+t("xq_prev")+'</button>'
+  +'<button class="btn sec" onclick="xqTF()">'+t("xq_flag")+'</button>'
+  +'<button class="btn sec" onclick="xqTC()">'+t("xq_clear")+'</button>'
+  +'<button class="btn" onclick="xqMove(1)">'+t("xq_next")+' &rarr;</button></div>';
+ xqPal();
+ var pal=$("xqPal");if(pal){var c=pal.children[XQ.i];if(c)c.scrollIntoView({block:"nearest"})}
+}
+function xqPal(){
+ var p=$("xqPal");if(!p)return;
+ p.innerHTML=XQ.qs.map(function(_,i){var cls="palb"+(XQ.ans[i]!==undefined&&XQ.ans[i]!==null?" st-a":"")+(XQ.fl[i]?" st-f":"")+(i===XQ.i?" st-cur":"");
+  return '<button class="'+cls+'" onclick="xqGoto('+i+')">'+(i+1)+'</button>'}).join("");
+}
+function xqEA(j){XQ.ans[XQ.i]=j;xqShow()}
+function xqMove(d){var n=XQ.i+d;if(n<0)n=0;if(n>XQ.qs.length-1)n=XQ.qs.length-1;XQ.i=n;xqShow()}
+function xqGoto(i){XQ.i=i;xqShow()}
+function xqTF(){XQ.fl[XQ.i]=!XQ.fl[XQ.i];xqShow()}
+function xqTC(){XQ.ans[XQ.i]=undefined;xqShow()}
+function xqSubmit(){
+ var a=0,f=0;XQ.ans.forEach(function(v){if(v!==undefined&&v!==null)a++});XQ.fl.forEach(function(v){if(v)f++});
+ $("k-mock").innerHTML='<div class="card"><h3>'+t("xq_submitq")+'</h3>'
+  +'<p>'+t("xq_ans")+": <b>"+a+"</b> \u00b7 "+t("xq_unans")+": <b>"+(XQ.qs.length-a)+"</b> \u00b7 "+t("xq_flagged")+": <b>"+f+'</b></p>'
+  +'<div class="xqgo"><button class="btn sec" onclick="xqShow()">'+t("xq_back")+'</button>'
+  +'<button class="btn" onclick="xqFinish()">'+t("xq_submit")+'</button></div></div>';
+}
+function xqFinish(){
+ if(XQ.timer)clearInterval(XQ.timer);
+ var ok=0,wr=0,sk=0;XQ.qs.forEach(function(q,i){var a=XQ.ans[i];if(a===undefined||a===null)sk++;else if(a===q[2])ok++;else wr++});
+ var pct=Math.round(100*ok/XQ.qs.length);xqBestSet(XQ.c,pct);
+ var marks=XQ.neg?(ok*4-wr):ok;
+ var units={};XQ.qs.forEach(function(q,i){var u=String(q[3]);units[u]=units[u]||{t:0,c:0};units[u].t++;if(XQ.ans[i]===q[2])units[u].c++});
+ var ub=Object.keys(units).map(function(u){return '<div class="xqu"><span>UNIT '+esc(u)+'</span><div class="xqb"><i style="width:'+Math.round(100*units[u].c/units[u].t)+'%"></i></div><span>'+units[u].c+"/"+units[u].t+'</span></div>'}).join("");
+ var rows=XQ.qs.map(function(q,i){var a=XQ.ans[i],good=(a===q[2]);
+  return '<div class="qcard"><div class="qn">'+(good?"CORRECT":(a===undefined||a===null?"SKIPPED":"WRONG"))+" \u00b7 UNIT "+esc(String(q[3]))+'</div><div class="qt">'+esc(q[0])+'</div>'
+  +q[1].map(function(o,j){var cls=(j===q[2])?"ok":((j===a)?"bad":"");return '<div class="opt '+cls+'" style="cursor:default">'+String.fromCharCode(97+j)+") "+esc(o)+'</div>'}).join("")
+  +(q[4]?'<div class="xqexp">\u2192 '+esc(q[4])+'</div>':"")+'</div>'}).join("");
+ $("k-mock").innerHTML='<div class="section-label">'+t("xq_results")+" \u00b7 "+esc(xqName())+'</div>'
+  +'<div class="scorebig"><div class="n">'+ok+" / "+XQ.qs.length+'</div><div class="l">'+pct+"% \u00b7 "+xqVerdict(pct)
+  +(XQ.neg?' \u00b7 '+t("xq_marks")+": "+marks+" ("+ok+"\u00d74 \u2212 "+wr+"\u00d71)":'')+'</div></div>'
+  +'<div class="card"><h3>'+t("xq_unitb")+'</h3>'+ub+'</div>'
+  +'<h3 class="section-label" style="margin-top:16px">'+t("xq_review")+'</h3>'+rows
+  +'<div class="xqgo"><button class="btn sec" onclick="buildMock()">'+t("xq_back")+'</button><button class="btn" onclick="xqExam()">'+t("xq_retake")+'</button></div>';
+ window.scrollTo(0,0);
+}
+
+/* ---- AI question paper generation ---- */
+function xqPrompt(c){
+ var u=(c&&c.u&&c.u.length?c.u:[]).map(function(x,i){return "Unit "+(i+1)+": "+x}).join("\n");
+ return "You are a strict agricultural university examiner for B.Sc. (Hons.) Agriculture, TNAU/ICAR pattern.\n"
+ +"Write a multiple-choice question paper for this course.\n"
+ +"COURSE: "+(c?c.c+" - "+c.n:"B.Sc. Agriculture")+"\n"
+ +(u?"SYLLABUS UNITS:\n"+u+"\n":"")
+ +"RULES:\n"
+ +"- Write exactly 50 questions. Each question is ONE line in EXACTLY this format:\n"
+ +"Q|question text|option a|option b|option c|option d|ANS=b|UNIT=2|EXP=short reason\n"
+ +"- ANS is the letter (a, b, c or d) of the single correct option.\n"
+ +"- UNIT is the unit number the question belongs to.\n"
+ +"- Difficulty mix: 40% easy recall, 40% medium, 20% hard application or numerical.\n"
+ +"- Indian agricultural context, exam-standard language, single unambiguous correct answer.\n"
+ +"- No all-of-the-above options, no repeated facts, no numbering or markdown.\n"
+ +"- Output ONLY the question lines, nothing else.";
+}
+function xqParse(txt){
+ var out=[],seen={};
+ String(txt||"").split(/\r?\n/).forEach(function(L){
+  L=L.trim();if(!L||L.charAt(0)!=="Q")return;
+  var m=L.match(/^Q\s*\d*\s*[|:.\-]?\s*(.+)$/);if(!m)return;
+  var p=m[1].split("|");if(p.length<8)return;
+  var q=p[0].trim(),o=[p[1],p[2],p[3],p[4]].map(function(s){return String(s||"").trim()});
+  var tail=p.slice(5).join("|");
+  var am=tail.match(/ANS\s*[=:]\s*([a-dA-D])/),um=tail.match(/UNIT\s*[=:]\s*(\d+)/),em=tail.match(/EXP\s*[=:]\s*(.+)$/);
+  var ai2="abcd".indexOf(am?am[1].toLowerCase():"");if(ai2<0)return;
+  if(!q||q.length<12)return;if(o.some(function(x){return !x}))return;
+  if(new Set(o.map(function(x){return x.toLowerCase()})).size!==4)return;
+  var key=q.toLowerCase().replace(/[^a-z0-9]/g,"").slice(0,60);if(seen[key])return;seen[key]=1;
+  out.push([q,o,ai2,um?+um[1]:1,(em?em[1]:"").trim()]);
+ });
+ return out;
+}
+function xqGenerate(){
+ var c=xqCourse();
+ $("k-mock").innerHTML='<div class="section-label">'+t("xq_arena")+'</div>'
+  +'<div class="card"><h3>'+t("xq_gen")+'</h3><p class="sub">'+esc(xqName()+(c?" \u00b7 "+c.n:""))+'</p>'
+  +'<div class="spinner"></div><p class="sub">'+t("xq_genwait")+'</p></div>';
+ var done=function(txt){
+  var qs=xqParse(txt);
+  if(!qs||qs.length<15){toast(t("xq_pfail"));buildMock();return}
+  xqSave(XQ.c,qs);toast(t("xq_pok")+" ("+qs.length+")");buildMock();
+ };
+ var fail=function(e){toast(t("xq_pfail")+(e&&e.message?" \u00b7 "+e.message:""));buildMock()};
+ if(genMode==="class"&&SHARED_AI_URL){
+  var attempt=function(tried){
+   fetch(SHARED_AI_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body:JSON.stringify({action:"ai",prompt:xqPrompt(c),lang:"en",id:deviceId(),code:adminCode()})})
+   .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()})
+   .then(function(j){
+    if(j&&j.limit===true)throw new Error(j.error||"daily class AI limit reached");
+    if(!j||j.ok!==true)throw new Error((j&&j.error)||"proxy error");
+    if(!j.text||j.text.length<200)throw new Error("empty response");
+    done(j.text);
+   })
+   .catch(function(e){if(!tried)setTimeout(function(){attempt(true)},2500);else fail(e)});
+  };attempt(false);return;
+ }
+ if(genMode==="key"){
+  var ck=aiCfg();
+  if(!ck||ck.provider==="free"){toast(t("xq_needkey"));buildMock();return}
+  aiCall(ck,xqPrompt(c)).then(done).catch(fail);return;
+ }
+ if(genMode==="free"){
+  freeCall(xqPrompt(c)).then(done).catch(fail);return;
+ }
+ toast(t("xq_needmode"));buildMock();
+}
+var XQ={n:15,c:null,qs:[],ans:[],fl:[],i:0,neg:false,t:0,timer:null,mode:""};
+
 function mockN(btn,n){mock.n=n;document.querySelectorAll("#mn .chip").forEach(function(c){c.classList.remove("on")});btn.classList.add("on")}
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
 function mockStart(){
