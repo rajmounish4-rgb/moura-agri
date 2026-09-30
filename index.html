@@ -303,11 +303,19 @@ footer.appfoot{padding:14px 18px 20px;text-align:center;font-size:10.5px;color:v
       <div style="font-size:12px;font-weight:800;color:var(--sage)" id="doc-ai">AI PLANT DOCTOR</div>
       <div id="docAIBadge" style="font-family:var(--mono);font-size:9.5px;letter-spacing:.4px;border:1px solid #cfe3b2;background:#fff;border-radius:999px;padding:3px 9px;color:#3f6212"></div>
     </div>
-    <label for="photoIn" style="display:flex;align-items:center;gap:10px;border:1.5px dashed #a3c47c;border-radius:12px;padding:11px 12px;cursor:pointer;background:rgba(255,255,255,.6)">
+    <div style="border:1.5px dashed #a3c47c;border-radius:12px;padding:11px 12px;background:rgba(255,255,255,.6)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
       <svg viewBox="0 0 24 24" width="21" height="21" fill="none" style="flex:0 0 21px"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z" stroke="#65a30d" stroke-width="1.8"/><circle cx="12" cy="13.5" r="3.2" stroke="#65a30d" stroke-width="1.8"/></svg>
       <div><div style="font-size:12.5px;font-weight:700" id="doc-ph1">Take or choose a photo of the plant</div>
       <div style="font-size:10.5px;color:var(--ink-dim)" id="doc-ph2">Leaf, stem, fruit, pest or the whole plant</div></div>
-    </label>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn sm" style="background:#3f6212;border-color:#3f6212;color:#fff" id="doc-bcam" type="button" onclick="document.getElementById('photoCam').click()">Open camera</button>
+      <button class="btn sm" id="doc-bgal" type="button" onclick="document.getElementById('photoIn').click()">Choose from gallery</button>
+      </div>
+    </div>
+    <input type="file" id="photoCam" accept="image/*" capture="environment" style="display:none">
+    <input type="file" id="photoIn" accept="image/*" style="display:none">
     <input type="file" id="photoIn" accept="image/*" style="display:none">
     <img id="photoPrev" style="width:100%;border-radius:10px;margin-top:10px;display:none" alt="photo of the sick plant">
     <textarea id="aiSymTxt" class="ta" rows="3" style="margin-top:9px" placeholder="Describe what you saw - e.g. rice leaves with oval grey spots with dark borders, field patchy, started after last week's rain"></textarea>
@@ -605,7 +613,7 @@ function applyLang(){
   L("hm-kick","hm_kick");L("hm-title","hm_title");L("hm-tag","hm_tag");L("hm-cta1t","hm_cta1");L("hm-cta2","hm_cta2");L("gm-off-l","m_off");L("gm-class-l","m_class");L("gm-free-l","m_free");L("hm-go","hm_go");L("hm-inside","hm_inside");L("hm-off","hm_off");
   L("fc1h","fc1h");L("fc1p","fc1p");L("fc2h","fc2h");L("fc2p","fc2p");L("fc3h","fc3h");L("fc3p","fc3p");L("fc4h","fc4h");L("fc4p","fc4p");L("fc5h","fc5h");L("fc5p","fc5p");L("fc6h","fc6h");L("fc6p","fc6p");
   L("lb-topic","lb_topic");L("lb-code","lb_code");L("lb-how","lb_how");L("btn-gen","gen");
-  L("doc-title","doc_title");L("doc-sub","doc_sub");L("doc-ai","doc_ai");L("doc-ph1","doc_ph1");L("doc-ph2","doc_ph2");L("doc-bp","doc_btn_photo");L("doc-bt","doc_btn_text");
+  L("doc-title","doc_title");L("doc-sub","doc_sub");L("doc-ai","doc_ai");L("doc-ph1","doc_ph1");L("doc-ph2","doc_ph2");L("doc-bp","doc_btn_photo");L("doc-bt","doc_btn_text");L("doc-bcam","doc_cam");L("doc-bgal","doc_gal");
   var ids={"homeQ":"hm_ph","asTopic":"as_ph","aiSymTxt":"doc_phph"};
   Object.keys(ids).forEach(function(i){var e=document.getElementById(i);if(e)e.setAttribute("placeholder",t(ids[i]))});
   L("calc-title","calc_title");L("calc-sub","calc_sub");L("cal-title","cal_title");L("cal-sub","cal_sub");L("k-title","k_title");L("k-sub","k_sub");L("w-title","w_title");L("w-sub","w_sub");L("lb-crop","lb_crop");L("lb-area","lb_area");L("lb-unit","lb_unit");L("lb-soil","lb_soil");L("calc-go","calc_go");L("cal-alerts","cal_alerts");L("lb-city","lb_city");L("w-btn1","w_go");L("w-btn2","w_geo");L("jobs-title","jobs_title");L("jobs-sub","jobs_sub");L("fc7h","fc7h");L("fc7p","fc7p");L("lb-adm","adm_f");
@@ -783,6 +791,14 @@ var TR5={
 };
 Object.keys(TR5).forEach(function(l){ var src=TR[l]||{}; Object.keys(TR5[l]).forEach(function(k){src[k]=TR5[l][k]}); TR[l]=src; });
 
+var TR6={
+ en:{doc_cam:"Open camera",doc_gal:"Choose from gallery",doc_think_1:"Looking at the photo\u2026",doc_think_2:"Checking symptoms\u2026",doc_think_3:"Matching known diseases\u2026",doc_think_4:"Writing remedies\u2026"},
+ ta:{doc_cam:"\u0baa\u0b9f\u0b99\u0bcd\u0b95\u0bc1 \u0b8e\u0b9f\u0bc1",doc_gal:"\u0b95\u0bc7\u0bb2\u0bb0\u0bbf\u0baf\u0bbf\u0bb2\u0bcd \u0bb0\u0bc1\u0ba8\u0bcd\u0ba4\u0bc1 \u0ba4\u0bc7\u0bb0\u0bcd\u0bb5\u0bc1",doc_think_1:"\u0baa\u0b9f\u0ba4\u0bcd\u0ba4\u0bc8 \u0baa\u0bbe\u0bb0\u0bcd\u0b95\u0bcd\u0b95\u0bbf\u0bb1\u0ba4\u0bc1\u2026",doc_think_2:"\u0b85\u0bb1\u0bbf\u0b95\u0bc1\u0bb1\u0bbf\u0b95\u0bb3\u0bc8 \u0b9a\u0bb0\u0bbf\u0baa\u0bbe\u0bb0\u0bcd\u0b95\u0bcd\u0b95\u0bbf\u0bb1\u0ba4\u0bc1\u2026",doc_think_3:"\u0ba8\u0bc1\u0ba3\u0bc1\u0ba8\u0bcd\u0ba4 \u0ba8\u0bcb\u0baf\u0bcd\u0b95\u0bb3\u0bc8 \u0b92\u0baa\u0bcd\u0baa\u0bbf\u0b9f\u0bc1\u0b95\u0bbf\u0bb1\u0ba4\u0bc1\u2026",doc_think_4:"\u0ba4\u0bc0\u0bb0\u0bcd\u0bb5\u0bc1\u0b95\u0bb3\u0bc8 \u0b8e\u0bb4\u0bc1\u0ba4\u0bc1\u0b95\u0bbf\u0bb1\u0ba4\u0bc1\u2026"},
+ hi:{doc_cam:"\u0915\u0948\u092e\u0930\u093e \u0916\u094b\u0932\u0947\u0902",doc_gal:"\u0917\u0948\u0932\u0930\u0940 \u0938\u0947 \u091a\u0941\u0928\u0947\u0902",doc_think_1:"\u092b\u093c\u094b\u091f\u094b \u0926\u0947\u0916 \u0930\u0939\u093e \u0939\u0948\u2026",doc_think_2:"\u0932\u0915\u094d\u0937\u0923 \u091c\u093e\u0901\u091a \u0930\u0939\u093e \u0939\u0948\u2026",doc_think_3:"\u0930\u094b\u0917 \u092e\u093f\u0932\u093e\u0928 \u0930\u0939\u093e \u0939\u0948\u2026",doc_think_4:"\u0909\u092a\u093e\u092f \u0932\u093f\u0916 \u0930\u0939\u093e \u0939\u0948\u2026"}
+};
+Object.keys(TR6).forEach(function(l){ var src=TR[l]||{}; Object.keys(TR6[l]).forEach(function(k){src[k]=TR6[l][k]}); TR[l]=src; });
+
+
 
 
 
@@ -836,10 +852,18 @@ function findDisease(){
   }).join("")
   +'<div class="notecard" style="margin-top:12px">Not convincing? Keep only the 2&ndash;3 most specific symptoms and search again, or try the AI diagnosis at the top.</div>';
 }
+var docThinkTimer=null;
+function docThinkStop(){if(docThinkTimer){clearInterval(docThinkTimer);docThinkTimer=null}}
 function docAIThink(msg){
-  $("aiDocOut").innerHTML='<div class="alabel" style="margin-top:10px"><span class="kbtag" style="background:#7c3aed">AI</span>'+esc(msg)+'</div>';
+  docThinkStop();
+  var seq=[t("doc_think_1"),t("doc_think_2"),t("doc_think_3"),t("doc_think_4")];
+  var i=0,el=$("aiDocOut");
+  function draw(){el.innerHTML='<div class="alabel" style="margin-top:10px"><span class="kbtag" style="background:#7c3aed">AI</span>'+esc(msg+" "+(seq[i%seq.length]||""))+'</div>';}
+  draw();
+  docThinkTimer=setInterval(function(){i++;draw()},3000);
 }
 function docAICard(title,txt){
+  docThinkStop();
   $("aiDocOut").innerHTML='<div class="card" style="margin-top:10px;border-color:#7c3aed"><h3 style="font-size:13px">'+esc(title)+'</h3><p style="white-space:pre-wrap;font-size:13px;line-height:1.55">'+esc(txt)+'</p><p class="sub" style="margin-top:8px">AI can be wrong &mdash; cross-check with the symptom tool above and your KVK before treating.</p></div>';
 }
 function docAIBadge(){
@@ -909,6 +933,7 @@ function genSharedDiag(prompt,imageB64,cb,errCb,tried){
   });
 }
 function docRenderDiag(title,txt){
+  docThinkStop();
   var secs=String(txt).split(/\n(?=##\s)/).map(function(s){return s.trim()}).filter(Boolean);
   var html="";
   secs.forEach(function(s){
@@ -926,16 +951,19 @@ function docRenderDiag(title,txt){
    +'<p class="sub" style="margin-top:8px">'+t("doc_disclaimer")+'</p></div>';
 }
 function docLimitCard(msg){
+  docThinkStop();
   $("aiDocOut").innerHTML='<div class="card" style="margin-top:10px;border-color:var(--terra)"><b style="color:var(--terra)">'+t("doc_limit_t")+'</b>'
    +'<p style="font-size:12.5px;line-height:1.5;margin-top:4px">'+esc(msg||"")+'</p>'
    +'<p style="font-size:12.5px;line-height:1.5;margin-top:4px">'+t("doc_limit_b")+'</p></div>';
 }
 function docFailCard(errMsg){
+  docThinkStop();
   document.getElementById("aiDocOut").innerHTML='<div class="card" style="margin-top:10px;border-color:#7c3aed"><h3 style="font-size:13px">'+t("doc_fail_t")+'</h3>'
    +'<p style="white-space:pre-wrap;font-size:13px;line-height:1.55">'+(errMsg?esc(errMsg)+"\n\n":"")+t("doc_fail")+'</p>'
    +'<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn sm" onclick="aiTextDiag()">'+t("doc_retry")+'</button></div></div>';
 }
 function docPhotoNoVisionCard(errMsg){
+  docThinkStop();
   document.getElementById("aiDocOut").innerHTML='<div class="card" style="margin-top:10px;border-color:#7c3aed"><h3 style="font-size:13px">'+t("doc_photo_needs")+'</h3>'
    +'<p style="white-space:pre-wrap;font-size:13px;line-height:1.55">'+(errMsg?esc(errMsg)+"\n\n":"")+t("doc_photo_needs_b")+'</p>'
    +'<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn sm" onclick="aiPhotoDiag()">'+t("doc_retry")+'</button><button class="btn sm sec" onclick="aiTextDiag()">'+t("doc_text_instead")+'</button></div></div>';
@@ -973,7 +1001,7 @@ function aiTextDiag(){
   aiCall(cfg,p).then(function(txt){docRenderDiag(t("doc_res_title"),txt)}).catch(function(e){docFailCard(String(e&&e.message||e))});
 }
 function aiPhotoDiag(){
-  var f=document.getElementById("photoIn").files&&document.getElementById("photoIn").files[0];
+  var f=(typeof DOCFILE!=="undefined"&&DOCFILE)||(document.getElementById("photoIn").files&&document.getElementById("photoIn").files[0]);
   if(!f){toast(t("doc_need_photo"));return}
   var t1=document.getElementById("aiSymTxt").value.trim();
   var extra=t1?(" The farmer also notes: "+t1+"."):"";
@@ -1000,7 +1028,7 @@ function aiPhotoDiag(){
   });
 }
 function downscaleImage(file,cb,max){
-  max=max||1024;
+  max=max||640;
   var rd=new FileReader();
   rd.onload=function(){
     var img=new Image();
@@ -1011,7 +1039,7 @@ function downscaleImage(file,cb,max){
         c.width=Math.round(w*sc);c.height=Math.round(hh*sc);
         var ctx=c.getContext("2d");
         ctx.drawImage(img,0,0,c.width,c.height);
-        cb(c.toDataURL("image/jpeg",0.82));
+        cb(c.toDataURL("image/jpeg",0.75));
       }catch(e){cb(String(rd.result))}
     };
     img.onerror=function(){cb(String(rd.result))};
@@ -1019,13 +1047,18 @@ function downscaleImage(file,cb,max){
   };
   rd.readAsDataURL(file);
 }
+var DOCFILE=null;
 (function(){
-  var pi=document.getElementById("photoIn");
-  if(pi)pi.addEventListener("change",function(){
-    var f=pi.files&&pi.files[0],pv=document.getElementById("photoPrev");
+  function onpick(e){
+    var f=e.target.files&&e.target.files[0],pv=document.getElementById("photoPrev");
+    DOCFILE=f||null;
     if(!pv)return;
     if(f&&window.URL&&URL.createObjectURL){pv.src=URL.createObjectURL(f);pv.style.display="block"}
     else{pv.style.display="none"}
+  }
+  ["photoIn","photoCam"].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el)el.addEventListener("change",onpick);
   });
 })();
 
