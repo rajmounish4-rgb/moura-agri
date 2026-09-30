@@ -2257,7 +2257,18 @@ function synthDoc(topic,code){
     {t:"Scope",d:"The full range of activities, institutions and practices covered by the topic within the agricultural value chain."},
     {t:"Relevance",d:"The contribution of the topic to productivity, sustainability or farm income in Indian agriculture."}]}
   var secs=[],n=1;
-  secs.push({h:"Introduction",ps:intro});
+  var cmx=courseMatch(topic+" "+(code||""));
+  var smap=[];
+  if(cmx){
+    smap.push("Course: "+cmx.c+" - "+cmx.n+" (ICAR B.Sc. (Hons.) Agriculture syllabus, TNAU pattern).");
+    smap.push("Units of this course: "+cmx.u.map(function(u,i){return "Unit "+["I","II","III","IV","V"][i]+" - "+u}).join("; ")+".");
+    smap.push("Standard textbooks of this course: "+cmx.r.join("; ")+".");
+  }else{
+    smap.push("Cross-check the course code in your syllabus copy; this topic belongs to the applied agricultural science courses of the ICAR B.Sc. (Hons.) Agriculture programme.");
+    smap.push("Depth expected: as per the ICAR 5th Deans Committee recommendations followed by TNAU.");
+  }
+  smap.push("Verify the unit mapping with your course teacher before submission.");
+  secs.push({h:"Syllabus Mapping",list:smap});
   secs.push({h:"Objectives",list:objs});
   secs.push({h:"Key Concepts and Definitions",defs:defs});
   var main1=[],
@@ -2314,11 +2325,24 @@ function synthDoc(topic,code){
   di.slice(0,3).forEach(function(x){addkw(x.o.name.split(" ")[0]);addkw(x.o.crop)});
   le.slice(0,2).forEach(function(x){x.o.title.split(" ").forEach(function(w){if(w.length>4)addkw(w)})});
   secs.push({h:"Keywords for Rapid Revision",list:kwl.slice(0,10).map(function(w){return titleCase(w)+" - be able to define, apply and give one Indian example of this term in the examination."})});
-  secs.push({h:"References",list:["TNAU e-course content for B.Sc. (Hons.) Agriculture - relevant course material.",
-    "ICAR publications and the Handbook of Agriculture, Indian Council of Agricultural Research, New Delhi.",
-    "TNAU Agritech Portal (agritech.tnau.ac.in) - verified crop production and protection recommendations.",
-    "Ministry of Agriculture & Farmers' Welfare - scheme documents and annual reports.",
-    "Standard university textbook treatment of the subject as prescribed in the SAU curriculum."]});
+  secs.push({h:"Figure and Table Suggestions",list:[
+    "- Fig. 1: A labelled diagram of the central concept of "+topic+".",
+    "- Table 1: Classification or key parameters of "+topic+" - fill the columns from your course notes.",
+    "- Fig. 2: A flow diagram of the process or management sequence for "+topic+".",
+    "- Fig. 3: A field photograph from your practicals or a sourced image (cite the source under the figure).",
+    "- Present the Reference Data table in your final formatted document with proper borders."]});
+  var today=new Date();
+  var acc="Accessed "+today.getDate()+" "+["January","February","March","April","May","June","July","August","September","October","November","December"][today.getMonth()]+" "+today.getFullYear();
+  var reflist=[
+    "- [TNAU] TNAU Agritech Portal: crop production and protection recommendations. https://agritech.tnau.ac.in ("+acc+").",
+    "- [TNAU] TNAU Crop Production Guide for field crops. Tamil Nadu Agricultural University, Coimbatore.",
+    "- [ICAR] ICAR. Handbook of Agriculture. Indian Council of Agricultural Research, New Delhi.",
+    "- [ICAR] TNAU/ICAR eCourse materials for B.Sc. (Hons.) Agriculture. https://ecourses.icar.gov.in ("+acc+").",
+    "- [Govt] Ministry of Agriculture & Farmers Welfare. Agricultural Statistics at a Glance. https://agricoop.gov.in ("+acc+")."];
+  if(cmx){cmx.r.forEach(function(b,i){reflist.unshift("- [Book] "+b+".")})}
+  else{reflist.unshift("- [Book] The standard SAU textbook prescribed for the course in your syllabus copy.")}
+  secs.push({h:"References",list:reflist});
+
   secs.forEach(function(s){s.h=numSecs(n++)+s.h});
   return {title:T,course:code,secs:secs,source:"synthesis",kbname:null};
 }
@@ -2773,23 +2797,60 @@ function aiRefresh(){
    :'<span class="badge">AI off</span> <span class="sub">offline engine &middot; connect a key below for online writing</span>';
   setGenMode(genMode);
 }
+var COURSES=[
+ {k:"abt301",c:"ABT 301",n:"Principles of Plant Biotechnology",u:["Introduction to plant biotechnology and its scope in Indian agriculture","Cell and tissue culture: culture media, micropropagation and somaclonal variation","Protoplast culture, protoplast fusion and somatic hybridization","Recombinant DNA technology: enzymes, vectors and methods of gene transfer","Molecular markers (RFLP, RAPD, SSR, SNP), genomics, QTL mapping, commercial applications and biosafety"],r:["Singh, B.D. Biotechnology: Expanding Horizons. Kalyani Publishers","Gupta, P.K. Elements of Biotechnology. Rastogi Publications"]},
+ {k:"aec102",c:"AEC 102",n:"Fundamentals of Agricultural Economics",u:["Nature and scope of economics and agricultural economics in India","Theory of consumption: utility, demand, elasticity and consumer behaviour","Theory of production: factors of production, production laws and cost curves","Exchange and theory of distribution: markets, pricing and factor shares","Macroeconomic concepts: national income, money, banking, inflation and agricultural credit"],r:["Subba Reddy, S., Raghu Ram, P. and Neelakanta Sastry, T. Agricultural Economics. Oxford & IBH Publishing, New Delhi","Sankhayan, P.L. Introduction to Farm Management. Tata McGraw-Hill"]},
+ {k:"aec201",c:"AEC 201",n:"Farm Management, Production and Resource Economics",u:["Production economics and farm management: nature, scope and farm business principles","Factor-product, factor-factor and product-product relationships and least-cost combination","Farm planning and budgeting: types of budgets and farm investment analysis","Risk and uncertainty in agricultural production and management responses","Resource economics: land, labour and capital; resource conservation and ownership patterns"],r:["Johl, S.S. and Vasisht, T.K. Fundamentals of Farm Business Management","Subba Reddy, S., Raghu Ram, P. and Neelakanta Sastry, T. Agricultural Economics. Oxford & IBH Publishing"]},
+ {k:"aec301",c:"AEC 301",n:"Agricultural Marketing, Trade and Prices",u:["Market, marketing and agricultural marketing: concepts, structure, conduct and performance","Marketing channels, functions, institutions, costs and margins","Cooperation, contract farming, AGMARK grading and food safety standards","WTO and international agricultural trade: India's exports and imports","Prices and price policy: minimum support prices, procurement, buffer stocks and market information systems"],r:["Acharya, S.S. and Agarwal, N.L. Agricultural Marketing in India. Oxford & IBH Publishing, New Delhi","Kohls, R.L. and Uhl, J.N. Marketing of Agricultural Products"]},
+ {k:"aen201",c:"AEN 201",n:"Fundamentals of Entomology",u:["History of entomology in India and factors for insect abundance","Classification of phylum Arthropoda and relationship of class Insecta","Insect morphology: head, thorax, abdomen and their appendages","Insect anatomy and physiology: digestive, circulatory, respiratory, excretory, nervous, reproductive and endocrine systems","Insect taxonomy up to orders with examples; insect collection and preservation"],r:["Tembhare, D.B. A Textbook of Insect Anatomy and Physiology","David, B.V. Elements of Economic Entomology"]},
+ {k:"aen301",c:"AEN 301",n:"Pests of Field Crops and Stored Products and their Management",u:["Pests of cereals and millets: rice, wheat, maize, sorghum and minor millets","Pests of pulses and oilseeds","Pests of cotton and sugarcane","Pests of green manures, forage crops and stored products; non-insect pests","Principles and methods of pest management: IPM, biological, chemical and integrated control"],r:["Atwal, A.S. and Dhaliwal, G.S. Agricultural Pests of South Asia and their Management","TNAU. Techniques and Technologies for Pest Management in Field Crops"]},
+ {k:"aen302",c:"AEN 302",n:"Pests of Horticultural Crops and their Management",u:["Pests of fruit crops: mango, banana, citrus, grape, guava and pomegranate","Pests of vegetable crops: tomato, brinjal, okra, crucifers and cucurbits","Pests of plantation and spice crops: tea, coffee, coconut, pepper and cardamom","Pests of ornamental, medicinal and aromatic plants","Pest management in horticultural ecosystems and stored produce"],r:["Reddy, P.P. Plant Nematology in India","Atwal, A.S. and Dhaliwal, G.S. Agricultural Pests of South Asia and their Management"]},
+ {k:"aex101",c:"AEX 101",n:"Rural Sociology and Educational Psychology",u:["Rural sociology: nature, scope and importance; characteristics of rural society","Social institutions, social stratification and rural social change","Indian rural society: caste, family, community and rural leadership","Educational psychology: learning, motivation, intelligence and memory","Theories of learning and their application in agricultural extension"],r:["Dahama, O.P. and Bhatnagar, O.P. Education and Communication for Development","Sandhu, G.S. Rural Sociology: Concepts and Theories"]},
+ {k:"aex201",c:"AEX 201",n:"Communication Skills and Personality Development",u:["Communication skills: meaning and process of communication, verbal and non-verbal","Listening and note taking, writing skills and oral presentation skills","Reading and comprehension of general and technical articles; precise writing","Individual and group presentations, impromptu presentation and public speaking","Group discussion; organizing seminars and conferences"],r:["Murphy, H.A. Effective Communication in Business","Suriyapriya, E. AEX 201 Theory Manual, RVS Agricultural College"]},
+ {k:"agm101",c:"AGM 101",n:"Fundamentals of Microbiology",u:["Introduction: history and scope of microbiology","Microbiological techniques: microscopy, staining and culture methods","The microbial world: bacteria, fungi, viruses, algae and protozoa","Microbial growth, metabolism and control of microorganisms","Microbial genetics and immunology; applied microbiology in agriculture and industry"],r:["Dubey, R.C. and Maheshwari, D.K. A Textbook of Microbiology. S. Chand Publishing","Pelczar, M.J., Chan, E.C.S. and Krieg, N.R. Microbiology. Tata McGraw-Hill"]},
+ {k:"arm301",c:"ARM 301",n:"Entrepreneurship Development and Business Management",u:["Entrepreneur and the entrepreneurial process","Entrepreneurship opportunities and business idea generation","Managerial functions: planning and organizing","Managerial functions: staffing, directing and control","Functional areas of management: finance, marketing, human resources and production"],r:["Khanka, S.S. Entrepreneurship Development. S. Chand Publishing","Gupta, C.B. and Srinivasan, N.P. Entrepreneurial Development"]}
+];
+function courseMatch(q){
+  var s=String(q||"").toLowerCase().replace(/[^a-z0-9 ]/g," ");
+  var m=s.match(/(abt|aec|aen|aex|agm|arm)\s*[- ]?\s?(101|102|201|301|302)/);
+  if(m){var k=m[1]+m[2];for(var i=0;i<COURSES.length;i++){if(COURSES[i].k===k)return COURSES[i]}}
+  var best=null,bs=0;
+  COURSES.forEach(function(c){
+    var hay=(c.n+" "+c.c+" "+c.u.join(" ")).toLowerCase();
+    var sc=0;s.split(/\s+/).forEach(function(w){if(w.length>3&&hay.indexOf(w)>=0)sc++});
+    if(sc>bs){bs=sc;best=c}
+  });
+  return bs>=2?best:null;
+}
 function aiPrompt(topic,code){
-  var s='Write a complete university assignment for a B.Sc. (Hons.) Agriculture student in India.\n';
-  s+='Topic: '+topic+'\nCourse: '+code+'\n\n';
+  var s='Write a complete university assignment for a B.Sc. (Hons.) Agriculture student at a State Agricultural University in India (TNAU pattern).\n';
+  s+='Topic: '+topic+'\nCourse: '+(code||'not specified')+'\n';
+  var cm=courseMatch(topic+" "+(code||""));
+  if(cm){
+    s+='\nSYLLABUS CONTEXT (this is the most important grounding for the assignment):\n';
+    s+='The topic belongs to the course '+cm.c+' - '+cm.n+', ICAR B.Sc. (Hons.) Agriculture syllabus followed by TNAU.\n';
+    s+='Course units:\n'+cm.u.map(function(u,i){return "- Unit "+["I","II","III","IV","V"][i]+": "+u}).join("\n")+'\n';
+    s+='Frame the assignment inside this course: identify which unit the topic falls under, use the exact terminology this course expects, and treat these standard textbooks as the reference base: '+cm.r.join("; ")+'.\n';
+  }
+  s+='\n';
   s+='CONTENT RULES\n';
-  s+='1. Length: 1800-2500 words, formal academic tone.\n';
-  s+='2. Be India-specific: refer to Indian institutions (ICAR, TNAU, KVKs, CSIR, APEDA, NABARD, FPOs), Indian schemes, crops, prices in rupees and realistic Indian statistics. Hedge uncertain numbers with words like about or around; never invent precise fake data.\n';
-  s+='3. Topic adaptation: if the topic is a crop or production technology, cover botany, varieties, climate and soil, the full package of practices, harvesting and yield, post-harvest and economics. If it is a concept or theory, cover definition, classification, mechanism or process, applications and Indian context. If it is creative or reflective (essay, seminar, debate, vision), adapt section titles creatively but keep the same overall rhythm and depth.\n\n';
+  s+='1. Length: 2200-3200 words, formal academic tone, examination-grade depth. Write the maximum useful content; this should read like the best submission in the class, one a professor cannot reject.\n';
+  s+='2. Syllabus-first: frame every section around the ICAR/TNAU syllabus of this course and use the exact technical terminology a course teacher expects to see.\n';
+  s+='3. Be India-specific: refer to Indian institutions (ICAR, TNAU, KVKs, CSIR, APEDA, NABARD, FPOs), Indian schemes with years, Indian crops, prices in rupees and realistic Indian statistics. Prefer data attributable to Agricultural Statistics at a Glance, Pocket Book of Agricultural Statistics, TNAU Crop Production Guide, TNAU Agritech Portal, ICAR annual reports and scheme documents. Hedge uncertain numbers with about or around; never invent precise fake data.\n';
+  s+='4. Concrete examples everywhere: Indian crop examples with named varieties, released technologies, district or state level cases, and institutional examples (a KVK, an ICAR institute, an FPO, a cooperative).\n';
+  s+='5. Topic adaptation: if the topic is a crop or production technology, cover botany, varieties, climate and soil, the full package of practices, harvesting and yield, post-harvest and economics. If it is a concept or theory, cover definition, classification, mechanism or process, applications and Indian context. If it is creative or reflective (essay, seminar, debate, vision), adapt section titles creatively but keep the same overall rhythm and depth.\n\n';
   s+='STRUCTURE - use exactly these sections in this order. Each section heading must be on its own line prefixed with ## (for example: ## Introduction):\n';
-  s+='## Introduction\n## Objectives\n## Key Concepts and Definitions\nThen three to five main content sections with your own descriptive titles, each as ## <your title>\n## Reference Data\n## Case Study\n## Challenges\n## Impact and Outcomes\n## Suggestions and Way Forward\n## Conclusion\n## References\n\n';
+  s+='## Syllabus Mapping\n(two to three lines: the course code and name, which unit(s) the topic belongs to, and one line on why the syllabus includes it)\n';
+  s+='## Introduction\n## Objectives\n## Key Concepts and Definitions\nThen four to six main content sections with your own descriptive titles, each as ## <your title>. Cover the topic from multiple points of view: scientific, field-practical, economic and policy.\n## Reference Data\n## Case Study\n## Challenges\n## Impact and Outcomes\n## Suggestions and Way Forward\n## Conclusion\n## Figure and Table Suggestions\n## References\n\n';
   s+='FORMAT RULES - follow exactly:\n';
   s+='1. Paragraphs: plain text lines.\n';
   s+='2. Lists (objectives, references, challenges, impacts, suggestions): each item on its own line starting with "- ".\n';
   s+='3. Key Concepts and Definitions: each entry on one line in the form "Term : definition".\n';
   s+='4. Reference Data section: exactly one table. First row is the header. Every row is pipe-separated, like: | Parameter | Value | Relevance |\n';
-  s+='5. References: real verifiable sources (textbooks, TNAU Agritech Portal, ICAR and government publications); never invent page numbers.\n';
-  s+='6. Case Study: 150-250 words, a real Indian example with named institutions where you are confident.\n';
-  s+='7. No preamble, no closing remarks, no markdown bold or extra headings. Start directly with ## Introduction.'+langDirective();
+  s+='5. References: at least 8, in three groups, each item starting with the group tag then the citation. Group A [Book]: Indian-author textbooks of this course, formatted as Author(s), Year, Title, Publisher. Group B [TNAU/ICAR]: institutional publications such as the TNAU Crop Production Guide, ICAR Handbook of Agriculture, ICAR annual reports, TNAU Agritech Portal. Group C [Web]: Organisation, Year, Title, complete URL, and (Accessed September 2026). Only real verifiable sources; never invent page numbers or editions.\n';
+  s+='6. Figure and Table Suggestions: each item on its own line starting with \"- Fig. N: caption - what to insert or draw\" or \"- Table N: ...\" so the student can add photos, diagrams or data tables before submission.\n';
+  s+='7. Case Study: 150-250 words, a real Indian example with named institutions where you are confident.\n';
+  s+='7. No preamble, no closing remarks, no markdown bold or extra headings. Start directly with ## Syllabus Mapping.'+langDirective();
   return s;
 }
 function freeTryGet(url){
