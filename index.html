@@ -2438,20 +2438,31 @@ function drawChartDoc(title,sub,head,rows){var o=_can(1600,900);if(!o)return nul
   return _picBase(o.c)}
 function _short(s,n){s=String(s);if(s.length<=n)return s;s=s.slice(0,n-3);var p=s.lastIndexOf(" ");if(p>n*0.6)s=s.slice(0,p);return s+"..."}
 function collectDiagrams(doc){
-  var out=[],imgi=0,txt=(doc.title+" ").concat(doc.secs.map(function(s){return s.h+" "+(s.ps||[]).join(" ")+" "+(s.list||[]).join(" ")+" "+(s.defs||[]).map(function(d){return d.t+" "+d.d}).join(" ")}).join(" "));
-  // chart/table picture from the stats-like section
-  for(var i=0;i<doc.secs.length;i++){var s=doc.secs[i];
-    if(s.table&&s.table.rows&&s.table.rows.length>=2){out.push({n:"chart"+(imgi++),b64:drawChartDoc(s.table.title||s.h,doc.title,s.table.head,s.table.rows)});break}}
-  out=out.filter(function(p){return p.b64});
+  var out=[],imgi=0,fig=0,txt=(doc.title+" ").concat(doc.secs.map(function(s){return s.h+" "+(s.ps||[]).join(" ")+" "+(s.list||[]).join(" ")+" "+(s.defs||[]).map(function(d){return d.t+" "+d.d}).join(" ")}).join(" "));
+  // charts from every data table (up to two)
+  for(var i=0;i<doc.secs.length&&imgi<2;i++){var s=doc.secs[i];
+    if(s.table&&s.table.rows&&s.table.rows.length>=2){out.push({n:"chart"+(imgi++),b64:drawChartDoc(s.table.title||s.h,doc.title,s.table.head,s.table.rows),cap:"Fig. "+(++fig)+": "+(s.table.title||s.h)+" - visualised from the reference data table."})}}
   // topic-type diagram
-  var d=null,sub=doc.title;
+  var d=null,sub=doc.title,cap0="";
   if(/disease|blast|rust|wilt|blight|mosaic|rot|canker|spot|pathogen|fungu|symptom/i.test(txt)){
     d=drawFlowDoc("Disease cycle and management pathway","schematic - "+sub,["Pathogen survival (seed, stubble, volunteers)","Infection under favourable weather","Symptoms appear on the plant","Secondary spread (air, water, seed)","Integrated management: cultural, biological, chemical"]);
+    cap0="Disease cycle and integrated management pathway for "+sub+".";
   }else if(/insect|pest|larva|moth|beetle|aphid|borer|weevil|nematode|predator/i.test(txt)){
     d=drawCycleDoc("Typical pest life cycle","schematic - "+sub,["Egg","Larva / nymph","Pupa","Adult"]);
+    cap0="Typical pest life cycle relevant to "+sub+".";
   }else{var objs=(doc.secs[1]&&doc.secs[1].list)||[];var steps=objs.slice(0,4).map(function(o){return String(o).replace(/^To\s+/i,"").replace(/\.$/,"")});
-    if(steps.length>=3)d=drawFlowDoc("Assignment roadmap",sub,steps.concat(["Conclusion and outcomes"]))}
-  if(d)out.push({n:"diag0",b64:d});
+    if(steps.length>=3){d=drawFlowDoc("Assignment roadmap",sub,steps.concat(["Conclusion and outcomes"]));cap0="Assignment roadmap - the logical structure of this study of "+sub+"."}}
+  if(d)out.push({n:"diag0",b64:d,cap:"Fig. "+(++fig)+": "+cap0});
+  // extra process-flow diagrams from management/process-like sections (up to two)
+  var fl=0;
+  for(var i2=0;i2<doc.secs.length&&fl<2;i2++){var s2=doc.secs[i2];
+    var lst=(s2.list||[]).map(String);
+    if(lst.length>=4&&/(management|control|process|practice|method|step|scheme|program|recommendation|measure|strategy|approach|package|procedure|suggestion|way forward|precaution)/i.test(s2.h)){
+      var steps2=lst.slice(0,5).map(function(o){return String(o).replace(/^To\s+/i,"").replace(/\.$/,"")});
+      var d2=drawFlowDoc(s2.h.replace(/^\d+\.\s*/,""),sub,steps2.concat(["Outcome"]));
+      if(d2)out.push({n:"flow"+(fl++),b64:d2,cap:"Fig. "+(++fig)+": "+s2.h.replace(/^\d+\.\s*/,"")+" - summarised as a process flow."})
+    }}
+  out=out.filter(function(p){return p.b64});
   return out}
 
 // ---------- DOCX builder ----------
@@ -2489,7 +2500,9 @@ function buildDocx(doc,pics){
   if(picsrc.length){body+='<w:p/>';
     picsrc.forEach(function(p,i){var rid=100+i;used.push(p);
       rels+='<Relationship Id="rId'+rid+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/img'+i+'.png"/>';
-      body+=_wPic(rid,5486400,3086100)})}
+      body+=_wPic(rid,5486400,3086100);
+      if(p.cap)body+=_wPara(p.cap,{center:1,i:1,sz:18,color:"78716C",spc:180});
+      if(p.cap)body+=_wPara("",{spc:120})})}
   body+='<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440"/></w:sectPr>';
   var docxml='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"><w:body>'+body+'</w:body></w:document>';
   var styles='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
@@ -2557,6 +2570,7 @@ function buildPptx(doc,pics){
   slides.push(_slideXML(csh));
   // topic diagram slide (pics[1] if present)
   if(pics.length>1&&pics[1].b64){var dsh=_hdSlide(doc,{t:"Topic at a glance",sub:doc.title});dsh+=_pic(10,picRid(pics[1]),1000000,1300000,10200000,5737500);slides.push(_slideXML(dsh))}
+  pics.slice(2).forEach(function(px){if(px&&px.b64){var esh=_hdSlide(doc,{t:String(px.cap||"Supporting figure").replace(/^Fig\. \d+:\s*/,""),sub:doc.title});esh+=_pic(10,picRid(px),1000000,1300000,10200000,5737500);slides.push(_slideXML(esh))}});
   // content slides
   doc.secs.forEach(function(s){
     var title=s.h.replace(/^\d+\.\s*/,""),sub=doc.title+"  -  "+doc.course,bullets=[];
@@ -2650,6 +2664,14 @@ function renderDoc(doc){_LASTDOC=doc;
   }else{
     label='<div class="alabel"><span class="kbtag" style="background:var(--sage)">Course synthesis</span>Assembled from the built-in dictionary, disease, agronomy and ARM 301 databases &middot; ~'+words+" words</div>";
   }
+  try{
+    var figs=collectDiagrams(doc);
+    if(figs&&figs.length){
+      html+='<div class="card" style="margin-top:10px"><h3 style="font-size:13px">Figures and diagrams</h3>'
+       +figs.map(function(f){return '<figure style="margin:12px 0 4px"><img src="data:image/png;base64,'+f.b64+'" style="width:100%;border-radius:10px;border:1px solid #d8dcd3" alt="figure"/><figcaption style="font-size:11px;color:#78716c;text-align:center;margin-top:5px;font-style:italic">'+esc(f.cap||'')+'</figcaption></figure>'}).join("")
+       +'</div>';
+    }
+  }catch(ef){}
   $("asOut").innerHTML=label+html;
   window.scrollTo(0,0);
 }
