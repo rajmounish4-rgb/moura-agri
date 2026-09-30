@@ -216,6 +216,130 @@ footer.appfoot{padding:14px 18px 20px;text-align:center;font-size:10.5px;color:v
 .homesearch input{flex:1}
 .offlinebadge{display:flex;align-items:center;gap:8px;background:var(--sage-soft);border:1px solid #cfe3b2;border-radius:12px;padding:10px 12px;font-size:11.5px;color:#3f6212;margin-top:12px}
 .offlinebadge svg{width:15px;height:15px;flex:0 0 15px}
+
+/* ============================================================
+   v42 VISUAL REFRESH - "Modern Harvest" (CSS-only, no logic changes)
+   ============================================================ */
+@media screen{
+:root{
+  --r:16px;
+  --shadow-sm:0 1px 2px rgba(28,25,23,.05),0 2px 8px rgba(28,25,23,.06);
+  --shadow-md:0 2px 4px rgba(28,25,23,.05),0 10px 28px rgba(28,25,23,.10);
+  --shadow-lg:0 6px 12px rgba(28,25,23,.06),0 22px 48px rgba(28,25,23,.14);
+  --grad-terra:linear-gradient(135deg,#d9480f 0%,#c2410c 55%,#9a3412 100%);
+  --grad-sage:linear-gradient(135deg,#84cc16 0%,#65a30d 60%,#4d7c0f 100%);
+}
+::selection{background:#d9f99d;color:#1a2e05}
+:focus-visible{outline:2px solid var(--sage);outline-offset:2px;border-radius:6px}
+
+/* ---- app shell ---- */
+.phone{box-shadow:0 0 0 1px rgba(28,25,23,.04),0 30px 90px rgba(28,25,23,.16)}
+header.topbar{background:rgba(250,247,245,.8);backdrop-filter:blur(14px) saturate(1.5);-webkit-backdrop-filter:blur(14px) saturate(1.5);border-bottom:1px solid rgba(28,25,23,.06)}
+.brand .mark{background:var(--grad-terra);border-radius:11px;box-shadow:0 4px 10px rgba(194,65,12,.35);position:relative;overflow:hidden}
+.brand .mark::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.28),transparent 55%)}
+.lang{border-radius:10px;transition:all .15s;font-weight:600}
+.lang:active{transform:scale(.95)}
+main{padding:18px 16px 30px}
+
+/* ---- headings & labels ---- */
+h2.pg{font-size:20px;letter-spacing:-.4px}
+.section-label{font-size:10.5px;letter-spacing:1.4px}
+.section-label::before{border-radius:3px;background:var(--grad-terra);box-shadow:0 2px 6px rgba(194,65,12,.4)}
+
+/* ---- cards ---- */
+.card{border-radius:18px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow-sm);border-color:rgba(28,25,23,.07);transition:box-shadow .2s,transform .2s}
+.card:hover{box-shadow:var(--shadow-md)}
+
+/* ---- hero ---- */
+.hero{border-radius:22px;box-shadow:var(--shadow-lg)}
+.hero h2{font-size:27px}
+.hero .cta.main{box-shadow:0 6px 16px rgba(28,25,23,.3)}
+
+/* ---- feature grid ---- */
+.featgrid{gap:11px}
+.feat{border-radius:17px;box-shadow:var(--shadow-sm);border-color:rgba(28,25,23,.07);transition:transform .18s,box-shadow .18s,border-color .18s}
+.feat:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:rgba(101,163,13,.35)}
+.feat .fic{width:38px;height:38px;border-radius:12px;box-shadow:var(--shadow-sm)}
+
+/* ---- chips ---- */
+.chip{padding:7.5px 14px;font-weight:650;transition:all .16s;border-radius:999px}
+.chip:hover{border-color:var(--sage);color:var(--ink);transform:translateY(-1px)}
+.chip.on{background:var(--grad-terra);border-color:transparent;box-shadow:0 4px 10px rgba(194,65,12,.3)}
+.chip.sage.on{background:var(--grad-sage);box-shadow:0 4px 10px rgba(101,163,13,.3)}
+
+/* ---- buttons ---- */
+.btn{border-radius:14px;background:var(--grad-terra);box-shadow:0 4px 12px rgba(194,65,12,.32),inset 0 1px 0 rgba(255,255,255,.22);transition:transform .12s,box-shadow .2s,filter .2s}
+.btn:hover{filter:brightness(1.06);box-shadow:0 6px 18px rgba(194,65,12,.4),inset 0 1px 0 rgba(255,255,255,.22)}
+.btn:active{transform:scale(.975)}
+.btn.sec{background:var(--surface2);color:var(--ink);border:1px solid rgba(28,25,23,.12);box-shadow:var(--shadow-sm)}
+.btn.sec:hover{border-color:var(--sage);filter:none}
+
+/* ---- textareas & inputs ---- */
+.ta{border-radius:12px;transition:border-color .16s,box-shadow .16s}
+.ta:focus{border-color:var(--sage);box-shadow:0 0 0 3px rgba(101,163,13,.15)}
+
+/* ---- bottom nav ---- */
+nav.bottomnav{background:rgba(255,255,255,.88);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);border-top:1px solid rgba(28,25,23,.07)}
+nav.bottomnav button{border-radius:12px;transition:background .16s,color .16s}
+nav.bottomnav button.on{color:var(--terra);background:var(--terra-soft)}
+nav.bottomnav button.on svg{filter:drop-shadow(0 2px 4px rgba(194,65,12,.35))}
+
+/* ---- labels and tags ---- */
+.alabel{letter-spacing:.2px}
+.kbtag{box-shadow:var(--shadow-sm)}
+
+/* ---- toast ---- */
+.toast{border-radius:999px;background:rgba(28,25,23,.92);backdrop-filter:blur(8px);box-shadow:var(--shadow-lg);font-weight:600}
+
+/* ---- page entrance stagger ---- */
+.page.on>*{animation:fadeUp .32s cubic-bezier(.2,.7,.3,1) both}
+.page.on>*:nth-child(1){animation-delay:.02s}
+.page.on>*:nth-child(2){animation-delay:.06s}
+.page.on>*:nth-child(3){animation-delay:.1s}
+.page.on>*:nth-child(4){animation-delay:.14s}
+.page.on>*:nth-child(5){animation-delay:.18s}
+.page.on>*:nth-child(n+6){animation-delay:.22s}
+
+/* ---- scrollbar (desktop) ---- */
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:rgba(28,25,23,.18);border-radius:99px;border:2px solid var(--app)}
+::-webkit-scrollbar-thumb:hover{background:rgba(28,25,23,.3)}
+
+/* ===================== TABLET ===================== */
+@media(min-width:700px){
+  .phone{max-width:740px}
+  main{padding:26px 26px 36px}
+  h2.pg{font-size:23px}
+  p.sub{font-size:13.5px}
+  .card p{font-size:13.5px}
+  .featgrid{grid-template-columns:repeat(3,1fr);gap:13px}
+  .feat h3{font-size:14.5px}
+  .feat p{font-size:12.5px}
+  .btn{font-size:15px;padding:14px 22px}
+  .brand h1{font-size:18px}
+  nav.bottomnav button{font-size:11px}
+  nav.bottomnav button svg{width:24px;height:24px}
+}
+
+/* ===================== DESKTOP ===================== */
+@media(min-width:1120px){
+  .phone{max-width:1080px}
+  main{padding:34px 40px 48px}
+  h2.pg{font-size:26px}
+  .featgrid{grid-template-columns:repeat(3,1fr);gap:16px}
+  .feat{padding:20px 18px}
+  .card{padding:20px;border-radius:20px}
+  .card p{font-size:14px}
+  .hero{border-radius:26px;padding:38px 32px 32px}
+  .hero h2{font-size:34px}
+  .brand .mark{width:40px;height:40px;border-radius:13px;font-size:17px}
+  .brand h1{font-size:20px}
+  .brand small{font-size:10px}
+  .lang{font-size:11.5px;padding:7px 12px}
+  .toast{bottom:110px;font-size:14px}
+}
+}
+/* ============== end v42 visual refresh ============== */
 </style>
 </head>
 <body>
