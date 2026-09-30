@@ -2858,17 +2858,26 @@ function freeTryGet(url){
     .then(function(t){if(!t||t.length<200||t.indexOf("{\"error")===0)throw new Error("bad response");return t});
 }
 function freeWait(ms){return new Promise(function(res){setTimeout(res,ms)})}
+function freeEnrich(txt,cfg,round){
+  round=round||1;
+  var NEED=["## Syllabus Mapping","## Objectives","## Reference Data","## Case Study","## Conclusion","## Figure and Table Suggestions","## References"];
+  var words=(txt.match(/\S+/g)||[]).length;
+  var missing=NEED.filter(function(s){return txt.indexOf(s)<0});
+  if((words>=1900&&missing.length===0)||round>4)return Promise.resolve(txt);
+  var pr2="You are continuing a university agriculture assignment for a B.Sc. (Hons.) Agriculture student that was cut short. Continue EXACTLY where it stops - no preamble, no repetition, no new title. Write the remaining sections in the same plain style with ## headings, with substantial technical depth, Indian examples, named varieties and realistic data."
+   +(missing.length?" Sections still needed: "+missing.join("; ")+".":"")
+   +" End with the complete ## References section: at least 8 references, each on its own line starting with [Book], [TNAU/ICAR] or [Web] (web references include the full URL and Accessed date). The assignment so far ended with: ..."+txt.slice(-1400);
+  return aiCall(cfg,pr2).then(function(t2){
+    if(t2&&t2.length>150)return freeEnrich(txt+"\n\n"+t2,cfg,round+1);
+    return txt;
+  }).catch(function(){return txt});
+}
 function freeCall(prompt){
   var enc=encodeURIComponent(prompt);
-  var a=freeTryGet("https://text.pollinations.ai/"+enc+"?model=openai&referrer=moura.agri.app");
-  var b=a.catch(function(){return freeWait(900).then(function(){return freeTryGet("https://text.pollinations.ai/"+enc+"?model=openai-fast&referrer=moura.agri.app")})});
-  return b.catch(function(){return freeWait(1200).then(function(){
-    return fetch("https://text.pollinations.ai/openai",{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({model:"openai",messages:[{role:"user",content:prompt}],referrer:"moura.agri.app"})})
-    .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()})
-    .then(function(j){var t=j&&j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content;
-      if(!t||t.length<200)throw new Error("empty response");return t});
-  })});
+  var url="https://text.pollinations.ai/"+enc+"?model=openai&referrer=moura.agri.app";
+  return freeTryGet(url)
+  .catch(function(){return freeWait(15000).then(function(){return freeTryGet(url)})})
+  .catch(function(){return freeWait(30000).then(function(){return freeTryGet(url)})});
 }
 function aiCall(cfg,prompt){
   if(cfg.provider==="free"){
@@ -2947,15 +2956,10 @@ function aiParse(txt,topic,code){
 }
 function genAI(topic,code,cfg){
   var prov=AIPROV[cfg.provider];
-  $("asOut").innerHTML='<div class="alabel"><span class="kbtag" style="background:#7c3aed">AI mode</span>Writing your assignment on <b>'+esc(topic)+'</b> with '+esc(prov.name)+' - usually 10-40 seconds (free mode can take up to 2 minutes). Keep this page open.</div><div class="card"><p class="sub">Generating a complete, India-specific assignment in the MouRa format. Do not navigate away.</p></div>';
+  $("asOut").innerHTML='<div class="alabel"><span class="kbtag" style="background:#7c3aed">AI mode</span>Writing your assignment on <b>'+esc(topic)+'</b> with '+esc(prov.name)+' - usually 10-40 seconds (free mode builds the full assignment in up to 3 minutes). Keep this page open.</div><div class="card"><p class="sub">Generating a complete, India-specific assignment in the MouRa format. Do not navigate away.</p></div>';
   var pr=aiPrompt(topic,code);
-  if(cfg.provider==="free"){pr=pr.replace("1. Length: 1800-2500 words","1. Length: 900-1200 words")}
   aiCall(cfg,pr).then(function(txt){
-    if(cfg.provider==="free"&&txt.indexOf("## References")<0){
-      var tail=txt.slice(-600);
-      var pr2="You are continuing a university agriculture assignment that was cut off. Continue EXACTLY where it stops - no preamble, no repetition of text already written. Complete the remaining sections in the same markdown style (## headings), up to and including ## References. Keep each section brief. The assignment stopped at: ..."+tail;
-      return aiCall(cfg,pr2).then(function(t2){return txt+"\n"+t2});
-    }
+    if(cfg.provider==="free")return freeEnrich(txt,cfg);
     return txt;
   }).then(function(txt){
     var doc=aiParse(txt,topic,code);
