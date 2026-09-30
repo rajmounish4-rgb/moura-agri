@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#1c1917">
+<meta name="theme-color" content="#0f3d1f">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'>%3Crect width='48' height='48' rx='12' fill='%230f3d1f'/>%3Cpath d='M6 38c0-12 8-20 18-22' stroke='%23fff' stroke-width='4' stroke-linecap='round' fill='none'/>%3Cpath d='M24 16c0-6 5-11 12-11 0 7-5 12-12 11Z' fill='%23a3e635'/>%3Cpath d='M24 16C24 9 19 4 12 4c0 7 5 12 12 12Z' fill='%23fff' opacity='.9'/>%3Cpath d='M24 16v26' stroke='%23fff' stroke-width='4' stroke-linecap='round' fill='none'/>%3Cpath d='M24 30c2-6 7-9 14-9-1 7-6 11-14 11' fill='%23f59e0b'/>%3C/svg%3E>
 <title>MouRa &mdash; An Agri AI. Ask. Learn. Grow.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Azeret+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -361,7 +362,7 @@ header.topbar::after{content:"";position:absolute;left:0;right:0;bottom:0;height
   background:linear-gradient(90deg,#a3e635,#f59e0b,#c2410c)}
 .brand h1{color:#fff;letter-spacing:-.3px}
 .brand small{color:rgba(255,255,255,.82)}
-.brand small::after{content:"  \00b7  v43";color:#a3e635;font-weight:600}
+.brand small::after{content:"  \00b7  v44";color:#a3e635;font-weight:600}
 .lang{background:rgba(255,255,255,.20);color:#fff;font-weight:700;border-color:rgba(255,255,255,.38);
   backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .lang:active{transform:scale(.93)}
@@ -398,6 +399,64 @@ nav.bottomnav{margin:0 10px calc(10px + env(safe-area-inset-bottom));border-radi
 }
 }
 /* ============== end v43 bold redesign ============== */
+
+/* ============================================================
+   v44 "UNEXPECTED" LAYER - per-page identity colors, gradient
+   headings, themed nav, floating hero leaf (CSS-only)
+   ============================================================ */
+@media screen{
+
+/* ---- gradient heading text (safe: falls back to solid ink) ---- */
+@supports (-webkit-background-clip:text){
+  h2.pg{background:var(--hdg,var(--terra));-webkit-background-clip:text;background-clip:text;color:transparent}
+}
+
+/* ---- per-page identity ---- */
+#pg-doctor{--hdg:linear-gradient(115deg,#14532d 0%,#4d7c0f 45%,#a3e635 100%)}
+#pg-doctor .section-label{color:#4d7c0f}
+#pg-doctor .section-label::before{background:linear-gradient(135deg,#84cc16,#4d7c0f)}
+#pg-knowledge{--hdg:linear-gradient(115deg,#7c2d12 0%,#d97706 55%,#fbbf24 100%)}
+#pg-knowledge .section-label{color:#b45309}
+#pg-knowledge .section-label::before{background:linear-gradient(135deg,#f59e0b,#b45309)}
+#pg-weather{--hdg:linear-gradient(115deg,#082f49 0%,#0369a1 45%,#7dd3fc 100%)}
+#pg-weather .section-label{color:#0c4a6e}
+#pg-weather .section-label::before{background:linear-gradient(135deg,#38bdf8,#0c4a6e)}
+#pg-calc{--hdg:linear-gradient(115deg,#3b0764 0%,#7c3aed 55%,#c4b5fd 100%)}
+#pg-calc .section-label{color:#5b21b6}
+#pg-calc .section-label::before{background:linear-gradient(135deg,#a78bfa,#5b21b6)}
+#pg-calendar{--hdg:linear-gradient(115deg,#4c0519 0%,#e11d48 55%,#fda4af 100%)}
+#pg-calendar .section-label{color:#9f1239}
+#pg-calendar .section-label::before{background:linear-gradient(135deg,#fb7185,#9f1239)}
+#pg-jobs{--hdg:linear-gradient(115deg,#042f2e 0%,#0d9488 55%,#5eead4 100%)}
+#pg-jobs .section-label{color:#115e59}
+#pg-jobs .section-label::before{background:linear-gradient(135deg,#2dd4bf,#115e59)}
+
+/* ---- themed bottom-nav accents per section ---- */
+#bnav button[data-pg="doctor"].on{color:#4d7c0f;background:#eef5e4}
+#bnav button[data-pg="knowledge"].on{color:#b45309;background:#fdf3e3}
+#bnav button[data-pg="calc"].on{color:#5b21b6;background:#f1ebfc}
+#bnav button[data-pg="calendar"].on{color:#9f1239;background:#fceef2}
+#bnav button[data-pg="weather"].on{color:#0c4a6e;background:#e3f2fa}
+
+/* ---- hero: breathing glow + floating leaf ---- */
+.hero::before{content:"";position:absolute;inset:-40%;
+  background:radial-gradient(circle at 30% 30%,rgba(163,230,53,.25),transparent 55%);
+  animation:heroGlow 7s ease-in-out infinite alternate;pointer-events:none}
+@keyframes heroGlow{from{transform:translate(0,0) scale(1);opacity:.5}to{transform:translate(6%,-4%) scale(1.15);opacity:.9}}
+.hero .leafbg{animation:leafFloat 9s ease-in-out infinite alternate;opacity:.2}
+@keyframes leafFloat{from{transform:rotate(0deg) translate(0,0)}to{transform:rotate(14deg) translate(-10px,12px)}}
+
+/* ---- doctor page: leafy top card glow ---- */
+#pg-doctor .card:first-of-type{background:linear-gradient(180deg,rgba(132,204,22,.08),rgba(255,255,255,0) 120px),var(--surface)}
+#pg-weather .card:first-of-type{background:linear-gradient(180deg,rgba(56,189,248,.10),rgba(255,255,255,0) 120px),var(--surface)}
+#pg-calc .card:first-of-type{background:linear-gradient(180deg,rgba(167,139,250,.10),rgba(255,255,255,0) 120px),var(--surface)}
+
+/* ---- logo mark upgrade ---- */
+.brand .mark{background:linear-gradient(135deg,#84cc16 0%,#4d7c0f 60%,#166534 100%);
+  box-shadow:0 4px 12px rgba(77,124,15,.45),inset 0 1px 0 rgba(255,255,255,.35)}
+.brand .mark svg{display:block;filter:drop-shadow(0 1px 2px rgba(0,0,0,.25))}
+}
+/* ============== end v44 unexpected layer ============== */
 </style>
 </head>
 <body>
@@ -405,7 +464,7 @@ nav.bottomnav{margin:0 10px calc(10px + env(safe-area-inset-bottom));border-radi
 <header class="topbar">
   <div class="brandrow">
     <div class="brand">
-      <div class="mark">M</div>
+      <div class="mark" aria-hidden="true"><svg viewBox="0 0 48 48" width="22" height="22" fill="none"><path d="M6 38c0-12 8-20 18-22" stroke="#fff" stroke-width="4" stroke-linecap="round"/><path d="M24 16c0-6 5-11 12-11 0 7-5 12-12 11Z" fill="#a3e635"/><path d="M24 16C24 9 19 4 12 4c0 7 5 12 12 12Z" fill="#fff" opacity=".9"/><path d="M24 16v26" stroke="#fff" stroke-width="4" stroke-linecap="round"/><path d="M24 30c2-6 7-9 14-9-1 7-6 11-14 11" fill="#f59e0b"/></svg></div>
       <div><h1>MouRa</h1><small>An Agri AI &middot; Ask. Learn. Grow.</small></div>
     </div>
     <button class="lang" id="langBtn" onclick="cycleLang()" style="cursor:pointer">EN</button>
