@@ -1,0 +1,15 @@
+{
+  "name": "MouRa \u2014 An Agri AI",
+  "short_name": "MouRa",
+  "description": "Ask. Learn. Grow. Your agriculture study companion: plant doctor, assignments, notes, weather, calculators.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#faf7f5",
+  "theme_color": "#0f3d1f",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f3d1f">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MouRa">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'>%3Crect width='48' height='48' rx='12' fill='%230f3d1f'/>%3Cpath d='M6 38c0-12 8-20 18-22' stroke='%23fff' stroke-width='4' stroke-linecap='round' fill='none'/>%3Cpath d='M24 16c0-6 5-11 12-11 0 7-5 12-12 11Z' fill='%23a3e635'/>%3Cpath d='M24 16C24 9 19 4 12 4c0 7 5 12 12 12Z' fill='%23fff' opacity='.9'/>%3Cpath d='M24 16v26' stroke='%23fff' stroke-width='4' stroke-linecap='round' fill='none'/>%3Cpath d='M24 30c2-6 7-9 14-9-1 7-6 11-14 11' fill='%23f59e0b'/>%3C/svg%3E>
 <title>MouRa &mdash; An Agri AI. Ask. Learn. Grow.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -362,7 +368,7 @@ header.topbar::after{content:"";position:absolute;left:0;right:0;bottom:0;height
   background:linear-gradient(90deg,#a3e635,#f59e0b,#c2410c)}
 .brand h1{color:#fff;letter-spacing:-.3px}
 .brand small{color:rgba(255,255,255,.82)}
-.brand small::after{content:"  \00b7  v44";color:#a3e635;font-weight:600}
+.brand small::after{content:"  \00b7  v45";color:#a3e635;font-weight:600}
 .lang{background:rgba(255,255,255,.20);color:#fff;font-weight:700;border-color:rgba(255,255,255,.38);
   backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .lang:active{transform:scale(.93)}
@@ -457,9 +463,52 @@ nav.bottomnav{margin:0 10px calc(10px + env(safe-area-inset-bottom));border-radi
 .brand .mark svg{display:block;filter:drop-shadow(0 1px 2px rgba(0,0,0,.25))}
 }
 /* ============== end v44 unexpected layer ============== */
+
+/* ============================================================
+   v45 - PWA splash + seasonal theming (monsoon/harvest/winter/
+   summer chosen by real month; visual only, no logic changes)
+   ============================================================ */
+#splash{position:fixed;inset:0;z-index:999;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:12px;
+  background:linear-gradient(160deg,#0f3d1f 0%,#166534 60%,#1c7a40 100%);
+  animation:splashOut .5s ease 1.15s forwards}
+@keyframes splashOut{to{opacity:0;visibility:hidden}}
+#splash .slogo{width:96px;height:96px;border-radius:26px;background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;
+  box-shadow:0 18px 44px rgba(0,0,0,.35);animation:splashPop .7s cubic-bezier(.2,.9,.3,1.4)}
+@keyframes splashPop{from{transform:scale(.6);opacity:0}}
+#splash h1{color:#fff;font-size:34px;font-weight:800;letter-spacing:-1px;font-family:var(--font)}
+#splash p{color:rgba(255,255,255,.78);font-family:var(--mono);font-size:11px;
+  letter-spacing:2.5px;text-transform:uppercase}
+@media print{#splash{display:none!important}}
+@media (prefers-reduced-motion:reduce){#splash{animation-delay:.2s}#splash .slogo{animation:none}}
+
+@media screen{
+/* ---- SEASONAL DRESS (body[data-s] set by tiny boot script) ---- */
+body[data-s="harvest"] .hero{background:linear-gradient(135deg,#451a03 0%,#78350f 55%,#92400e 100%)}
+body[data-s="harvest"]::before{background:radial-gradient(640px circle at 88% -6%,rgba(251,191,36,.26),transparent 62%),
+  radial-gradient(760px circle at -10% 108%,rgba(217,119,6,.22),transparent 62%)}
+body[data-s="harvest"] header.topbar{background:linear-gradient(120deg,#451a03 0%,#78350f 55%,#92400e 100%)}
+body[data-s="harvest"] .hero::before{background:radial-gradient(circle at 30% 30%,rgba(251,191,36,.28),transparent 55%)}
+
+body[data-s="winter"] .hero{background:linear-gradient(135deg,#0b2239 0%,#123a52 55%,#155e75 100%)}
+body[data-s="winter"]::before{background:radial-gradient(640px circle at 88% -6%,rgba(125,211,252,.24),transparent 62%),
+  radial-gradient(760px circle at -10% 108%,rgba(56,189,248,.16),transparent 62%)}
+body[data-s="winter"] header.topbar{background:linear-gradient(120deg,#0b2239 0%,#123a52 55%,#155e75 100%)}
+body[data-s="winter"] .hero::before{background:radial-gradient(circle at 30% 30%,rgba(125,211,252,.24),transparent 55%)}
+
+body[data-s="summer"] .hero{background:linear-gradient(135deg,#431407 0%,#7c2d12 55%,#9a3412 100%)}
+body[data-s="summer"]::before{background:radial-gradient(640px circle at 88% -6%,rgba(251,146,60,.24),transparent 62%),
+  radial-gradient(760px circle at -10% 108%,rgba(194,65,12,.2),transparent 62%)}
+body[data-s="summer"] header.topbar{background:linear-gradient(120deg,#431407 0%,#7c2d12 55%,#9a3412 100%)}
+body[data-s="summer"] .hero::before{background:radial-gradient(circle at 30% 30%,rgba(251,146,60,.26),transparent 55%)}
+}
+/* ============== end v45 ============== */
 </style>
 </head>
 <body>
+<div id="splash" aria-hidden="true"><div class="slogo"><svg viewBox="0 0 48 48" width="52" height="52" fill="none"><path d="M6 38c0-12 8-20 18-22" stroke="#fff" stroke-width="4" stroke-linecap="round"/><path d="M24 16c0-6 5-11 12-11 0 7-5 12-12 11Z" fill="#a3e635"/><path d="M24 16C24 9 19 4 12 4c0 7 5 12 12 12Z" fill="#fff" opacity=".9"/><path d="M24 16v26" stroke="#fff" stroke-width="4" stroke-linecap="round"/><path d="M24 30c2-6 7-9 14-9-1 7-6 11-14 11" fill="#f59e0b"/></svg></div><h1>MouRa</h1><p>An Agri AI &middot; Ask. Learn. Grow.</p></div>
+
 <div class="phone">
 <header class="topbar">
   <div class="brandrow">
@@ -3395,5 +3444,7 @@ kTab=function(t){kCurrentTab=t;_origKTab(t)};
 buildDoctor();buildHomeStats();buildCourses();renderDict();buildCalc();buildCal();buildMock();applyLang();
 routeFromHash();
 </script>
+
+<script>(function(){var m=new Date().getMonth();var s=(m>=5&&m<=8)?"monsoon":((m===9||m===10)?"harvest":((m===11||m<=1)?"winter":"summer"));document.body.setAttribute("data-s",s);var sp=document.getElementById("splash");if(sp){setTimeout(function(){if(sp.parentNode){sp.parentNode.removeChild(sp)}},1900)}})();</script>
 </body>
 </html>
