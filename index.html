@@ -324,6 +324,7 @@ footer.appfoot{padding:14px 18px 20px;text-align:center;font-size:10.5px;color:v
       <button class="btn sm" style="background:var(--terra);border-color:var(--terra);color:#fff" onclick="aiPhotoDiag()"><span id="doc-bp">Diagnose from photo</span></button>
       <button class="btn sm" onclick="aiTextDiag()"><span id="doc-bt">Diagnose from description</span></button>
     </div>
+    <div id="doc-lang-note" style="font-size:10.5px;color:var(--ink-dim);margin-top:7px"></div>
     <div id="aiDocOut"></div>
   </div>
   <label class="f">STEP 1 &middot; Select the crop</label>
@@ -614,6 +615,13 @@ function applyLang(){
   L("fc1h","fc1h");L("fc1p","fc1p");L("fc2h","fc2h");L("fc2p","fc2p");L("fc3h","fc3h");L("fc3p","fc3p");L("fc4h","fc4h");L("fc4p","fc4p");L("fc5h","fc5h");L("fc5p","fc5p");L("fc6h","fc6h");L("fc6p","fc6p");
   L("lb-topic","lb_topic");L("lb-code","lb_code");L("lb-how","lb_how");L("btn-gen","gen");
   L("doc-title","doc_title");L("doc-sub","doc_sub");L("doc-ai","doc_ai");L("doc-ph1","doc_ph1");L("doc-ph2","doc_ph2");L("doc-bp","doc_btn_photo");L("doc-bt","doc_btn_text");L("doc-bcam","doc_cam");L("doc-bgal","doc_gal");
+  var dln=document.getElementById("doc-lang-note");if(dln)dln.textContent=t("doc_lang_note");
+  if(typeof DOCSHOWN!=="undefined"&&DOCSHOWN&&LASTDIAG){
+    var out=document.getElementById("aiDocOut");
+    if(out&&!/docTrBar/.test(out.innerHTML)){
+      out.innerHTML+='<div class="card" id="docTrBar" style="margin-top:8px;border-color:#7c3aed;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap"><div style="font-size:11.5px">'+esc(t("doc_lang_diff"))+'</div><button class="btn sm" style="background:var(--terra);border-color:var(--terra);color:#fff" onclick="docTranslate()">'+esc(t("doc_translate"))+'</button></div>';
+    }
+  }
   var ids={"homeQ":"hm_ph","asTopic":"as_ph","aiSymTxt":"doc_phph"};
   Object.keys(ids).forEach(function(i){var e=document.getElementById(i);if(e)e.setAttribute("placeholder",t(ids[i]))});
   L("calc-title","calc_title");L("calc-sub","calc_sub");L("cal-title","cal_title");L("cal-sub","cal_sub");L("k-title","k_title");L("k-sub","k_sub");L("w-title","w_title");L("w-sub","w_sub");L("lb-crop","lb_crop");L("lb-area","lb_area");L("lb-unit","lb_unit");L("lb-soil","lb_soil");L("calc-go","calc_go");L("cal-alerts","cal_alerts");L("lb-city","lb_city");L("w-btn1","w_go");L("w-btn2","w_geo");L("jobs-title","jobs_title");L("jobs-sub","jobs_sub");L("fc7h","fc7h");L("fc7p","fc7p");L("lb-adm","adm_f");
@@ -798,6 +806,14 @@ var TR6={
 };
 Object.keys(TR6).forEach(function(l){ var src=TR[l]||{}; Object.keys(TR6[l]).forEach(function(k){src[k]=TR6[l][k]}); TR[l]=src; });
 
+var TR7={
+ en:{doc_lang_note:"AI answers will be in English",doc_lang_diff:"This answer is in another language",doc_translate:"Translate to English"},
+ ta:{doc_lang_note:"AI \u0baa\u0ba4\u0bbf\u0bb2\u0bcd\u0b95\u0bb3\u0bcd \u0ba4\u0bae\u0bbf\u0bb4\u0bbf\u0bb2\u0bcd \u0bb5\u0bb0\u0bc1\u0bae\u0bcd",doc_lang_diff:"\u0b87\u0ba8\u0bcd\u0ba4 \u0baa\u0ba4\u0bbf\u0bb2\u0bcd \u0bb5\u0bc7\u0bb1\u0bc1 \u0bae\u0bca\u0bb4\u0bbf\u0baf\u0bbf\u0bb2\u0bcd \u0b89\u0bb3\u0bcd\u0bb3\u0ba4\u0bc1",doc_translate:"\u0ba4\u0bae\u0bbf\u0bb4\u0bbf\u0bb2\u0bcd \u0bae\u0bca\u0bb4\u0bbf\u0baa\u0bc6\u0baf\u0bb0\u0bcd"},
+ hi:{doc_lang_note:"AI \u0909\u0924\u094d\u0924\u0930 \u0939\u093f\u0928\u094d\u0926\u0940 \u092e\u0947\u0902 \u0906\u090f\u0902\u0917\u0947",doc_lang_diff:"\u092f\u0939 \u0909\u0924\u094d\u0924\u0930 \u0926\u0942\u0938\u0930\u0940 \u092d\u093e\u0937\u093e \u092e\u0947\u0902 \u0939\u0948",doc_translate:"\u0939\u093f\u0928\u094d\u0926\u0940 \u092e\u0947\u0902 \u0905\u0928\u0941\u0935\u093e\u0926 \u0915\u0930\u0947\u0902"}
+};
+Object.keys(TR7).forEach(function(l){ var src=TR[l]||{}; Object.keys(TR7[l]).forEach(function(k){src[k]=TR7[l][k]}); TR[l]=src; });
+
+
 
 
 
@@ -851,6 +867,15 @@ function findDisease(){
       +'<b style="font-size:12px;color:var(--sage)">MANAGEMENT</b><ul class="mgmt">'+r.d.management.map(function(m){return "<li>"+esc(m)+"</li>"}).join("")+'</ul></div>';
   }).join("")
   +'<div class="notecard" style="margin-top:12px">Not convincing? Keep only the 2&ndash;3 most specific symptoms and search again, or try the AI diagnosis at the top.</div>';
+}
+function docTranslate(){
+  if(!LASTDIAG)return;
+  var tgt=(LANG==="ta")?"Tamil":((LANG==="hi")?"Hindi":"English");
+  var p="Translate the following plant-doctor diagnosis fully into "+tgt+" in its native script. Keep the exact same ## section structure; translate the headings and every line. Keep scientific names, pesticide chemical names and abbreviations in English inside brackets. Do not add or remove any information.\n\n"+LASTDIAG;
+  docAIThink(t("doc_think_4"));
+  if(SHARED_AI_URL){genSharedDiag(p,"",function(txt){docRenderDiag(t("doc_res_photo"),txt)},function(err){if(err&&err.limit){docLimitCard(err.msg);return}docFailCard(err&&err.msg)});return}
+  var cfg=aiCfg();if(!cfg){toast(t("doc_setup"));return}
+  aiCall(cfg,p).then(function(txt){docRenderDiag(t("doc_res_title"),txt)}).catch(function(e){docFailCard(String(e&&e.message||e))});
 }
 var docThinkTimer=null;
 function docThinkStop(){if(docThinkTimer){clearInterval(docThinkTimer);docThinkTimer=null}}
@@ -932,7 +957,10 @@ function genSharedDiag(prompt,imageB64,cb,errCb,tried){
     if(errCb)errCb({msg:msg});
   });
 }
+var LASTDIAG=null,DOCSHOWN=false;
 function docRenderDiag(title,txt){
+  LASTDIAG=txt;
+  docThinkStop();DOCSHOWN=true;
   docThinkStop();
   var secs=String(txt).split(/\n(?=##\s)/).map(function(s){return s.trim()}).filter(Boolean);
   var html="";
