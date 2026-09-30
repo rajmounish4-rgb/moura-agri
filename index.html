@@ -340,6 +340,64 @@ nav.bottomnav button.on svg{filter:drop-shadow(0 2px 4px rgba(194,65,12,.35))}
 }
 }
 /* ============== end v42 visual refresh ============== */
+
+/* ============================================================
+   v43 BOLD REDESIGN - forest header, glow backdrop, pill nav,
+   accent-bar cards, version badge (CSS-only, no logic changes)
+   ============================================================ */
+@media screen{
+
+/* ---- living backdrop ---- */
+body{background:linear-gradient(165deg,#edf3e6 0%,#efe9e1 48%,#f7f0e6 100%)}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(640px circle at 88% -6%,rgba(163,230,53,.22),transparent 62%),
+             radial-gradient(760px circle at -10% 108%,rgba(234,137,62,.18),transparent 62%)}
+.phone{background:linear-gradient(180deg,#fbf9f5 0%,#faf7f5 26%)}
+
+/* ---- forest-green topbar with harvest stripe ---- */
+header.topbar{background:linear-gradient(120deg,#0f3d1f 0%,#166534 55%,#1c7a40 100%);
+  border-bottom:none;box-shadow:0 6px 20px rgba(15,61,31,.30)}
+header.topbar::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;
+  background:linear-gradient(90deg,#a3e635,#f59e0b,#c2410c)}
+.brand h1{color:#fff;letter-spacing:-.3px}
+.brand small{color:rgba(255,255,255,.82)}
+.brand small::after{content:"  \00b7  v43";color:#a3e635;font-weight:600}
+.lang{background:rgba(255,255,255,.20);color:#fff;font-weight:700;border-color:rgba(255,255,255,.38);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.lang:active{transform:scale(.93)}
+
+/* ---- hero drama ---- */
+.hero{border-radius:24px;box-shadow:0 8px 14px rgba(15,61,31,.12),0 26px 54px rgba(28,25,23,.18)}
+.hero h2{font-size:29px;letter-spacing:-.6px}
+
+/* ---- page headings ---- */
+h2.pg{font-size:22px;letter-spacing:-.5px}
+
+/* ---- feature cards with accent bars ---- */
+.feat{border-radius:18px;overflow:hidden}
+.feat::before{content:"";display:block;height:4px;width:46px;border-radius:99px;
+  margin:0 0 10px;background:var(--grad-terra)}
+.feat:nth-child(3n+2)::before{background:var(--grad-sage)}
+.feat:nth-child(3n)::before{background:linear-gradient(135deg,#f59e0b,#b45309)}
+.feat .fic{width:40px;height:40px;border-radius:12px}
+
+/* ---- floating pill bottom nav ---- */
+nav.bottomnav{margin:0 10px calc(10px + env(safe-area-inset-bottom));border-radius:22px;
+  border:1px solid rgba(28,25,23,.08);box-shadow:var(--shadow-lg);background:rgba(255,255,255,.93)}
+.toast{bottom:104px}
+
+/* ---- tablet/desktop: frame the app over the glow ---- */
+@media(min-width:700px){
+  .phone{max-width:740px;margin:20px 0}
+  main{padding:26px 26px 42px}
+}
+@media(min-width:1120px){
+  .phone{max-width:1080px;margin:26px 0}
+  .hero h2{font-size:36px}
+  h2.pg{font-size:26px}
+}
+}
+/* ============== end v43 bold redesign ============== */
 </style>
 </head>
 <body>
