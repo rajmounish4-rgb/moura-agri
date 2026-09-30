@@ -745,6 +745,38 @@ var TR3={
 };
 Object.keys(TR3).forEach(function(l){ var src=TR[l]||{}; Object.keys(TR3[l]).forEach(function(k){src[k]=TR3[l][k]}); TR[l]=src; });
 
+var TR4={
+ en:{doc_think:"Thinking - usually 10-30 seconds...",doc_photo_think:"Reading the photo - usually 10-30 seconds...",
+  doc_res_title:"AI diagnosis - disease or insect, with remedies",doc_res_photo:"AI photo diagnosis - disease or insect, with remedies",
+  doc_too_short:"Describe the problem in a little more detail",doc_need_photo:"Choose or take a photo of the plant first",
+  doc_disclaimer:"AI can be wrong &mdash; cross-check with the symptom tool above and your KVK before treating.",
+  doc_limit_t:"Today's doctor checks are used up",doc_limit_b:"They renew at midnight. The offline symptom tool above still works for any number of checks.",
+  doc_fail:"AI could not check right now - check your internet and retry. The offline symptom tool above always works.",
+  doc_photo_needs:"Photo scanning is not available right now",
+  doc_photo_needs_b:"Describe what you see in the box and tap \"Diagnose from description\" instead - it works right now.\n\n(For photo scanning, the class AI or a free Gemini key is needed.)",
+  doc_setup:"Class AI is not connected - use the offline symptom tool, or set up AI in the Assignments tab"},
+ ta:{doc_think:"\u0b9a\u0bbf\u0ba8\u0bcd\u0ba4\u0bbf\u0b95\u0bcd\u0b95\u0bbf\u0bb1\u0ba4\u0bc1 - \u0bb5\u0bb4\u0b95\u0bcd\u0b95\u0bae\u0bbe\u0b95 10-30 \u0bb5\u0bbf\u0ba8\u0bbe\u0b9f\u0bbf\u0b95\u0bb3\u0bcd...",doc_photo_think:"\u0baa\u0b9f\u0ba4\u0bcd\u0ba4\u0bc8\u0baa\u0bcd \u0baa\u0b9f\u0bbf\u0b95\u0bcd\u0b95\u0bbf\u0bb1\u0ba4\u0bc1 - \u0bb5\u0bb4\u0b95\u0bcd\u0b95\u0bae\u0bbe\u0b95 10-30 \u0bb5\u0bbf\u0ba8\u0bbe\u0b9f\u0bbf\u0b95\u0bb3\u0bcd...",
+  doc_res_title:"AI \u0b95\u0ba3\u0bcd\u0b9f\u0bb1\u0bbf\u0ba4\u0bb2\u0bcd - \u0ba8\u0bcb\u0baf\u0bbe \u0baa\u0bc2\u0b9a\u0bcd\u0b9a\u0bbf, \u0ba4\u0bc0\u0bb0\u0bcd\u0bb5\u0bc1\u0b95\u0bb3\u0bc1\u0b9f\u0ba9\u0bcd",doc_res_photo:"AI \u0baa\u0b9f\u0ba4\u0bcd\u0ba4\u0bc1\u0ba3\u0bb0\u0bcd\u0bb5\u0bc1 - \u0ba8\u0bcb\u0baf\u0bbe \u0baa\u0bc2\u0b9a\u0bcd\u0b9a\u0bbf, \u0ba4\u0bc0\u0bb0\u0bcd\u0bb5\u0bc1\u0b95\u0bb3\u0bc1\u0b9f\u0ba9\u0bcd",
+  doc_too_short:"\u0ba8\u0bbf\u0bb2\u0bc8\u0bae\u0bc8\u0baf\u0bc8 \u0b87\u0ba9\u0bcd\u0ba9\u0bc1\u0bae\u0bcd \u0b95\u0bc6\u0bbe\u0b9e\u0bcd\u0b9a\u0bae\u0bbe\u0b95 \u0bb5\u0bbf\u0bb5\u0bb0\u0bbf\u0baf\u0bc1\u0b99\u0bcd\u0b95\u0bb3\u0bcd",doc_need_photo:"\u0bae\u0bc1\u0ba4\u0bb2\u0bbf\u0bb2\u0bcd \u0baa\u0baf\u0bbf\u0bb0\u0bbf\u0ba9\u0bcd \u0baa\u0b9f\u0ba4\u0bcd\u0ba4\u0bc8 \u0b8e\u0b9f\u0bc1\u0b95\u0bcd\u0b95\u0bb5\u0bc1\u0bae\u0bcd \u0ba4\u0bc7\u0bb0\u0bcd\u0ba8\u0bcd\u0ba4\u0bc6\u0b9f\u0bc1\u0b95\u0bcd\u0b95\u0bb5\u0bc1\u0bae\u0bcd",
+  doc_disclaimer:"AI \u0ba4\u0bb5\u0bb1\u0bbe\u0b95 \u0b87\u0bb0\u0bc1\u0b95\u0bcd\u0b95\u0bb2\u0bbe\u0bae\u0bcd - \u0bae\u0bc7\u0bb2\u0bc7 \u0b89\u0bb3\u0bcd\u0bb3 \u0b85\u0bb1\u0bbf\u0b95\u0bc1\u0bb1\u0bbf \u0b95\u0bb0\u0bc1\u0bb5\u0bbf\u0ba9\u0bcd \u0bae\u0bc2\u0bb2\u0bae\u0bcd \u0bae\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bcd \u0ba8\u0bbf\u0b99\u0bcd\u0b95\u0bb3\u0bcd KVK-\u0b90\u0baf\u0bc1\u0bae\u0bcd \u0b9a\u0bb0\u0bbf\u0baa\u0bbe\u0bb0\u0bc1\u0b99\u0bcd\u0b95\u0bb3\u0bcd.",
+  doc_limit_t:"\u0b87\u0ba9\u0bcd\u0bb1\u0bc8\u0baf \u0bae\u0bb0\u0bc1\u0ba4\u0bcd\u0ba4\u0bc1\u0bb5\u0bb0\u0bcd \u0b9a\u0bcb\u0ba4\u0ba9\u0bc8\u0b95\u0bb3\u0bcd \u0bae\u0bc1\u0b9f\u0bbf\u0ba8\u0bcd\u0ba4\u0ba4\u0bc1",doc_limit_b:"\u0ba8\u0bb3\u0bcd\u0bb3\u0bbf\u0b95\u0bcd\u0b95\u0bbf\u0bb4\u0bae\u0bc8 \u0bae\u0bc0\u0b9f\u0bcd\u0b9f\u0bc6\u0b9f\u0bc1\u0b95\u0bcd\u0b95\u0bc1\u0bae\u0bcd. \u0bae\u0bc7\u0bb2\u0bc7 \u0b89\u0bb3\u0bcd\u0bb3 \u0b85\u0ba9\u0bcd\u0bb2\u0bc8\u0ba9\u0bcd \u0b85\u0bb1\u0bbf\u0b95\u0bc1\u0bb1\u0bbf \u0b95\u0bb0\u0bc1\u0bb5\u0bbf \u0b8e\u0bb5\u0bcd\u0bb5\u0bb3\u0bb5\u0bc1 \u0bae\u0bc1\u0bb1\u0bc8\u0baf\u0bc1\u0bae\u0bcd \u0bb5\u0bc7\u0bb2\u0bc8 \u0b9a\u0bc6\u0baf\u0bcd\u0baf\u0bc1\u0bae\u0bcd.",
+  doc_fail:"AI \u0b87\u0baa\u0bcd\u0baa\u0bcb\u0ba4\u0bc1 \u0b9a\u0bcb\u0ba4\u0bbf\u0b95\u0bcd\u0b95 \u0bae\u0bc1\u0b9f\u0bbf\u0baf\u0bb5\u0bbf\u0bb2\u0bcd\u0bb2\u0bc8 - \u0b87\u0ba3\u0bc8\u0baf\u0ba4\u0bcd\u0ba4\u0bc8 \u0b9a\u0bb0\u0bbf\u0baa\u0bbe\u0bb0\u0bcd\u0ba4\u0bcd\u0ba4\u0bc1 \u0bae\u0bc0\u0ba3\u0bcd\u0b9f\u0bc1\u0bae\u0bcd \u0bae\u0bc1\u0baf\u0bb1\u0bcd\u0b9a\u0bbf\u0b99\u0bcd\u0b95\u0bb3\u0bcd. \u0bae\u0bc7\u0bb2\u0bc7 \u0b89\u0bb3\u0bcd\u0bb3 \u0b85\u0ba9\u0bcd\u0bb2\u0bc8\u0ba9\u0bcd \u0b95\u0bb0\u0bc1\u0bb5\u0bbf \u0b8e\u0baa\u0bcd\u0baa\u0bcb\u0ba4\u0bc1\u0bae\u0bcd \u0bb5\u0bc7\u0bb2\u0bc8 \u0b9a\u0bc6\u0baf\u0bcd\u0baf\u0bc1\u0bae\u0bcd.",
+  doc_photo_needs:"\u0baa\u0b9f\u0bae\u0bcd \u0bb8\u0bcd\u0b95\u0bc7\u0ba9\u0bcd \u0ba4\u0bb1\u0bcd\u0baa\u0bcb\u0ba4\u0bc1 \u0b95\u0bbf\u0b9f\u0b95\u0bcd\u0b95\u0bbf\u0bb1\u0ba4\u0bc1",
+  doc_photo_needs_b:"\u0ba8\u0bc0\u0b99\u0bcd\u0b95\u0bb3\u0bcd \u0b95\u0ba3\u0bcd\u0b9f\u0ba4\u0bc8 \u0baa\u0bc6\u0b9f\u0b9f\u0bbf\u0baf\u0bbf\u0bb2\u0bcd \u0b8e\u0bb4\u0bc1\u0ba4\u0bbf \u201c\u0bb5\u0bbf\u0bb5\u0bb0\u0ba3\u0bc8\u0baf\u0bbf\u0bb2\u0bbf\u0bb0\u0bc1\u0ba8\u0bcd\u0ba4\u0bc1 \u0b95\u0ba3\u0bcd\u0b9f\u0bb1\u0bbf\u201d \u0baa\u0bca\u0ba4\u0bcd\u0ba4\u0ba8\u0bcd\u0ba4\u0bc8 \u0ba4\u0b9f\u0bbf\u0b95\u0bcd\u0b95\u0bb5\u0bc1\u0bae\u0bcd - \u0b85\u0ba4\u0bc1 \u0b87\u0baa\u0bcd\u0baa\u0bcb\u0ba4\u0bc7 \u0bb5\u0bc7\u0bb2\u0bc8 \u0b9a\u0bc6\u0baf\u0bcd\u0b95\u0bbf\u0bb1\u0ba4\u0bc1.\n\n(\u0baa\u0b9f\u0bae\u0bcd \u0bb8\u0bcd\u0b95\u0bc7\u0ba9\u0bc1\u0b95\u0bcd\u0b95\u0bc1 \u0bb5\u0b95\u0bc1\u0baa\u0bcd\u0baa\u0bc1 AI \u0b85\u0bb2\u0bcd\u0bb2\u0ba4\u0bc1 \u0b87\u0bb2\u0bb5\u0b9a Gemini \u0b9a\u0bbe\u0bb5\u0bbf \u0ba4\u0bc7\u0bb5\u0bc8.)",
+  doc_setup:"\u0bb5\u0b95\u0bc1\u0baa\u0bcd\u0baa\u0bc1 AI \u0b87\u0ba3\u0bc8\u0b95\u0bcd\u0b95\u0baa\u0bcd\u0baa\u0b9f\u0bb5\u0bbf\u0bb2\u0bcd\u0bb2\u0bc8 - \u0bae\u0bc7\u0bb2\u0bc7 \u0b89\u0bb3\u0bcd\u0bb3 \u0b85\u0ba9\u0bcd\u0bb2\u0bc8\u0ba9\u0bcd \u0b95\u0bb0\u0bc1\u0bb5\u0bbf\u0baf\u0bc8 \u0baa\u0baf\u0ba9\u0bcd\u0baa\u0b9f\u0bc1\u0ba4\u0bcd\u0ba4\u0bc1\u0b99\u0bcd\u0b95\u0bb3\u0bcd"},
+ hi:{doc_think:"\u0938\u094b\u091a \u0930\u0939\u093e \u0939\u0948 - \u0906\u092e\u0924\u094c\u0930 \u092a\u0930 10-30 \u0938\u0947\u0915\u0902\u0921...",doc_photo_think:"\u092b\u093c\u094b\u091f\u094b \u092a\u0922\u093c \u0930\u0939\u093e \u0939\u0948 - \u0906\u092e\u0924\u094c\u0930 \u092a\u0930 10-30 \u0938\u0947\u0915\u0902\u0921...",
+  doc_res_title:"AI \u0928\u093f\u0926\u093e\u0928 - \u0930\u094b\u0917 \u092f\u093e \u0915\u0940\u091f, \u0909\u092a\u093e\u092f\u094b\u0902 \u0938\u0939\u093f\u0924",doc_res_photo:"AI \u092b\u093c\u094b\u091f\u094b \u0928\u093f\u0926\u093e\u0928 - \u0930\u094b\u0917 \u092f\u093e \u0915\u0940\u091f, \u0909\u092a\u093e\u092f\u094b\u0902 \u0938\u0939\u093f\u0924",
+  doc_too_short:"\u0938\u092e\u0938\u094d\u092f\u093e \u0915\u094b \u0925\u094b\u095c\u093e \u0935\u093f\u0935\u0930\u0923 \u092e\u0947\u0902 \u0932\u093f\u0916\u0947\u0902",doc_need_photo:"\u092a\u0939\u0932\u0947 \u092a\u094c\u0927\u0947 \u0915\u0940 \u092b\u093c\u094b\u091f\u094b \u0932\u0947\u0902 \u092f\u093e \u091a\u0941\u0928\u0947\u0902",
+  doc_disclaimer:"AI \u0917\u093c\u0932\u0924 \u0939\u094b \u0938\u0915\u0924\u093e \u0939\u0948 - \u0907\u0932\u093e\u091c \u0926\u0947\u0916\u0947\u0902, \u0909\u092a\u091a\u093e\u0930 \u0938\u0947 \u092a\u0939\u0932\u0947 \u0905\u092a\u0928\u0947 KVK \u0938\u0947 \u092a\u0941\u0937\u094d\u091f\u093f \u0915\u0930\u0947\u0902\u0964",
+  doc_limit_t:"\u0906\u091c \u0915\u0947 \u0921\u0949\u0915\u094d\u091f\u0930 \u091a\u0947\u0915 \u092a\u0942\u0930\u0947 \u0939\u0941\u090f",doc_limit_b:"\u0906\u0927\u0940 \u0930\u093e\u0924 \u0928\u0947 \u0928\u090f \u0939\u094b \u091c\u093e\u090f\u0902\u0917\u0947\u0964 \u090a\u092a\u0930 \u0935\u093e\u0932\u093e \u0911\u092b\u093c\u0932\u093e\u0907\u0928 \u0932\u0915\u094d\u0937\u0923 \u091f\u0942\u0932 \u0939\u092e\u0947\u0936\u093e \u0915\u0902\u092e \u092d\u0940 \u091a\u0947\u0915 \u0915\u0930 \u0938\u0915\u0924\u093e \u0939\u0948\u0964",
+  doc_fail:"AI \u0905\u092d\u0940 \u091c\u093e\u0901\u091a \u0928\u0939\u0940\u0902 \u092a\u093e \u0930\u093e - \u0907\u0902\u091f\u0930\u0928\u0947\u091f \u0926\u0947\u0916\u0915\u0930 \u0926\u094b\u092c\u093e\u0930\u093e \u0915\u094b\u0936\u093f\u0936 \u0915\u0930\u0947\u0902\u0964 \u092a\u0939\u0932\u0947 \u0935\u093e\u0932\u093e \u0911\u092b\u093c\u0932\u093e\u0907\u0928 \u0932\u0915\u094d\u0937\u0923 \u091f\u0942\u0932 \u0939\u092e\u0947\u0936\u093e \u0915\u0902\u092e \u0915\u0930\u0924\u093e \u0939\u0948\u0964",
+  doc_photo_needs:"\u092b\u093c\u094b\u091f\u094b \u0938\u094d\u0915\u0948\u0928 \u0905\u092d\u0940 \u0909\u092a\u0932\u092c\u094d\u0927 \u0928\u0939\u0940\u0902 \u0939\u0948",
+  doc_photo_needs_b:"\u091c\u094b \u0926\u0947\u0916\u093e \u0935\u0939 \u092c\u0949\u0915\u094d\u0938 \u092e\u0947\u0902 \u0932\u093f\u0916\u0915\u0930 “\u0935\u093f\u0935\u0930\u0923 \u0938\u0947 \u0928\u093f\u0926\u093e\u0928” \u0926\u092c\u093e\u090f\u0902 - \u092f\u0939 \u0905\u092d\u0940 \u0915\u0902\u092e \u0915\u0930\u0924\u093e \u0939\u0948\u0964\n\n(\u092b\u093c\u094b\u091f\u094b \u0938\u094d\u0915\u0948\u0928 \u0915\u0947 \u0932\u093f\u090f \u0915\u094d\u0932\u093e\u0938 AI \u092f\u093e \u092e\u0941\u092b\u093c\u094d\u0924 Gemini \u0915\u0941\u0902\u091c\u0940 \u091a\u093e\u0939\u093f\u090f\u0964)",
+  doc_setup:"\u0915\u094d\u0932\u093e\u0938 AI \u091c\u0941\u095c\u093e \u0928\u0939\u0940\u0902 \u0939\u0948 - \u092a\u0939\u0932\u0947 \u0935\u093e\u0932\u0947 \u0911\u092b\u093c\u0932\u093e\u0907\u0928 \u0932\u0915\u094d\u0937\u0923 \u091f\u0942\u0932 \u092f\u093e \u091c\u093c\u0930\u0942\u0930 \u092e\u0947\u0902 AI \u0938\u0947\u091f\u0905\u092a \u0915\u0930\u0947\u0902"}
+};
+Object.keys(TR4).forEach(function(l){ var src=TR[l]||{}; Object.keys(TR4[l]).forEach(function(k){src[k]=TR4[l][k]}); TR[l]=src; });
+
+
 
 function buildDoctor(){
   var quick=["Leaf spots","Yellowing leaves","Wilting / drying","Holes in leaves","Stem borer dead hearts","Sucking pests - hoppers/whitefly","Powdery coating","Sooty mould","Fruit / pod damage","Root rot / wilting at base","Tuber / corm damage","Stunted growth"];
@@ -804,6 +836,7 @@ function docAICard(title,txt){
 }
 function docAIBadge(){
   var b=document.getElementById("docAIBadge");if(!b)return;
+  if(SHARED_AI_URL){b.innerHTML="CLASS AI &middot; shared";b.onclick=null;b.style.cursor="default";return}
   var cfg=aiCfg();
   if(!cfg){b.innerHTML="AI off &middot; tap to set up";b.onclick=function(){go("knowledge");setTimeout(function(){kTab("assign")},80)};b.style.cursor="pointer";return}
   var nm={free:"FREE AI &middot; keyless",gemini:"GEMINI",groq:"GROQ",openai:"OPENAI"}[cfg.provider]||cfg.provider;
@@ -833,25 +866,122 @@ function docPromptBase(){
    +'Give REAL product names and doses used in India (e.g. g or ml per litre of water, kg per ha). If a dose varies, give the typical range and say to confirm the label. '
    +'Be honest about uncertainty.';
 }
+/* ---------------- PLANT DOCTOR v30: structured diagnosis ---------------- */
+function docPromptDiag(hasPhoto,notes,ground){
+  var gtxt=(ground&&ground.length)?("\nA local verified disease database suggests these may be relevant: "+ground.map(function(g){return g.n+" ("+g.c+")"}).join("; ")+". Use them as reference candidates, not as final answers.\n"):"";
+  var p='You are an experienced plant doctor for Indian farmers and agriculture students, working with TNAU and ICAR guidance. '
+   +(hasPhoto?'Look at this photo of a plant, crop problem, pest or symptom.'+notes:'A farmer reports this problem: "'+notes+'". If a crop or plant is not mentioned, say so first and give answers for the most likely crops. ')+gtxt
+   +'FIRST decide: is this a plant DISEASE (fungal, bacterial, viral, nematode or physiological) or an INSECT/PEST attack, or a nutrient disorder? Then identify the exact culprit. '
+   +'Answer in sections, each starting with "## " alone on its own line, in exactly this order:\n'
+   +'## PLANT PART AFFECTED\nwhich parts are affected (leaf, stem, root, fruit, flower, whole plant) and exactly what is visible on each\n'
+   +'## DISEASE OR INSECT?\nstate clearly PLANT DISEASE or INSECT/PEST ATTACK or NUTRIENT DISORDER, then the exact disease or insect name - common and scientific name; for insects add which stage damages the crop\n'
+   +'## WHAT IT IS & WHY\none short paragraph: the causal organism or insect species, how it damages the plant, and the weather or field conditions that favour it\n'
+   +'## ORGANIC & CULTURAL CONTROL\nIndia-specific: neem and other botanical formulations with concentration, Trichoderma and other biocontrol agents, pheromone or sticky traps, and the cultural practices that matter\n'
+   +'## CHEMICAL CONTROL\nCIB&RC registered products available in India: common name, dose per litre or per ha, spray timing, pre-harvest interval and safety gear\n'
+   +'## PRECAUTIONS\nhow to stop it spreading, how to protect the rest of the crop, when to remove and burn infected plants\n'
+   +(hasPhoto?'If the photo is unclear or the problem is not visible, say exactly that first and list what to photograph instead.\n':'')
+   +'Keep the whole answer under 400 words.'+langDirective()+"\n"+docPromptBase();
+  return p;
+}
+function genSharedDiag(prompt,imageB64,cb,errCb){
+  fetch(SHARED_AI_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body:JSON.stringify({action:"diag",prompt:prompt,image:imageB64||"",lang:LANG,id:deviceId(),code:adminCode()})})
+  .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()})
+  .then(function(j){
+    if(j&&j.limit===true){if(errCb)errCb({limit:true,msg:j.error||""});return}
+    if(!j||j.ok!==true)throw new Error((j&&j.error)||"proxy error");
+    if(!j.text||j.text.length<80)throw new Error("empty response");
+    cb(j.text);
+  })
+  .catch(function(err){if(errCb)errCb({msg:String(err&&err.message||err)})});
+}
+function docRenderDiag(title,txt){
+  var secs=String(txt).split(/\n(?=##\s)/).map(function(s){return s.trim()}).filter(Boolean);
+  var html="";
+  secs.forEach(function(s){
+    var m=s.match(/^##\s*(.+)/);
+    if(m){
+      var head=m[1].replace(/:$/,"").trim();
+      var body=s.slice(m[0].length).replace(/^[\s\n]+/,"");
+      html+='<div style="margin-top:10px"><div style="font-size:11px;font-weight:800;letter-spacing:.6px;color:#7c3aed">'+esc(head)+'</div><p style="white-space:pre-wrap;font-size:13px;line-height:1.55;margin-top:3px">'+esc(body)+'</p></div>';
+    } else {
+      html+='<p style="white-space:pre-wrap;font-size:13px;line-height:1.55;margin-top:8px">'+esc(s)+'</p>';
+    }
+  });
+  if(!html)html='<p style="white-space:pre-wrap;font-size:13px;line-height:1.55">'+esc(txt)+'</p>';
+  $("aiDocOut").innerHTML='<div class="card" style="margin-top:10px;border-color:#7c3aed"><h3 style="font-size:13px">'+esc(title)+'</h3>'+html
+   +'<p class="sub" style="margin-top:8px">'+t("doc_disclaimer")+'</p></div>';
+}
+function docLimitCard(msg){
+  $("aiDocOut").innerHTML='<div class="card" style="margin-top:10px;border-color:var(--terra)"><b style="color:var(--terra)">'+t("doc_limit_t")+'</b>'
+   +'<p style="font-size:12.5px;line-height:1.5;margin-top:4px">'+esc(msg||"")+'</p>'
+   +'<p style="font-size:12.5px;line-height:1.5;margin-top:4px">'+t("doc_limit_b")+'</p></div>';
+}
+function docFailCard(){
+  docAIThink(t("doc_fail"));
+}
+function docPhotoNoVisionCard(){
+  document.getElementById("aiDocOut").innerHTML='<div class="card" style="margin-top:10px;border-color:#7c3aed"><h3 style="font-size:13px">'+t("doc_photo_needs")+'</h3>'
+   +'<p style="white-space:pre-wrap;font-size:13px;line-height:1.55">'+t("doc_photo_needs_b")+'</p></div>';
+}
+function geminiDirectPhoto(cfg,p,b64){
+  fetch("https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(cfg.model)+":generateContent?key="+encodeURIComponent(cfg.key),{
+    method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({contents:[{role:"user",parts:[{text:p},{inline_data:{mime_type:"image/jpeg",data:b64}}]}],generationConfig:{temperature:0.4,maxOutputTokens:4096}})
+  }).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()})
+  .then(function(j){var t2="";
+    if(j&&j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts)
+      j.candidates[0].content.parts.forEach(function(pt){t2+=pt.text||""});
+    if(!t2)throw new Error("empty response");
+    docRenderDiag(t("doc_res_photo"),t2);
+  }).catch(function(){docFailCard()});
+}
 function aiTextDiag(){
+  var t1=document.getElementById("aiSymTxt").value.trim();
+  if(t1.length<10){toast(t("doc_too_short"));return}
+  var ground=docGround(t1);
+  var p=docPromptDiag(false,t1,ground);
+  if(SHARED_AI_URL){
+    docAIThink(t("doc_think"));
+    genSharedDiag(p,null,function(txt){docRenderDiag(t("doc_res_title"),txt)},function(err){
+      if(err&&err.limit){docLimitCard(err.msg);return}
+      var cfg=aiCfg();
+      if(cfg){docAIThink(t("doc_think"));aiCall(cfg,p).then(function(txt){docRenderDiag(t("doc_res_title"),txt)}).catch(function(){docFailCard()});return}
+      docFailCard();
+    });
+    return;
+  }
   var cfg=aiCfg();
-  if(!cfg){toast("AI mode is off - set it up free in the Assignments tab");go("knowledge");setTimeout(function(){kTab("assign")},80);return}
-  var t=document.getElementById("aiSymTxt").value.trim();
-  if(t.length<10){toast("Describe the problem in a little more detail");return}
-  var ground=docGround(t);
-  var gtxt=ground.length?("\nA local verified disease database suggests these may be relevant: "+ground.map(function(g){return g.n+" ("+g.c+")"}).join("; ")+". Use them as reference candidates, not as final answers.\n"):"";
-  var p='You are a plant doctor for Indian farmers and agriculture students. A farmer reports this problem: "'+t+'". '
-   +'If a crop or plant is not mentioned, say so first and give answers for the most likely crops. '+gtxt
-   +'Reply in plain text with exactly these headings:\n'
-   +'WHAT IT LIKELY IS - the most likely diagnosis first, then up to 2 alternatives, each tagged (Likely) or (Possible), one line of reasoning each\n'
-   +'HOW TO CONFIRM - 2-3 quick field checks\n'
-   +'ORGANIC & CULTURAL CONTROL - specific to India: neem or other botanical formulations with concentration, Trichoderma or other biocontrol agents, pheromone/sticky traps, and the cultural practices that matter\n'
-   +'CHEMICAL CONTROL - CIB&RC registered products available in India, each with common name, dose per litre or per ha, and spray timing; mention pre-harvest interval and safety gear\n'
-   +'PREVENTION - 2-3 points\n'
-   +'Keep it under 350 words. '+langDirective()+docPromptBase();
-  docAIThink("Thinking - usually 10-30 seconds...");
-  aiCall(cfg,p).then(function(txt){docAICard("AI diagnosis - organic & chemical options",txt)})
-   .catch(function(){docAIThink("AI call failed - check your internet and try again. The offline symptom tool below always works.")});
+  if(!cfg){toast(t("doc_setup"));go("knowledge");setTimeout(function(){kTab("assign")},80);return}
+  docAIThink(t("doc_think"));
+  aiCall(cfg,p).then(function(txt){docRenderDiag(t("doc_res_title"),txt)}).catch(function(){docFailCard()});
+}
+function aiPhotoDiag(){
+  var f=document.getElementById("photoIn").files&&document.getElementById("photoIn").files[0];
+  if(!f){toast(t("doc_need_photo"));return}
+  var t1=document.getElementById("aiSymTxt").value.trim();
+  var extra=t1?(" The farmer also notes: "+t1+"."):"";
+  var cfg=aiCfg();
+  if(SHARED_AI_URL){
+    docAIThink(t("doc_photo_think"));
+    downscaleImage(f,function(dataUrl){
+      var b64=String(dataUrl).split(",")[1];
+      var p=docPromptDiag(true,extra,null);
+      genSharedDiag(p,b64,function(txt){docRenderDiag(t("doc_res_photo"),txt)},function(err){
+        if(err&&err.limit){docLimitCard(err.msg);return}
+        if(cfg&&cfg.provider==="gemini"){geminiDirectPhoto(cfg,p,b64);return}
+        docPhotoNoVisionCard();
+      });
+    });
+    return;
+  }
+  if(!cfg){toast(t("doc_setup"));go("knowledge");setTimeout(function(){kTab("assign")},80);return}
+  if(cfg.provider!=="gemini"){docPhotoNoVisionCard();return}
+  docAIThink(t("doc_photo_think"));
+  downscaleImage(f,function(dataUrl){
+    var b64=String(dataUrl).split(",")[1];
+    geminiDirectPhoto(cfg,docPromptDiag(true,extra,null),b64);
+  });
 }
 function downscaleImage(file,cb,max){
   max=max||1024;
@@ -873,43 +1003,6 @@ function downscaleImage(file,cb,max){
   };
   rd.readAsDataURL(file);
 }
-function aiPhotoDiag(){
-  var cfg=aiCfg();
-  if(!cfg){toast("AI mode is off - set it up free in the Assignments tab");go("knowledge");setTimeout(function(){kTab("assign")},80);return}
-  var f=document.getElementById("photoIn").files&&document.getElementById("photoIn").files[0];
-  if(!f){toast("Choose or take a photo of the plant first");return}
-  if(cfg.provider!=="gemini"){
-    document.getElementById("aiDocOut").innerHTML='<div class="card" style="margin-top:10px;border-color:#7c3aed"><h3 style="font-size:13px">Photo scanning needs a Gemini key</h3>'
-     +'<p style="white-space:pre-wrap;font-size:13px;line-height:1.55">The free keyless AI mode cannot see photos - it reads your description instead.\n\nTwo options:\n1. Describe what you see in the box and tap "Diagnose from description" - works right now, keyless.\n2. For photo scanning, add a free Gemini key in the Assignments tab (aistudio.google.com/apikey, 2 minutes, free tier).\n\nYour photo stays attached - nothing was uploaded.</p></div>';
-    return;
-  }
-  docAIThink("Reading the photo - usually 10-30 seconds...");
-  downscaleImage(f,function(dataUrl){
-    var b64=String(dataUrl).split(",")[1];
-    var t=document.getElementById("aiSymTxt").value.trim();
-    var extra=t?(" The farmer also notes: "+t+"."):"";
-    var p='You are a plant doctor for Indian farmers and agriculture students. Look at this photo of a plant, crop problem, pest or symptom.'+extra
-     +' Reply in plain text with exactly these headings:\n'
-     +'WHAT I SEE - 2-3 lines describing the visible symptoms precisely\n'
-     +'WHAT IT LIKELY IS - the crop/plant if identifiable, then the most likely diagnosis and up to 2 alternatives, each tagged (Likely) or (Possible)\n'
-     +'HOW TO CONFIRM - 2-3 quick field checks\n'
-     +'ORGANIC & CULTURAL CONTROL - specific to India: neem or other botanical formulations with concentration, Trichoderma or other biocontrol agents, pheromone/sticky traps, and the cultural practices that matter\n'
-     +'CHEMICAL CONTROL - CIB&RC registered products available in India, each with common name, dose per litre or per ha, and spray timing; mention pre-harvest interval and safety gear\n'
-     +'PREVENTION - 2-3 points\n'
-     +'Keep it under 350 words. If the photo is unclear or the problem is not visible, say exactly that and list what to photograph instead. '+langDirective()+docPromptBase();
-    fetch("https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(cfg.model)+":generateContent?key="+encodeURIComponent(cfg.key),{
-      method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({contents:[{role:"user",parts:[{text:p},{inline_data:{mime_type:"image/jpeg",data:b64}}]}],generationConfig:{temperature:0.4,maxOutputTokens:2048}})
-    }).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()})
-    .then(function(j){var t2="";
-      if(j&&j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts)
-        j.candidates[0].content.parts.forEach(function(pt){t2+=pt.text||""});
-      if(!t2)throw new Error("empty response");
-      docAICard("AI photo diagnosis - organic & chemical options",t2);
-    }).catch(function(){docAIThink("Photo AI failed - check your internet and Gemini key, then retry.")});
-  });
-}
-
 (function(){
   var pi=document.getElementById("photoIn");
   if(pi)pi.addEventListener("change",function(){
