@@ -616,12 +616,6 @@ function applyLang(){
   L("lb-topic","lb_topic");L("lb-code","lb_code");L("lb-how","lb_how");L("btn-gen","gen");
   L("doc-title","doc_title");L("doc-sub","doc_sub");L("doc-ai","doc_ai");L("doc-ph1","doc_ph1");L("doc-ph2","doc_ph2");L("doc-bp","doc_btn_photo");L("doc-bt","doc_btn_text");L("doc-bcam","doc_cam");L("doc-bgal","doc_gal");
   var dln=document.getElementById("doc-lang-note");if(dln)dln.textContent=t("doc_lang_note");
-  if(typeof DOCSHOWN!=="undefined"&&DOCSHOWN&&LASTDIAG){
-    var out=document.getElementById("aiDocOut");
-    if(out&&!/docTrBar/.test(out.innerHTML)){
-      out.innerHTML+='<div class="card" id="docTrBar" style="margin-top:8px;border-color:#7c3aed;display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap"><div style="font-size:11.5px">'+esc(t("doc_lang_diff"))+'</div><button class="btn sm" style="background:var(--terra);border-color:var(--terra);color:#fff" onclick="docTranslate()">'+esc(t("doc_translate"))+'</button></div>';
-    }
-  }
   var ids={"homeQ":"hm_ph","asTopic":"as_ph","aiSymTxt":"doc_phph"};
   Object.keys(ids).forEach(function(i){var e=document.getElementById(i);if(e)e.setAttribute("placeholder",t(ids[i]))});
   L("calc-title","calc_title");L("calc-sub","calc_sub");L("cal-title","cal_title");L("cal-sub","cal_sub");L("k-title","k_title");L("k-sub","k_sub");L("w-title","w_title");L("w-sub","w_sub");L("lb-crop","lb_crop");L("lb-area","lb_area");L("lb-unit","lb_unit");L("lb-soil","lb_soil");L("calc-go","calc_go");L("cal-alerts","cal_alerts");L("lb-city","lb_city");L("w-btn1","w_go");L("w-btn2","w_geo");L("jobs-title","jobs_title");L("jobs-sub","jobs_sub");L("fc7h","fc7h");L("fc7p","fc7p");L("lb-adm","adm_f");
@@ -868,15 +862,15 @@ function findDisease(){
   }).join("")
   +'<div class="notecard" style="margin-top:12px">Not convincing? Keep only the 2&ndash;3 most specific symptoms and search again, or try the AI diagnosis at the top.</div>';
 }
-function docTranslate(){
+function docTranslateTo(l){
   if(!LASTDIAG)return;
-  var tgt=(LANG==="ta")?"Tamil":((LANG==="hi")?"Hindi":"English");
-  var p="Translate the following plant-doctor diagnosis fully into "+tgt+" in its native script. Keep the exact same ## section structure; translate the headings and every line. Keep scientific names, pesticide chemical names and abbreviations in English inside brackets. Do not add or remove any information.\n\n"+LASTDIAG;
+  var p="Translate the following plant-doctor diagnosis fully into "+docLangName(l)+" in its native script. Keep the exact same ## section structure; translate the headings and every line. Keep scientific names, pesticide chemical names and abbreviations in English inside brackets. Do not add or remove any information.\n\n"+LASTDIAG;
   docAIThink(t("doc_think_4"));
-  if(SHARED_AI_URL){genSharedDiag(p,"",function(txt){docRenderDiag(t("doc_res_photo"),txt)},function(err){if(err&&err.limit){docLimitCard(err.msg);return}docFailCard(err&&err.msg)});return}
+  if(SHARED_AI_URL){genSharedDiag(p,"",function(txt){docRenderDiag(t("doc_res_photo"),txt,l)},function(err){if(err&&err.limit){docLimitCard(err.msg);return}docFailCard(err&&err.msg)});return}
   var cfg=aiCfg();if(!cfg){toast(t("doc_setup"));return}
-  aiCall(cfg,p).then(function(txt){docRenderDiag(t("doc_res_title"),txt)}).catch(function(e){docFailCard(String(e&&e.message||e))});
+  aiCall(cfg,p).then(function(txt){docRenderDiag(t("doc_res_title"),txt,l)}).catch(function(e){docFailCard(String(e&&e.message||e))});
 }
+function docLangTo(l){if(!LASTDIAG||l===DIAGLANG)return;docTranslateTo(l)}
 var docThinkTimer=null;
 function docThinkStop(){if(docThinkTimer){clearInterval(docThinkTimer);docThinkTimer=null}}
 function docAIThink(msg){
@@ -957,11 +951,18 @@ function genSharedDiag(prompt,imageB64,cb,errCb,tried){
     if(errCb)errCb({msg:msg});
   });
 }
-var LASTDIAG=null,DOCSHOWN=false;
-function docRenderDiag(title,txt){
-  LASTDIAG=txt;
+var LASTDIAG=null,DOCSHOWN=false,DIAGLANG="en";
+function docLangName(l){return l==="en"?"English":(l==="ta"?"\u0ba4\u0bae\u0bbf\u0bb4\u0bcd":"\u0939\u093f\u0928\u094d\u0926\u0940")}
+function docScriptRatio(txt,lo,hi){var n=0,d=0;for(var i=0;i<txt.length;i++){var c=txt.charCodeAt(i);if(c===32||c===10)continue;d++;if(c>=lo&&c<=hi)n++}return d?n/d:0}
+function docLangMismatch(txt){if(LANG==="ta")return docScriptRatio(txt,0x0b80,0x0bff)<0.08;if(LANG==="hi")return docScriptRatio(txt,0x0900,0x097f)<0.08;return false}
+function docLangPills(){
+  return '<div style="display:flex;gap:6px;margin:6px 0 2px">'+["en","ta","hi"].map(function(l){
+    return '<button type="button" class="chip'+(l===DIAGLANG?" on":"")+'" style="font-size:11.5px;padding:5px 11px;cursor:pointer" onclick="docLangTo(\''+l+'\')">'+docLangName(l)+'</button>';
+  }).join("")+'</div>';
+}
+function docRenderDiag(title,txt,lang){
+  LASTDIAG=txt;DIAGLANG=lang||LANG;
   docThinkStop();DOCSHOWN=true;
-  docThinkStop();
   var secs=String(txt).split(/\n(?=##\s)/).map(function(s){return s.trim()}).filter(Boolean);
   var html="";
   secs.forEach(function(s){
@@ -975,7 +976,7 @@ function docRenderDiag(title,txt){
     }
   });
   if(!html)html='<p style="white-space:pre-wrap;font-size:13px;line-height:1.55">'+esc(txt)+'</p>';
-  $("aiDocOut").innerHTML='<div class="card" style="margin-top:10px;border-color:#7c3aed"><h3 style="font-size:13px">'+esc(title)+'</h3>'+html
+  $("aiDocOut").innerHTML='<div class="card" style="margin-top:10px;border-color:#7c3aed"><h3 style="font-size:13px">'+esc(title)+'</h3>'+docLangPills()+html
    +'<p class="sub" style="margin-top:8px">'+t("doc_disclaimer")+'</p></div>';
 }
 function docLimitCard(msg){
@@ -1005,7 +1006,7 @@ function geminiDirectPhoto(cfg,p,b64){
     if(j&&j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts)
       j.candidates[0].content.parts.forEach(function(pt){t2+=pt.text||""});
     if(!t2)throw new Error("empty response");
-    docRenderDiag(t("doc_res_photo"),t2);
+    docRenderDiag(t("doc_res_photo"),t2);if(docLangMismatch(t2))docTranslateTo(LANG);
   }).catch(function(e){docFailCard(String(e&&e.message||e))});
 }
 function aiTextDiag(){
@@ -1015,10 +1016,10 @@ function aiTextDiag(){
   var p=docPromptDiag(false,t1,ground);
   if(SHARED_AI_URL){
     docAIThink(t("doc_think"));
-    genSharedDiag(p,null,function(txt){docRenderDiag(t("doc_res_title"),txt)},function(err){
+    genSharedDiag(p,null,function(txt){docRenderDiag(t("doc_res_title"),txt);if(docLangMismatch(txt))docTranslateTo(LANG)},function(err){
       if(err&&err.limit){docLimitCard(err.msg);return}
       var cfg=aiCfg();
-      if(cfg){docAIThink(t("doc_think"));aiCall(cfg,p).then(function(txt){docRenderDiag(t("doc_res_title"),txt)}).catch(function(e){docFailCard(String(e&&e.message||e))});return}
+      if(cfg){docAIThink(t("doc_think"));aiCall(cfg,p).then(function(txt){docRenderDiag(t("doc_res_title"),txt);if(docLangMismatch(txt))docTranslateTo(LANG)}).catch(function(e){docFailCard(String(e&&e.message||e))});return}
       docFailCard(err&&err.msg);
     });
     return;
@@ -1026,7 +1027,7 @@ function aiTextDiag(){
   var cfg=aiCfg();
   if(!cfg){toast(t("doc_setup"));go("knowledge");setTimeout(function(){kTab("assign")},80);return}
   docAIThink(t("doc_think"));
-  aiCall(cfg,p).then(function(txt){docRenderDiag(t("doc_res_title"),txt)}).catch(function(e){docFailCard(String(e&&e.message||e))});
+  aiCall(cfg,p).then(function(txt){docRenderDiag(t("doc_res_title"),txt);if(docLangMismatch(txt))docTranslateTo(LANG)}).catch(function(e){docFailCard(String(e&&e.message||e))});
 }
 function aiPhotoDiag(){
   var f=(typeof DOCFILE!=="undefined"&&DOCFILE)||(document.getElementById("photoIn").files&&document.getElementById("photoIn").files[0]);
@@ -1039,7 +1040,7 @@ function aiPhotoDiag(){
     downscaleImage(f,function(dataUrl){
       var b64=String(dataUrl).split(",")[1];
       var p=docPromptDiag(true,extra,null);
-      genSharedDiag(p,b64,function(txt){docRenderDiag(t("doc_res_photo"),txt)},function(err){
+      genSharedDiag(p,b64,function(txt){docRenderDiag(t("doc_res_photo"),txt);if(docLangMismatch(txt))docTranslateTo(LANG)},function(err){
         if(err&&err.limit){docLimitCard(err.msg);return}
         if(cfg&&cfg.provider==="gemini"){geminiDirectPhoto(cfg,p,b64);return}
         docPhotoNoVisionCard(err&&err.msg);
