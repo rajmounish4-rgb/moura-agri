@@ -308,7 +308,7 @@ footer.appfoot{padding:14px 18px 20px;text-align:center;font-size:10.5px;color:v
       <div><div style="font-size:12.5px;font-weight:700" id="doc-ph1">Take or choose a photo of the plant</div>
       <div style="font-size:10.5px;color:var(--ink-dim)" id="doc-ph2">Leaf, stem, fruit, pest or the whole plant</div></div>
     </label>
-    <input type="file" id="photoIn" accept="image/*" capture="environment" style="display:none">
+    <input type="file" id="photoIn" accept="image/*" style="display:none">
     <img id="photoPrev" style="width:100%;border-radius:10px;margin-top:10px;display:none" alt="photo of the sick plant">
     <textarea id="aiSymTxt" class="ta" rows="3" style="margin-top:9px" placeholder="Describe what you saw - e.g. rice leaves with oval grey spots with dark borders, field patchy, started after last week's rain"></textarea>
     <div class="chiprow" style="margin:6px 0 0" id="docQuick"></div>
@@ -871,8 +871,9 @@ function docPromptDiag(hasPhoto,notes,ground){
   var gtxt=(ground&&ground.length)?("\nA local verified disease database suggests these may be relevant: "+ground.map(function(g){return g.n+" ("+g.c+")"}).join("; ")+". Use them as reference candidates, not as final answers.\n"):"";
   var p='You are an experienced plant doctor for Indian farmers and agriculture students, working with TNAU and ICAR guidance. '
    +(hasPhoto?'Look at this photo of a plant, crop problem, pest or symptom.'+notes:'A farmer reports this problem: "'+notes+'". If a crop or plant is not mentioned, say so first and give answers for the most likely crops. ')+gtxt
-   +'FIRST decide: is this a plant DISEASE (fungal, bacterial, viral, nematode or physiological) or an INSECT/PEST attack, or a nutrient disorder? Then identify the exact culprit. '
+   +'FIRST identify the HOST PLANT itself from the photo or description, then decide: is this a plant DISEASE (fungal, bacterial, viral, nematode or physiological) or an INSECT/PEST attack, or a nutrient disorder? Then identify the exact culprit. '
    +'Answer in sections, each starting with "## " alone on its own line, in exactly this order:\n'
+   +'## HOST PLANT\nname the host plant or crop the specimen belongs to - common name and botanical name; if it cannot be identified with confidence, say so and mention what details would help (flower, fruit, whole plant)\n'
    +'## PLANT PART AFFECTED\nwhich parts are affected (leaf, stem, root, fruit, flower, whole plant) and exactly what is visible on each\n'
    +'## DISEASE OR INSECT?\nstate clearly PLANT DISEASE or INSECT/PEST ATTACK or NUTRIENT DISORDER, then the exact disease or insect name - common and scientific name; for insects add which stage damages the crop\n'
    +'## WHAT IT IS & WHY\none short paragraph: the causal organism or insect species, how it damages the plant, and the weather or field conditions that favour it\n'
