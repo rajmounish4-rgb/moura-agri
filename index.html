@@ -368,7 +368,7 @@ header.topbar::after{content:"";position:absolute;left:0;right:0;bottom:0;height
   background:linear-gradient(90deg,#a3e635,#f59e0b,#c2410c)}
 .brand h1{color:#fff;letter-spacing:-.3px}
 .brand small{color:rgba(255,255,255,.82)}
-.brand small::after{content:"  \00b7  v54";color:#a3e635;font-weight:600}
+.brand small::after{content:"  \00b7  v55";color:#a3e635;font-weight:600}
 .lang{background:rgba(255,255,255,.20);color:#fff;font-weight:700;border-color:rgba(255,255,255,.38);
   backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .lang:active{transform:scale(.93)}
@@ -1604,24 +1604,53 @@ function openCourse(tab){
   if(courseTab==="practice"){renderPractice("all")}
 }
 
+var FOLD={"AEX101":"1RiHjEl0qFKP5Xc3hxawks2lKczfBnXkF","AGR101":"1l8PgFoX26Inh_LeCBTj7KcMOSD2G6Gem","BIC101":"15RzmblrGXQGeWZNX5WZ8qRS2S5nsAKft","ENG101":"1sSNh_XGj59WcZyefDiFBKlN-VaIBggiM","FOR101":"1qAb6LKUT8NdlayXhJaDieqhw0JnmAzjM","HOR101":"1izgi1i06r2rME6SsCRwAe5pP3PTQTHsG","MAT111":"1oH9zwUlnG2g-GxyqxgJ-hayuzDrtvmcs","PBG101":"1qdTQMm_F2c-yvWsincYTgZOjJ7gX48l-","SAC101":"1csShra_QC8GhlB6zA8UCLY9hO5Ag-mAD","TAM101":"1V1odkxwkRyPMXYznRGj9LsTVsp9O55Id","AEC102":"18kTfTsAHgpvJmR5L0gIrXOzwzNPFct_-","AEX102":"1iaUg4fKSwADLIMXqUzr1FkeCgDaeHdCL","AGM101":"13c-5AnoNOVNWcMb79kt2muCnuEnxeP0z","AGR102":"1-_udZo1SOq0E40MFrwifj1ebhTE7Z61g","CRP102":"1gHP3TWOQ_lu_WoVn24ll-ZQJbQ4eI0FB","FSN102":"1zCB3I-lXkxrFWtia_sXBixUJwETWtU5q","HOR102":"1G7iYzCZ6F7K3Ajl67_zFtwpyAgKia5Zf","RSG102":"1S6OAddq32parWhmv8NnUc4F2B983qGf7","SWE112":"1915NQWmjbKvEF0zLy1SSEtE--zdDuVU-","AEC201":"1Cfrv0jgOfJGtyR4nQ4WQKbNJ1vnWO3ew","AEN201":"1AT_YNVjHHKM3ckAzDEPJOjnZD6NdH5ED","AGR201":"1xdXJ2kTOQrzxKNa2GviL47K_ZC1mXapz","AMP201":"1j6N-mKwSDneGPjCeGLKRmlv4t5NlmO_3","ENS201":"1YX40W-WFm75a0scLn8uOwGIGx1TUL7kr","FMP211":"1A4Y58fuuSTwNKcbkDVz2GqURF4KYh0Xx","HOR211":"1LqdqSATlsNTEPIJ1rXdxB7q_YSrle07h","PAT201":"1b8MREO8kIMLzY6daTUTfjOUQTzGLs23Y","SAC201":"1Ubf1eEFppTHAXTr0xB-U7SQ0UyllkgPH","SST201":"1VU2VX-WbjS6Deby2g2FBHZ4Ip-s9vjET","AEN202":"1A3OQIi1CGrpbWbiTNfHajyYbKIU6_1rR","AEX201":"1RzZlWprCqL5aBgmLIvaeQ5RjOm8Ae5Kc","AGR203":"1NigpNyPVcFOSGetGG9xzIM22r7mewIa-","AGR204":"18i5XjeIS3jH25-4qwocTzxELNRI4GbEq","ANM201":"11jwIlMJmLLi6VMuxoBAKJFflwV6rmJJT","ERG211":"1n0KnNVVORBPDbvhfxkmXxAkyEGTFKcdx","HOR212":"15_Uz1X9jjIoY-x-Y84YqVnw8bfAMhzQ7","NST201":"1SkzWk9uAxB-sX6iDeHzMimIuc7CoFV-d","PAT202":"1BYX7RRIwVAqO0zUoNTKvE4sQ0WkKQWcq","PBG201":"1lZuVu8ZHD5G4-gIq_IZYqncXOIAVveeh","SAC202":"12bssdR3B4mhNF9yaAtWQd3_FqKIjE8fj","STA211":"1UBdVoQtj_E_eYlcWJCCgL2cAa-wLvSNV","AEC301":"1BlZvuH0jVSIG0-m7gtvjFJbKWzpfXeyy","AEN301":"194N-ZaCr5lACfvFb4GAecBdTeNv7rYZV","AGM301":"1yCz2s3A8jFtW_vbGI7WQMOxxefHBlv2X","AGR301":"17sgaxwt6O_CyKJrXgIYY3plDN3URitKa","AGR302":"1m_i2Z3Ch0qhJrz46g-LPXHpLEncFXJX9","ARM301":"1wuozNVuxPyaDikdEdvHSt1if6n3tVnCz","HOR311":"1Y2JAXYoILIe3tvWcW94tgM4Ir85axH2Q","PAT301":"1pJtxcVD_EPOL5BLUOfJB_yOmt8QY7UkW","PBG301":"1x7gfdH34A7kBRnRnSCKk-8Cw6vCLAGUi","SAC301":"1JWGaeHRMN4qhuGKWNrhi5wwgXam4yOyQ","AGR304":"1R86Hnl5qHuxy9eBKo-7O5VwMSUICFV5H","ABT301":"1Ki1t_x88apdw8hC3Q4F47CWZWjtzTK5C","AEC302":"1RtaXXqgqFnOC6pZ74FhscElrXx2w60IY","AEN302":"1RvRLKCTkqL90o9NYt9o3ZwBSERjxwwak","AGR351":"1RAvLEYsuaT9r7BBnPADtiA9v1LCt7Jfr","COM311":"1S23H9d4xPSyWvakFzMzj0WUWaXzOH6tP","ENS301":"1RliNawfs_eY4OvFvT-eHR1srjOVFC52o","PAT302":"1RlIl7c5az5qLK3Gnmh53a7oxzzKKEFhX","PBG302":"1Rs_Rz9ppWVRrO5HNp8ULHFPoP1dLuxo4","AGM121":"1EiTX_W1lX3Y57k3H5GcZ73a_2WXXCJYW","FSC101":"1ddzNhNayIM2FRzYdQYG-ESuuxpzgogov","FSC102":"1pjzSxem2v3F_AMJL66BxTefxJO0hwIhv","VSC101":"1iTQgPCxcncMSy1evmlsowiJOPis5jV3J","CRP112":"1h53HBZ_fEIFI89PAL4Bpb0sUQiCcHVlc","FSC103":"1rGtriVWtDCPZup4Pz73C3BNwLbmNWHQm","FSN121":"1TNmRoLROzsmfF952hfsu7M3FwpOWOty0","PBG112":"1igwxTo3GYDqr17uTs7bzmnj-yr1tloHd","PSM101":"10N3Luidj3FveqLIpWv8xGJeemL4B7svf","SAC102":"1OSZ1NVJuhilnavM7wMR1TcTqMqc0Dty-","VSC102":"1l_ntXEux_GvyG17IdLRlBYIYgbfGb_Xa","FLG201":"1hSRNxFjfUXy_Jnq1frbk00eM0_Qm813H","FSC201":"1sB4f-Rh4VovJlpYOAWU21nJohUrMWfmv","PAT211":"1huF5DVWgCVtidNw6X04EMXc5sw2siyJP","PBG211":"1tBsABl_R7qpUO4QVuGZ2O3yZE_jjAegn","PSM201":"1iqOsfmwyMtTSzaE9Epx8Fj2XOcyxHm_0","SST221":"1Wx8x0WVXvp7iMCyjyTPamTFUwI8WYIfe","VSC201":"1WrjJk99yf2gF8t5jfwlrWgF5BAIZShmX","VSC202":"1agm2UqT3lkiGL8jRJe1LfBWt37XBHoA-","AEC202":"1FV34L3rcaTQRYJuXYrLZiv-o6uNAh4Ek","AEN212":"1AFpD001DIfDgMCAlmgzKfFOKTo8X1roX","AGR211":"1S0aIM6O8ji2sVceAbvTKNtn0GRUIEldf","FLG202":"1iQSE_zMS8QSi4-xKhbKNkLD38hpZ_THt","FSC202":"1EefC2vJ9f_Hhxn38xc_qP2WDrtDhd2WB","FSC203":"1jzasIZf_n55ovMGjqDr0w22c7F0FIlnE","PSM202":"1gs4WiQA7o4p_vHkHegdi3F0c7cxmFSyr","STA201":"1zBhk3jUxTvfCuFrOywyTcCKnst01A0o7","AEN311":"1E8amT2BtuzOmrh2jCJwle7RzwPaMQvqr","AGR311":"1ETfOMYlZmaQYb_oS5gQbvFMs9Y9rYXjw","ANM311":"1EK5urmvUvz46xFB3zvsIeets_lrT0v0h","CRP321":"1E_t2MNxDZIV6On1Vh_yqk3EUYEtdxS8h","FOR311":"1ETp52tfObyp0dhVnaiFfWmFSf5xA_aWC","FSN311":"1EU864OlyOE9sdc1mSKjlKoNNkfnZa21-","PAT311":"1EV2vix_rM8pz2u5OHJxNR69DHynPdgrC","VSC301":"1E_9ROIOE_SKYwpS8nzAMRoyITnxQshdM","ABT312":"1HigD92E1GL07UU4VNN5jIM7HLZv9MRSZ","AEN312":"1E-r5VKZ2c-3R3JR-EG7B3jyZ18WEMH7O","AEX311":"1EAC9Sw-734V2wNB46HAxAFD6KT7DnZRo","AGM321":"1DyNwQgDYqR7OASUg0ChpODX6ZxDGIxO9","AGR313":"1DyTM_WMgbvvC4yUqo8mw5Kl8qR3BcyvG","ARM324":"1Dx3yqCY69BZFTckZgjWlPf6g3USQcAGC","FSC301":"1Hc5bJrUof8XMPhO26RRQzFb5P3NYrrCV","PAT312":"1E6TvuR9aT6w8-5GmTFctBjVd6F3EwRgl","SST321":"1HbKG2IaeXvY3kDQXU4WdwfdlL5LSPhVZ","VSC302":"1DxiMHIhCUvPcMmozaQHi-Fm3NH5ugL-y","FOR111":"1HFQed9vU54m-cwWlfd5vfOLlfLS-57sg","CRP101":"1AWCgY8d2QgRHLeM6BjEl38nirIun0qAV","FSN111":"144Shq3fpy0M8KxO1b37CZYJrKipyUdrY","HOR112":"1ihQx6dSFjKfxzotvQ4jLCOmO4pKNCbWM","RSG101":"11lNep87tQzCSuyF2C99DsNmPzmkZCFMF","APE311":"1QZLowz3th7xP7m5cxE9FoxLf26vLAqaS","SAC351":"12xYXCKUFIoEbe8ZrbI6u5Zg1M-OnnslC","TAM201":"12g7oyq1djdvWByL7wxKmIuydmHX12y8O","AGR303":"1c1iX8g2uWh54GpnrPyb5dFGzG901oOfd","AGM353":"1C_KEkWHfxfqGU__weDGeJJ05SU_W-izi","NEM351":"1t-DecST74UdvNtdrQ4HL9kJHB3jlD1WZ","SAC352":"1e1GOGAvYnTQpyqe8btqCNdvTbGkPitcy","SAC353":"1uA6SBNtKngFHJq5euVfEakBTxitHTgrG"};
+var _mc=null,_mt="all";
 function openMats(code){
+  _mc=code;_mt="all";
   var list=MATS[code]||[];
   var LAB={man:"Practical manuals",qp:"Question papers",qb:"Question bank",syl:"Syllabus",note:"Notes / study material",ppt:"Slides / PPT"};
   var order=["note","man","ppt","qp","qb","syl"];
-  var g={};
-  list.forEach(function(x){ (g[x[2]]=g[x[2]]||[]).push(x); });
+  var g={};list.forEach(function(x){(g[x[2]]=g[x[2]]||[]).push(x);});
   var code2=code.length>3?code.slice(0,3)+" "+code.slice(3):code;
+  var fld=FOLD[code]||"";
   var h='<div class="backrow"><button onclick="closeCourse()">&larr; Back to courses</button></div>'
    +'<div class="hero"><div class="code">'+esc(code2)+' &middot; Agri Junction materials</div><h2>'+list.length+' materials</h2>'
-   +'<p>Every file in the TNAU Agri Junction Google Drive collection for this course &mdash; notes, practical manuals, slides, question papers and question banks. Tap any item to open the file in Google Drive.</p></div>';
+   +'<p>Every file in the TNAU Agri Junction Google Drive collection for this course &mdash; notes, practical manuals, slides, question papers and question banks. Tap any item to open it in Google Drive.</p>'
+   +(fld?'<div style="margin-top:8px"><a class="mchip main" target="_blank" rel="noopener" href="https://drive.google.com/drive/folders/'+fld+'">Open the whole folder in Drive</a></div>':'')
+   +'</div>'
+   +'<label class="f">Search these materials</label>'
+   +'<input id="msearch" type="text" placeholder="e.g. manual, mid sem, ppt, 2019" oninput="matsFilter()" style="width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;font:inherit">'
+   +'<div class="chiprow" id="mtypes" style="margin-top:10px"><button class="chip on" data-t="all" onclick="matsType(this)">All ('+list.length+')</button>'
+   +order.filter(function(k){return g[k]&&g[k].length;}).map(function(k){
+      return '<button class="chip" data-t="'+k+'" onclick="matsType(this)">'+LAB[k]+' ('+g[k].length+')</button>';}).join("")
+   +'</div><div id="mlist"></div>';
+  $("k-courses").innerHTML=h;
+  var b="";
   order.forEach(function(k){
     if(!g[k]||!g[k].length)return;
-    h+='<div class="section-label">'+LAB[k]+' ('+g[k].length+')</div><div class="chiprow">'
+    b+='<div class="section-label mglabel" data-g="'+k+'">'+LAB[k]+' ('+g[k].length+')</div>'
       +g[k].map(function(x){
-        return '<a class="mchip" target="_blank" rel="noopener" href="https://drive.google.com/file/d/'+x[1]+'/view">'+esc(x[0])+'</a>';
-      }).join("")+'</div>';
+        return '<a class="mchip mitem" data-t="'+x[2]+'" data-n="'+esc((x[0]||"").toLowerCase())+'" target="_blank" rel="noopener" href="https://drive.google.com/file/d/'+x[1]+'/view">'+esc(x[0])+'</a>';}).join("");
   });
-  $("k-courses").innerHTML=h;
+  $("mlist").innerHTML=b;
+}
+function matsType(btn){
+  _mt=btn.getAttribute("data-t");
+  var p=btn.parentNode;Array.prototype.forEach.call(p.children,function(c){c.classList.toggle("on",c===btn)});
+  matsFilter();
+}
+function matsFilter(){
+  var el=$("msearch");var q=(el&&el.value?el.value:"").trim().toLowerCase();
+  var shown={};
+  Array.prototype.forEach.call(document.querySelectorAll(".mitem"),function(a){
+    var ok=(_mt==="all"||a.getAttribute("data-t")===_mt)&&(!q||(a.getAttribute("data-n")||"").indexOf(q)>=0);
+    a.style.display=ok?"":"none";
+    if(ok)shown[a.getAttribute("data-t")]=1;
+  });
+  Array.prototype.forEach.call(document.querySelectorAll(".mglabel"),function(l){
+    l.style.display=shown[l.getAttribute("data-g")]?"":"none";
+  });
 }
 function closeCourse(){buildCourses()}
 var prU="all";
