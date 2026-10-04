@@ -1,6 +1,9 @@
-/* MouRa service worker - caches the app shell so it loads with no internet.
-   AI/API calls are never cached; they simply need a network. */
-const CACHE = 'moura-v56';
+/* MouRa service worker.
+   - The app shell (HTML) is NETWORK-FIRST so a new version arrives as soon as you are online,
+     and falls back to cache when offline.
+   - Other same-origin assets (icons, manifest, notes PDFs) are CACHE-FIRST for speed.
+   - AI / live-API hosts are never cached and simply need a network. */
+const CACHE = 'moura-v58';
 const SHELL = [
   './',
   './index.html',
@@ -25,15 +28,33 @@ self.addEventListener('activate', e => {
   );
 });
 
-const NEVER = /script\.google|pollinations|generativelanguage|googleapis|openai\.com|groq\.com|anthropic|api\.openweathermap|open-meteo/i;
+const NEVER = /script\.google|pollinations|generativelanguage|googleapis|openai\.com|groq\.com|anthropic|openweathermap|open-meteo/i;
 
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const u = new URL(req.url);
-  if (NEVER.test(u.hostname + u.pathname)) return;          // AI + live APIs: always network
-  if (u.origin !== self.location.origin) return;            // only cache our own files
+  if (NEVER.test(u.hostname + u.pathname)) return;
+  if (u.origin !== self.location.origin) return;
 
+  const isDoc = req.mode === 'navigate' || req.destination === 'document' ||
+                /\.html?$/i.test(u.pathname) || u.pathname.endsWith('/');
+
+  if (isDoc) {
+    // network-first: always try for the newest app, fall back to cache offline
+    e.respondWith(
+      fetch(req).then(resp => {
+        if (resp && resp.ok) {
+          const cp = resp.clone();
+          caches.open(CACHE).then(c => c.put(req, cp)).catch(() => {});
+        }
+        return resp;
+      }).catch(() => caches.match(req).then(h => h || caches.match('./index.html')))
+    );
+    return;
+  }
+
+  // cache-first for everything else
   e.respondWith(
     caches.match(req).then(hit => {
       const net = fetch(req).then(resp => {
@@ -42,8 +63,8 @@ self.addEventListener('fetch', e => {
           caches.open(CACHE).then(c => c.put(req, cp)).catch(() => {});
         }
         return resp;
-      }).catch(() => hit || caches.match('./index.html'));
-      return hit || net;                                     // cache-first, then network
+      }).catch(() => hit);
+      return hit || net;
     })
   );
 });
