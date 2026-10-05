@@ -3,7 +3,7 @@
      and falls back to cache when offline.
    - Other same-origin assets (icons, manifest, notes PDFs) are CACHE-FIRST for speed.
    - AI / live-API hosts are never cached and simply need a network. */
-const CACHE = 'moura-v67';
+const CACHE = 'moura-v68';
 const SHELL = [
   './',
   './index.html',
