@@ -3,11 +3,13 @@
      and falls back to cache when offline.
    - Other same-origin assets (icons, manifest, notes PDFs) are CACHE-FIRST for speed.
    - AI / live-API hosts are never cached and simply need a network. */
-const CACHE = 'moura-v80';
+const CACHE = 'moura-v81';
 const SHELL = [
   './',
   './index.html',
   './data.json',
+  './reels.js',
+  './data.js',
   './reels.json',
   './manifest.webmanifest',
   './icons/icon-180.png',
@@ -40,7 +42,7 @@ self.addEventListener('fetch', e => {
   if (u.origin !== self.location.origin) return;
 
   const isDoc = req.mode === 'navigate' || req.destination === 'document' ||
-                /\.html?$/i.test(u.pathname) || /\.json$/i.test(u.pathname) || u.pathname.endsWith('/');
+                /\.html?$/i.test(u.pathname) || u.pathname.endsWith('/');
 
   if (isDoc) {
     // network-first: always try for the newest app, fall back to cache offline
