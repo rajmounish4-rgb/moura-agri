@@ -1,21 +1,6 @@
-/* MouRa service worker.
-   - The app shell (HTML) is NETWORK-FIRST so a new version arrives as soon as you are online,
-     and falls back to cache when offline.
-   - Other same-origin assets (icons, manifest, notes PDFs) are CACHE-FIRST for speed.
-   - AI / live-API hosts are never cached and simply need a network. */
-const CACHE = 'moura-v81';
-const SHELL = [
-  './',
-  './index.html',
-  './data.json',
-  './reels.js',
-  './data.js',
-  './reels.json',
-  './manifest.webmanifest',
-  './icons/icon-180.png',
-  './icons/icon-192.png',
-  './icons/icon-512.png'
-];
+/* MouRa service worker - minimal. The app is self-contained, so there is nothing else to cache. */
+const CACHE = 'moura-v82';
+const SHELL = ['./', './index.html'];
 
 self.addEventListener('install', e => {
   self.skipWaiting();
@@ -41,34 +26,14 @@ self.addEventListener('fetch', e => {
   if (NEVER.test(u.hostname + u.pathname)) return;
   if (u.origin !== self.location.origin) return;
 
-  const isDoc = req.mode === 'navigate' || req.destination === 'document' ||
-                /\.html?$/i.test(u.pathname) || u.pathname.endsWith('/');
-
-  if (isDoc) {
-    // network-first: always try for the newest app, fall back to cache offline
-    e.respondWith(
-      fetch(req).then(resp => {
-        if (resp && resp.ok) {
-          const cp = resp.clone();
-          caches.open(CACHE).then(c => c.put(req, cp)).catch(() => {});
-        }
-        return resp;
-      }).catch(() => caches.match(req).then(h => h || caches.match('./index.html')))
-    );
-    return;
-  }
-
-  // cache-first for everything else
+  // the app itself: always try the network first, fall back to the cache offline
   e.respondWith(
-    caches.match(req).then(hit => {
-      const net = fetch(req).then(resp => {
-        if (resp && resp.ok) {
-          const cp = resp.clone();
-          caches.open(CACHE).then(c => c.put(req, cp)).catch(() => {});
-        }
-        return resp;
-      }).catch(() => hit);
-      return hit || net;
-    })
+    fetch(req).then(resp => {
+      if (resp && resp.ok) {
+        const cp = resp.clone();
+        caches.open(CACHE).then(c => c.put(req, cp)).catch(() => {});
+      }
+      return resp;
+    }).catch(() => caches.match(req).then(h => h || caches.match('./index.html')))
   );
 });
