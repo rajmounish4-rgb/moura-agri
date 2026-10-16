@@ -1,5 +1,5 @@
 /* MouRa service worker - minimal. The app is self-contained, so there is nothing else to cache. */
-const CACHE = 'moura-v100';
+const CACHE = 'moura-v101';
 const SHELL = ['./', './index.html'];
 
 self.addEventListener('install', e => {
