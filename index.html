@@ -368,7 +368,7 @@ header.topbar::after{content:"";position:absolute;left:0;right:0;bottom:0;height
   background:linear-gradient(90deg,#a3e635,#f59e0b,#c2410c)}
 .brand h1{color:#fff;letter-spacing:-.3px}
 .brand small{color:rgba(255,255,255,.82)}
-.brand small::after{content:"  \00b7  v109";color:#a3e635;font-weight:600}
+.brand small::after{content:"  \00b7  v110";color:#a3e635;font-weight:600}
 .lang{background:rgba(255,255,255,.20);color:#fff;font-weight:700;border-color:rgba(255,255,255,.38);
   backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .lang:active{transform:scale(.93)}
@@ -3568,7 +3568,7 @@ function absP(p){return /^https?:/i.test(p||"")?p:(MOURA_BASE+(p||"").replace(/^
 function courseCard(c,full){
   var n=encodeURIComponent(c.name);
   var pf=c.pdf?c.pdf.replace("notes/",""):"";
-  var isSplit=pf&&PARTS[pf]&&MATLOCAL;
+  var isSplit=pf&&PARTS[pf];
   var mk=(c.code||"").replace(/[^A-Za-z0-9]/g,"").toUpperCase();var _m=MATS[mk]||[];
   var links='<div style="margin-top:8px">'
    +progressChip(c)
@@ -3633,7 +3633,7 @@ function dlNotes(name,n){
 }
 (function(){
   try{
-    fetch("notes/AGR-101.pdf",{method:"HEAD"}).then(function(r){
+    fetch(absP("notes/AGR-101.pdf"),{method:"HEAD"}).then(function(r){
       if(r.ok){MATLOCAL=true;buildCourses()}
     }).catch(function(){});
   }catch(e){}
