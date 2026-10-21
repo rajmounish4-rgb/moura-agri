@@ -368,7 +368,7 @@ header.topbar::after{content:"";position:absolute;left:0;right:0;bottom:0;height
   background:linear-gradient(90deg,#a3e635,#f59e0b,#c2410c)}
 .brand h1{color:#fff;letter-spacing:-.3px}
 .brand small{color:rgba(255,255,255,.82)}
-.brand small::after{content:"  \00b7  v110";color:#a3e635;font-weight:600}
+.brand small::after{content:"  \00b7  v111";color:#a3e635;font-weight:600}
 .lang{background:rgba(255,255,255,.20);color:#fff;font-weight:700;border-color:rgba(255,255,255,.38);
   backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .lang:active{transform:scale(.93)}
@@ -3611,22 +3611,36 @@ function courseCard(c,full){
 }
 function dlNotes(name,n){
   var bufs=[],i=0,label=name.length>26?name.slice(0,24)+"..":name;
-  toast("Downloading "+label+" - joining "+n+" parts, keep the app open...");
+  function note(msg){try{toast(msg)}catch(e){}}
+  note("Preparing "+label+" - "+n+" parts, keep the app open...");
   function save(){
     var blob=new Blob(bufs,{type:"application/pdf"});
     var a=document.createElement("a");
     a.href=URL.createObjectURL(blob); a.download=name;
     document.body.appendChild(a); a.click(); a.remove();
-    toast("Saved "+name);
+    note("Saved "+name);
+  }
+  function grab(url,tries){
+    return fetch(url,{cache:"force-cache"}).then(function(r){
+      if(!r.ok)throw new Error("http "+r.status);
+      return r.arrayBuffer();
+    }).catch(function(e){
+      if(tries<=1)throw e;
+      return new Promise(function(res){setTimeout(res,700)}).then(function(){return grab(url,tries-1)});
+    });
   }
   function step(){
     if(i>=n){save();return}
-    fetch("notes/"+name+".p"+(i+1)).then(function(r){if(!r.ok)throw new Error("x");return r.arrayBuffer()})
-    .then(function(b){bufs.push(b);i++;step()})
-    .catch(function(){
-      fetch("notes/"+name).then(function(r){if(!r.ok)throw new Error("x");return r.arrayBuffer()})
-      .then(function(b){bufs=[b];i=n;save()})
-      .catch(function(){toast("Download failed - check your internet connection.")});
+    var part="notes/"+name+".p"+(i+1);
+    note("Getting part "+(i+1)+" of "+n+" - "+label);
+    grab(absP(part),3).then(function(b){
+      bufs.push(b);i++;step();
+    }).catch(function(){
+      // no parts at all -> this is a single-file notes PDF
+      grab(absP("notes/"+name),3).then(function(b){bufs=[b];i=n;save()})
+      .catch(function(){
+        note("Could not fetch "+label+" - tap again on a steadier connection.");
+      });
     });
   }
   step();
